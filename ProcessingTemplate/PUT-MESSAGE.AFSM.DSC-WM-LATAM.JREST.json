@@ -1,0 +1,100 @@
+{
+  "description": "Put message to AFSM",
+  "endpoint": "Afsm.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "ignoreProcessingStateRegistry": true,
+  "node": "AnowEngine.Rest.rr",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "preScript": ":INC PICK.SYSTEM-CONFIG.AFSM.DSC-WM-LATAM.INCL\n:INC READ.SYSTEM-CONFIG.AFSM.DSC-WM-LATAM.INCL\n\n!:READ &AFSM_MESSAGE_URL#,,,&SC_AFSM_MESSAGE_URL#\n!:SET &AFSM_FULL_URL# = CONV_LC(\"&AFSM_MESSAGE_URL#\")\n:SET &AFSM_PART_URL# = CONV_LC(\"&SC_AFSM_CONTEXT_MESSAGE#\")\n:PUB &AFSM_PART_URL#,,TASK\n\n:RESOLVE &TMP_STR# = \"&IN_DESCRIPTION#\"\n:SET &DESCRIPTION# = &TMP_STR#\n:PUB &DESCRIPTION#,,TASK\n\n:SET &TMP1# = \"${IN_FLOW_STATUS#}\"\n\n:IF &TMP1# <> \"\"\n:  SET &FLOW_STATUS# = &TMP1#\n:ELSE\n:  SET &FLOW_STATUS# = &SC_PARENT_RET_CODE#\n:ENDIF\n:PUB &FLOW_STATUS#,,TASK\n",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "{\n  \"run_id\": ${RUN_ID#},\n  \"instance_name\": \"${IN_INSTANCE_NAME#}\",\n  \"module_status\": \"${IN_MODULE_STATUS#}\",\n  \"module\": \"${IN_MODULE#}\",\n  \"machine_function\": \"${IN_MACHINE_FUNCTION#}\",\n  \"flow_status\": \"${FLOW_STATUS#}\",\n  \"description\": \"${DESCRIPTION#}\"\n}",
+    "headers": "Content-Type=application/json\nrequestDataSource=text\nresponseTimeout=60\n",
+    "method": "POST",
+    "resultVariableLevel": "SELF",
+    "url": "${AFSM_PART_URL#}"
+  },
+  "actions": 
+  [
+    {
+      "duration": 15000,
+      "durationThresholdType": "DURATION",
+      "processingActionType": "KILL",
+      "processingEventCategory": "PROCESSING",
+      "processingEventType": "EXECUTING_LONG",
+      "processingCommand": {
+        "actionTargetType": "SELF",
+        "keepForcedStatus": true,
+        "operator": "",
+        "restartType": "RESTART_FROM_BEGINNING"
+      }
+    },
+    {
+      "processingActionType": "FORCE_COMPLETED",
+      "processingEventCategory": "PROCESSING",
+      "processingEventType": "PROCESSING_FAILED",
+      "processingCommand": {
+        "actionTargetType": "SELF",
+        "keepForcedStatus": true,
+        "operator": "",
+        "restartType": "RESTART_FROM_BEGINNING"
+      }
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "defaultValue": "${INSTANCE_NAME#}",
+      "editorType": "TEXT",
+      "name": "IN_INSTANCE_NAME#",
+      "title": "IN_INSTANCE_NAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_MODULE#",
+      "title": "IN_MODULE#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_MODULE_STATUS#",
+      "title": "IN_MODULE_STATUS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_MACHINE_FUNCTION#",
+      "title": "IN_MACHINE_FUNCTION#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_FLOW_STATUS#",
+      "title": "IN_FLOW_STATUS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_DESCRIPTION#",
+      "title": "IN_DESCRIPTION#"
+    }
+  ]
+}

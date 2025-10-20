@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":SET &STOP_SCRIPT_NAME# = GET_VAR(CONFIG.DR-NTV.DSC-WM-LATAM.V,STOP_SCRIPT_NAME,1)\n:SET &STOP_PRECHECK_SCRIPT_NAME# = GET_VAR(CONFIG.DR-NTV.DSC-WM-LATAM.V,STOP_PRECHECK_SCRIPT_NAME,1)\n:SET &CRONTAB_SCRIPT_NAME# = GET_VAR(CONFIG.DR-NTV.DSC-WM-LATAM.V,CRONTAB_SCRIPT_NAME,1)\n\n:PUB &STOP_SCRIPT_NAME#\n:PUB &STOP_PRECHECK_SCRIPT_NAME# \n:PUB &CRONTAB_SCRIPT_NAME# "
+  }
+}

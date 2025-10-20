@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":SET &TZ# = GET_VAR(CONFIG.SELF-HEALING.DSC-WM-LATAM.V,TIME_ZONE,1)\n:PUB &TZ#\n\n:SET &RUN_ID#      = SYS_ACT_PARENT_NR()\n:SET &RUN_ID#      = FORMAT(&RUN_ID#)\n!:PUBLISH &RUN_ID#,,WORKFLOW\n\n! Get current time and date\n:SET &TIME_NOW#  = SYS_TIME_PHYSICAL(\"HH:MM:SS\",\"&TZ#\")\n:SET &DATE_NOW#  = SYS_DATE_PHYSICAL(\"YYYY-MM-DD\",\"&TZ#\")\n:PUBLISH &TIME_NOW#,,WORKFLOW\n:PUBLISH &DATE_NOW#,,WORKFLOW\n\n! INC/CTASK\n:SET &TICKET_TYPE# = \"\"\n\n:IF &TICKET# = \"null\"\n:  SET &TICKET# = \"\"\n:  PUBLISH &TICKET#,,WORKFLOW\n:ENDIF\n\n:IF &TICKET# <> \"\"\n:  SET &INC# = SUBSTR(&TICKET#,1,3)\n:  SET &CTA# = SUBSTR(&TICKET#,1,5)\n:  IF &INC# = \"INC\"\n:    SET &TICKET_TYPE# = \"INC\"\n:  ELSE\n:    IF &CTA# = \"CTASK\"\n:      SET &TICKET_TYPE# = \"CTASK\"\n:    ELSE\n:      PRINT \"WARNING - No valid INC/CTASK!\"\n:      SET &TICKET_TYPE# = \"\"\n:    ENDIF\n:  ENDIF\n:ENDIF\n:PUBLISH &TICKET_TYPE#\n\n:IF &MODULES# = \"\"\n:  PRINT \"ERROR - No module selected!\"\n:  SET &STATUS# = CANCEL_UC_OBJECT(&RUN_ID#, \"ENDED_CANCEL\")\n:ENDIF\n\n:SET &DB# = \"false\"\n\n:SWITCH \"Y\"\n:  CASE &MODULES# = \"WMS\"\n:    SET &EMODULE# = \"WMS\"\n:    SET &FUNCTION# = \"WMS\"\n:  CASE &MODULES# = \"REFS\"\n:    SET &EMODULE# = \"REFS\"\n:    SET &FUNCTION# = \"REFS\"\n:  CASE &MODULES# = \"RW\"\n:    SET &EMODULE# = \"RW\"\n:    SET &FUNCTION# = \"RW\"\n:  CASE &MODULES# = \"EMS\"\n:    SET &EMODULE# = \"EMS\"\n:    SET &FUNCTION# = \"EMS\"\n:  CASE &MODULES# = \"WMS-FAIL\"\n:    SET &EMODULE# = \"WMS\"\n:    SET &FUNCTION# = \"WMS-FAIL\"\n:  CASE &MODULES# = \"REFS-FAIL\"\n:    SET &EMODULE# = \"REFS\"\n:    SET &FUNCTION# = \"REFS-FAIL\"\n:  CASE &MODULES# = \"RW-FAIL\"\n:    SET &EMODULE# = \"RW\"\n:    SET &FUNCTION# = \"RW-FAIL\"\n:  CASE &MODULES# = \"EMS-FAIL\"\n:    SET &EMODULE# = \"EMS\"\n:    SET &FUNCTION# = \"EMS-FAIL\"\n:  CASE &MODULES# = \"DB_WMS\"\n:    SET &EMODULE# = \"WMS\"\n:    SET &FUNCTION# = \"WMS_DB\"\n:    SET &DB# = \"true\"\n:  CASE &MODULES# = \"DB_REFS\"\n:    SET &EMODULE# = \"REFS\"\n:    SET &FUNCTION# = \"REFS_DB\"\n:    SET &DB# = \"true\"\n:  CASE &MODULES# = \"DB_EMS\"\n:    SET &EMODULE# = \"EMS\"\n:    SET &FUNCTION# = \"EMS_DB\"\n:    SET &DB# = \"true\"\n:ENDSWITCH\n:PUBLISH &EMODULE#,,WORKFLOW\n:PUBLISH &FUNCTION#,,WORKFLOW\n:PUBLISH &DB#,,WORKFLOW\n\n! Login\n:SET &MODULE_LOGIN# = GET_VAR(CONFIG.SELF-HEALING.DSC-WM-LATAM.V, \"LOGIN\", 1)\n:PUBLISH &MODULE_LOGIN#,,WORKFLOW\n\n:SET &NUMBER_ID# = \"\"\n:PUBLISH &NUMBER_ID#,,WORKFLOW\n\n:SET &CLOSE_NUMBER_ID# = \"\"\n:PUBLISH &CLOSE_NUMBER_ID#,,WORKFLOW\n\n! RPTAB\n:SET &CHECK_RPTAB# = GET_VAR(CONFIG.SELF-HEALING.DSC-WM-LATAM.V, \"CHECK_RPTAB\", 1)\n:PUBLISH &CHECK_RPTAB#,,WORKFLOW\n\n! Incident Site Update\n:SET &INC_SITE_UPDATE# = \"false\"\n:PUBLISH &INC_SITE_UPDATE#,,WORKFLOW"
+  }
+}

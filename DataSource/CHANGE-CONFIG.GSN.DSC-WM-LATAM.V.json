@@ -1,0 +1,43 @@
+{
+  "dataSourceType": "LOCAL_KEY_VALUE_STORE",
+  "dataType": "STRING",
+  "description": "Change main config",
+  "errorHandling": "INIT",
+  "folder": "DSC-WM-LATAM",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "validity": "FREE",
+  "records": 
+  [
+    {
+      "key": "change_task_valid",
+      "value": "Assigned,,,,"
+    },
+    {
+      "key": "gsn_context_change_ctask_update",
+      "value": "cchm_change_task_update.do?SOAP,,,,"
+    },
+    {
+      "key": "gsn_context_change_get",
+      "value": "api/now/table/task?number=,,,,"
+    },
+    {
+      "key": "gsn_context_change_get_parameters",
+      "value": "&sysparm_fields=sys_id,state,active,parent,assignment_group&sysparm_limit=1&sysparm_display_value=true&sysparm_exclude_reference_link=true,,,,"
+    },
+    {
+      "key": "gsn_context_change_task_read",
+      "value": "api/now/table/change_task?number=,,,,"
+    },
+    {
+      "key": "gsn_protocol",
+      "value": "https,,,,"
+    },
+    {
+      "key": "gsn_url",
+      "value": "servicenow.dhl.com,,,,"
+    }
+  ]
+}

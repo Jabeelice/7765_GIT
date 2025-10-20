@@ -1,0 +1,69 @@
+{
+  "description": "Read Incident",
+  "endpoint": "ServiceNow.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Rest.rr",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":IF &INC_STATE# < 0\n:  PRINT \"ERROR - The status of the ticket is not actionable!\"\n:  SET &CTASK_VALID# = \"false\"\n:  SET &ALERT_MESSAGE# = GET_VAR(MAIN-CONFIG.GSN.DSC-WM-LATAM.V, \"ALERT_MESSAGE_STATE\", 1)\n:ELSE\n:  IF &INC_STATE# > 2\n:    PRINT \"ERROR - The status of the ticket is not actionable!\"\n:    SET &INC_VALID# = \"false\"\n:    SET &ALERT_MESSAGE# = GET_VAR(MAIN-CONFIG.GSN.DSC-WM-LATAM.V, \"ALERT_MESSAGE_STATE\", 1)\n:  ELSE\n:    IF &INC_ASSIGNED_TO# = \"1512a59adb9bdb4067affb261d961989\"\n:      PRINT \"INFO - The status of the ticket is valid\"\n:      SET &INC_VALID# = \"true\"\n:    ELSE\n:      PRINT \"ERROR - The assignee of the ticket is not actionable!\"\n:      SET &CTASK_VALID# = \"false\"\n:      SET &ALERT_MESSAGE# = GET_VAR(MAIN-CONFIG.GSN.DSC-WM-LATAM.V, \"ALERT_MESSAGE_ASSIGNEE\", 1)\n:    ENDIF\n:  ENDIF\n:ENDIF\n:PUBLISH &INC_VALID#,,WORKFLOW\n:PUBLISH &ALERT_MESSAGE#,,WORKFLOW\n\n:SET &TMP# = STR_SUB('${SYS_ID#}', '[','')\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n:SET &SYS_ID# = &TMP#\n:PUBLISH &SYS_ID#,,TOP\n",
+  "preScript": ":INC PICK.INCIDENT-CONFIG.GSN.DSC-WM-LATAM.INCL\n:INC READ.INCIDENT-CONFIG.GSN.DSC-WM-LATAM.INCL\n\n!:READ &GSN_READ_URL#,,,&SC_GSN_READ_URL#\n:SET &GSN_READ_URL# = &SC_GSN_READ_URL#\n:SET &GSN_FULL_URL# = \"&GSN_READ_URL#${IN_TICKET_ID}\"\n:SET &GSN_READ_URL# = &SC_GSN_CONTEXT_READ#\n:SET &GSN_PART_URL# = \"&GSN_READ_URL#${IN_TICKET_ID}\"\n:PUB &GSN_PART_URL#,,TASK",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "",
+    "headers": "responseTimeout=60\n",
+    "method": "GET",
+    "resultVariableLevel": "SELF",
+    "url": "${GSN_PART_URL#}"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_TICKET_ID",
+      "title": "IN_TICKET_ID"
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "INC_ASSIGNED_TO#",
+      "outputFormat": "JSON",
+      "title": "&INC_ASSIGNED_TO#",
+      "outputDefinition": {
+        "dataPath": "$.result[0].assigned_to.value"
+      }
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "INC_STATE#",
+      "outputFormat": "JSON",
+      "title": "&INC_STATE#",
+      "outputDefinition": {
+        "dataPath": "$.result[0].state"
+      }
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "SYS_ID#",
+      "outputFormat": "JSON",
+      "title": "&SYS_ID#",
+      "outputDefinition": {
+        "dataPath": "$.result[*].sys_id"
+      }
+    }
+  ]
+}

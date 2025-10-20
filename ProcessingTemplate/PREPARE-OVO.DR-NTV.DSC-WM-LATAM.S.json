@@ -1,0 +1,20 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":IF &TICKET_TYPE# = \"\"\n:  IF &NUMBER_ID# = \"\"\n:    SET &OVO_M# = &RUN_ID#\n:  ELSE\n:    SET &OVO_M# = &NUMBER_ID#\n:  ENDIF\n:ELSE\n:  SET &OVO_M# = &TICKET#\n:ENDIF\n:PUBLISH &OVO_M#,,WORKFLOW"
+  }
+}

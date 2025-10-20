@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":PRINT \"RESTORE COMPLETED\"\n:SET &RESTORE_COMPLETED# = \"true\"\n:PUBLISH &RESTORE_COMPLETED#,,TOP\n\n!:SET &JOBNR#  = SYS_ACT_PARENT_NR()\n!:READ &JOBNR#,,,&JOBNR#\n!:SET &TASKNR# = GET_UC_OBJECT_NR(\"PREPARE-CONTINUE.UPGRADE.DSC-WM-LATAM.S\")\n!:READ &TASKNR#,,,&TASKNR#\n!:SET &STATUS# = MODIFY_UC_OBJECT(&JOBNR#, RELEASE, &TASKNR#)\n\n!:SET &WMSNR#  = GET_UC_OBJECT_NR(\"MODULE-WMS.UPGRADE.DSC-WM-LATAM.WST\")\n!:SET &REFSNR# = GET_UC_OBJECT_NR(\"MODULE-REFS.UPGRADE.DSC-WM-LATAM.WST\")\n!:SET &RWNR#   = GET_UC_OBJECT_NR(\"MODULE-RW.UPGRADE.DSC-WM-LATAM.WST\")\n!:SET &EMSNR#  = GET_UC_OBJECT_NR(\"MODULE-EMS.UPGRADE.DSC-WM-LATAM.WST\")\n\n:SET &WMSNR#  = ${MODULE_WMS_ID#}\n:SET &REFSNR# = ${MODULE_REFS_ID#}\n:SET &RWNR#   = ${MODULE_RW_ID#}\n:SET &EMSNR#  = ${MODULE_EMS_ID#}\n\n:P &WMSNR#  \n:P &REFSNR# \n:P &RWNR#  \n:P &EMSNR#  \n\n!:SET &RET#    = CANCEL_UC_OBJECT(&WMSNR#, \"ENDED_CANCEL\")\n!:SET &RET#    = CANCEL_UC_OBJECT(&REFSNR#, \"ENDED_CANCEL\")\n!:SET &RET#    = CANCEL_UC_OBJECT(&RWNR#, \"ENDED_CANCEL\")\n!:SET &RET#    = CANCEL_UC_OBJECT(&EMSNR#, \"ENDED_CANCEL\")"
+  }
+}

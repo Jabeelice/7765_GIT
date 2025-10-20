@@ -1,0 +1,856 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Rebuild OS instance flow has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "",
+        "IN_MODULE#": "",
+        "IN_MODULE_STATUS#": "",
+        "IN_RUN_ID#": "${RUN_ID#}"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Retrieving instance data started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Retrieving instance data from AFSM has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "GET-INSTANCE-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "GET-INSTANCE-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "GET-INSTANCE-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+      "weight": "1",
+      "templateParameters": {
+        "IN_AFSM_ID#": "${AFSM_ID#}",
+        "IN_INSTANCE#": "${INSTANCE_NAME#}",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MODULES#": "${REST_MODULES#}",
+        "IN_RUN_ID#": "${RUN_ID#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Retrieving instance data finished",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Retrieving instance data from AFSM has finished",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-INSTANCE-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "GET-INSTANCE-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Creation of ZABBIX started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Creation of ZABBIX maintenance window has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "IN_AGENT": "${WMS_PRIMARY_SERVER#}",
+        "IN_AGENT#": null,
+        "IN_LOGIN#": null,
+        "IN_WMS_USER": "${WMS_USERNAME#}",
+        "IN_WMS_USER#": null,
+        "IN_WORKFLOW": "REBUILD-OS.DSC-WM-LATAM.WST",
+        "IN_WORKFLOW#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "ALERT.DSC-WM-LATAM.JLIN",
+      "priority": "0",
+      "processingTemplate": "ALERT.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "ALERT.DSC-WM-LATAM.JLIN",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${ZABBIX_MAINTENANCESID#}",
+            "operator": "NE",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_EMAIL#": null,
+        "IN_MAIL": "ZABBIX_ALERT_EMAIL",
+        "IN_MESSAGE": "ZABBIX_ALERT_MESSAGE",
+        "IN_MESSAGE#": null,
+        "IN_SUBJECT": "ZABBIX_ALERT_SUBJECT",
+        "IN_SUBJECT#": null,
+        "PART": "${TOP_PART}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "predecessor": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Zabbix maintenance window not created",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${ZABBIX_MAINTENANCESID#}",
+            "operator": "NE",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Zabbix maintenance window was not created",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "predecessor": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.5",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Zabbix maintenance window created",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${ZABBIX_MAINTENANCESID#}",
+            "operator": "EQ",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Zabbix maintenance window ${ZABBIX_MAINTENANCESID#} was created",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "ALERT.DSC-WM-LATAM.JLIN",
+          "predecessor": "ALERT.DSC-WM-LATAM.JLIN",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE-STOP.REBUILD-OS.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PREPARE-STOP.REBUILD-OS.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "PREPARE-STOP",
+      "weight": "1",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.5",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.5",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "STOP-CORE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "STOP-CORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "STOP-CORE",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE-STOP.REBUILD-OS.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE-STOP.REBUILD-OS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE-BACKUP.REBUILD-OS.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PREPARE-BACKUP.REBUILD-OS.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "PREPARE-BACKUP",
+      "weight": "1",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "STOP-CORE.DSC-WM-LATAM.WST",
+          "predecessor": "STOP-CORE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "BACKUP-CORE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "BACKUP-CORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "BACKUP-CORE",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE-BACKUP.REBUILD-OS.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE-BACKUP.REBUILD-OS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+      "weight": "1",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "BACKUP-CORE.DSC-WM-LATAM.WST",
+          "predecessor": "BACKUP-CORE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-ROOT-SCRIPT.REBUILD-OS.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-ROOT-SCRIPT.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "REPLICATE_PRINTERS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTANCE_NAME#}",
+            "operator": "NE",
+            "value": "${FIRST_INSTANCE_NAME#}"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PARAMETERS#": "'export' '${SERVER_NAME#}'",
+        "SCRIPT_NAME#": "${REPLICATE_PRINTERS_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "",
+        "STEP#": "REPLICATE_PRINTERS"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+          "predecessor": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT.REBUILD-OS.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "REPLICATE_CERTIFICATE",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTANCE_NAME#}",
+            "operator": "NE",
+            "value": "${FIRST_INSTANCE_NAME#}"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PARAMETERS#": "'export' '${SERVER_NAME#}'",
+        "SCRIPT_NAME#": "${REPLICATE_CERT_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "",
+        "STEP#": "REPLICATE_CERTIFICATE"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+          "predecessor": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT.REBUILD-OS.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "REPLICATE_AUTOMIC_KEY",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTANCE_NAME#}",
+            "operator": "NE",
+            "value": "${FIRST_INSTANCE_NAME#}"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PARAMETERS#": "'export'",
+        "SCRIPT_NAME#": "${REPLICATE_A_KEY_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "",
+        "STEP#": "REPLICATE_AUTOMIC_KEY"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+          "predecessor": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SERVER-INFO-SCRIPT.REBUILD-OS.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SERVER-INFO-SCRIPT.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "GET_SERVER_INFO",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "PARAMETERS#": "",
+        "SCRIPT_NAME#": "${GET_SERVER_INFO_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "",
+        "STEP#": "GET_SERVER_INFO"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+          "predecessor": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SUDO-SCRIPT-NL.REBUILD-OS.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SUDO-SCRIPT-NL.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "REPLICATE_MQS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTANCE_NAME#}",
+            "operator": "NE",
+            "value": "${FIRST_INSTANCE_NAME#}"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PARAMETERS#": "'export' '${SERVER_NAME#}'",
+        "SCRIPT_NAME#": "${REPLICATE_MQS_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "mqm",
+        "STEP#": "REPLICATE_MQS"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+          "predecessor": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SUDO-SCRIPT-NL.REBUILD-OS.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "RUN-SUDO-SCRIPT-NL.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "REPLICATE_ZABBIX_PSK",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTANCE_NAME#}",
+            "operator": "NE",
+            "value": "${FIRST_INSTANCE_NAME#}"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PARAMETERS#": "'export'",
+        "SCRIPT_NAME#": "${REPLICATE_Z_PSK_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "zabbix",
+        "STEP#": "REPLICATE_ZABBIX_PSK"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+          "predecessor": "PUBLISH-BACKUPS.REBUILD-OS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "description": "Close Change Task",
+  "endpoint": "UpdateCtask.Gsn.Gbl.ep",
+  "endpointType": "SOAP_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Soap.rr",
+  "owner": "TDROBISZ",
+  "postScript": ":SET &CTASK_UPDATE_STATUS# = \"${CTASK_UPDATE_STATUS}\"\n:PUBLISH &CTASK_UPDATE_STATUS#,,WORKFLOW",
+  "preScript": "\n:SET &IN_CLOSE_NOTES# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,CTASK_CLOSE_NOTES,1)\n:SET &IN_CHANGE_TASK_STATE# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,CTASK_CLOSE_STATE,1)\n:SET &IN_CHANGE_TASK_CLOSE_CODE# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,CTASK_CLOSE_CODE,1)\n\n\n:INC PICK.CHANGE-CONFIG.GSN.DSC-WM-LATAM.INCL\n:INC READ.CHANGE-CONFIG.GSN.DSC-WM-LATAM.INCL\n\n!:SET &GSN_FULL_URL# = &SC_GSN_CTASK_UPDATE_URL#\n\n:DEFINE &ACT#, string, 2\n:SET &TMP1# = \"${IN_CHANGE_CTASK}\"\n:IF &TMP1# <> \"/\"\n:FILL &ACT#[] = STR_SPLIT(&TMP1#, \"/\")\n:SET &CHANGE_REQUEST# = &ACT#[1]\n:SET &CHANGE_TASK# = &ACT#[2]\n:ELSE \n:SET &CHANGE_REQUEST# = \"\"\n:SET &CHANGE_TASK# = \"\"\n:ENDIF\n\n\n:PUB &CHANGE_REQUEST# \n:PUB &CHANGE_TASK# \n\n:SET &NEWLINE# = UC_CRLF()\n:SET &TMP_STR# = STR_SUB(&IN_CLOSE_NOTES#,&NEWLINE#,\"\\n\")\n:RESOLVE &CLOSE_NOTES# = \"&TMP_STR#\"\n\n\n:PUB &CLOSE_NOTES#\n\n:PUB &IN_CHANGE_TASK_STATE#\n:PUB &IN_CHANGE_TASK_CLOSE_CODE#\n\n",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "SOAP_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "SOAP_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "operation": "update",
+    "payload": "<dhl:update xmlns:dhl=\"https://servicenow.dhl.com/ns/cchm_change_task_update/\">\n      <change_request>${CHANGE_REQUEST#}<\/change_request>\n      <change_task>${CHANGE_TASK#}<\/change_task>\n<!-- optional -->\n      <state>${IN_CHANGE_TASK_STATE#}<\/state>\n      <u_close_code>${IN_CHANGE_TASK_CLOSE_CODE#}<\/u_close_code>\n      <close_notes>${CLOSE_NOTES#}<\/close_notes>\n<\/dhl:update>",
+    "port": "cchm_change_task_updateSOAP",
+    "responseVariableName": "TASK_CLOSE_RESP#",
+    "saveResponse": true,
+    "service": "cchm_change_task_update"
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "ServiceNow.Gbl.sem",
+      "processingStatus": "COMPLETED",
+      "processingType": "TASK",
+      "resource": "ServiceNow.Gbl.sem",
+      "resourceType": "BINARY_SEMAPHORE",
+      "semaphoreState": "ON",
+      "serverNodeType": "SOAP_WEB_SERVICE",
+      "taskType": "SOAP_WEB_SERVICE_CALL"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "defaultValue": "${TOP_PART}",
+      "editorType": "TEXT",
+      "name": "PART",
+      "title": "PART"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${CHANGE_TASK_REQUEST#}/${TICKET#}",
+      "editorType": "TEXT",
+      "name": "IN_CHANGE_CTASK",
+      "title": "IN_CHANGE_CTASK"
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "CTASK_UPDATE_STATUS",
+      "outputFormat": "XML",
+      "title": "CTASK_UPDATE_STATUS",
+      "outputDefinition": {
+        "dataPath": "/response_status",
+        "outputLevel": "SELF"
+      }
+    }
+  ]
+}

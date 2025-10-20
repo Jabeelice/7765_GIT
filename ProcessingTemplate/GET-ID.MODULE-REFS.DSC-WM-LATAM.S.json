@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":DEFINE &MODULE_REFS_ID#,unsigned\n\n\n:SET &MODULE_REFS_ID# = SYS_ACT_PARENT_NR(ACT)\n:P &MODULE_REFS_ID#\n:PUB &MODULE_REFS_ID#,,TOP\n\n"
+  }
+}

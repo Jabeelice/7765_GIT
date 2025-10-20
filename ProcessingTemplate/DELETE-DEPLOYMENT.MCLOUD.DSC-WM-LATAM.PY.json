@@ -1,0 +1,49 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Linux.apf",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &RID# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=*\")\n:PROCESS &RID#\n:  SET &LINE# = GET_PROCESS_LINE(&RID#)\n:  PRINT &LINE#\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,WORKFLOW\n!:  IF &EXITCODE# > 0\n!:    MODIFY_STATE RETCODE=1800\n!:  ENDIF\n:ENDPROCESS",
+  "preScript": ":SET &SYSTEM_CONFIG_DATABASE# = 'CONFIG.MCLOUD.DSC-WM-LATAM.V'\n\n:SET &SC_MCLOUD_URL#                = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_url\", 1)\n:SET &SC_MCLOUD_PROTOCOL#           = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_protocol\", 1)\n:SET &SC_MCLOUD_LOGIN#              = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_login\", 1)\n:SET &SC_MCLOUD_LOGIN_API#          = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_login_api\", 1)\n   \n:SET &SC_MCLOUD_CREATE_DEPLOYMENT#  = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_create_deployment\", 1)\n:SET &SC_MCLOUD_DELETE_DEPLOYMENT#  = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_delete_deployment\", 1)\n:SET &SC_MCLOUD_DEPLOYMENT_STATUS#  = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_deployment_status\", 1)\n:SET &SC_MCLOUD_GET_DEPLOYMENT#     = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_get_deployment\", 1)\n:SET &SC_MCLOUD_EXEC_NAS_SCRIPT#    = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_execute_nas_script\", 1)\n!:SET &SC_MCLOUD_LOGIN_OBJECT#       = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_login_object\", 1)\n   \n:SET &SC_MCLOUD_LOGIN_URL#          = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_LOGIN#\"\n:SET &SC_MCLOUD_LOGIN_API_URL#      = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_LOGIN_API#\"\n:SET &SC_MCLOUD_CREATE_URL#         = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_CREATE_DEPLOYMENT#\"\n:SET &SC_MCLOUD_DELETE_URL#         = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_DELETE_DEPLOYMENT#\"\n:SET &SC_MCLOUD_GET_URL#            = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_GET_DEPLOYMENT#\"\n:SET &SC_MCLOUD_EXEC_URL#           = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_EXEC_NAS_SCRIPT#\"\n:SET &SC_MCLOUD_STATUS_URL#         = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_DEPLOYMENT_STATUS#\"\n   \n:SET &MCLOUD_LOGIN_URL# = &SC_MCLOUD_LOGIN_URL#\n:SET &MCLOUD_LOGIN_API_URL# = &SC_MCLOUD_LOGIN_API_URL#\n\n:SET &MCLOUD_DELETE_URL# = &SC_MCLOUD_DELETE_URL#\n:SET &MCLOUD_DELETE_URL# = STR_SUBSTITUTE(&MCLOUD_DELETE_URL#, \"{ID}\", ${IN_DEPLOYMENT_ID#})\n\n:PUB &MCLOUD_LOGIN_URL#\n:PUB &MCLOUD_LOGIN_API_URL#\n:PUB &MCLOUD_DELETE_URL#",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "PYTHON",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "# DELETE DEPLOYMENT\n\nimport requests\nimport json\nimport os\nimport getpass\nimport sys\nimport time\n\nuser = str(getpass.getuser())\nhost = str(os.uname()[1])\nprint(\">> Login URL: ${MCLOUD_LOGIN_URL#}\")\nprint(\">> Login API URL: ${MCLOUD_LOGIN_API_URL#}\")\nprint(\">> Delete deployment URL: ${MCLOUD_DELETE_URL#}\")\n\n# GET REFRESH TOKEN\ndef getRefreshToken():\n  print(\"------------------------------------------------------------------------------------------\")\n  print(\"Getting refresh token ...\")\n  print(\"------------------------------------------------------------------------------------------\")\n\n  username=\"${IN_MCLOUD_USERNAME#}\"\n  password=\"${IN_MCLOUD_PASSWORD#}\"\n  headers = {\"Content-Type\": \"application/json\", \"Accept\": \"application/json\"}\n  data = {\"username\":\"${IN_MCLOUD_USERNAME#}\",\"password\":\"${IN_MCLOUD_PASSWORD#}\",\"domain\":\"prg-dc.dhl.com\",\"scope\":\"\"}\n  url = \"${MCLOUD_LOGIN_URL#}\"\n\n  try:\n    resp = requests.post(url, data=json.dumps(data), auth=(username, password), headers = headers)\n    jsonResponse = json.loads(resp.text)\n    refreshToken = jsonResponse[\"refresh_token\"]\n    print(\"------------------------------------------------------------------------------------------\")\n    print(\"refreshToken = \" + refreshToken)\n    print(\"------------------------------------------------------------------------------------------\")\n    return refreshToken\n  except Exception as e:\n    print(\"------------------------------------------------------------------------------------------\")\n    print(\"ERROR: Unable to get refresh token!\")\n    print(e)\n    print(\"EXITCODE=1\")\n    print(\"------------------------------------------------------------------------------------------\")\n    exit(1)\n\n# GET ACCESS TOKEN\ndef getAccessToken(refreshToken):\n  print(\"------------------------------------------------------------------------------------------\")\n  print(\"Getting access token ...\")\n  print(\"------------------------------------------------------------------------------------------\")\n\n  data = {\"refreshToken\":\"\" + refreshToken +\"\"}\n  url = \"${MCLOUD_LOGIN_API_URL#}\"\n  headers = {\"Content-Type\": \"application/json\", \"Accept\": \"application/json\"}\n  try:\n    resp = requests.post(url, data=json.dumps(data), headers = headers)\n    jsonResponse = json.loads(resp.text)\n    accessToken = jsonResponse[\"token\"]\n    print(\"------------------------------------------------------------------------------------------\")\n    print(\"accessToken = \" + accessToken)\n    print(\"------------------------------------------------------------------------------------------\")\n    return accessToken\n  except Exception as e:\n    print(\"------------------------------------------------------------------------------------------\")\n    print(\"ERROR: Unable to get access token!\")\n    print(e)\n    print(\"EXITCODE=1\")\n    print(\"------------------------------------------------------------------------------------------\")\n    exit(1)\n    \n# DELETE DEPLOYMENT\nrefreshToken = getRefreshToken()\naccessToken = getAccessToken(refreshToken)\n\nprint(\"------------------------------------------------------------------------------------------\")\nprint(\"Deleting deployment '${IN_DEPLOYMENT_ID#}' ...\")\nprint(\"------------------------------------------------------------------------------------------\")\n\ndata = {\"actionId\":\"Deployment.custom.delete.immediately\",\n           \"inputs\":{\n              \"preApproved\":True\n            },\n            \"reason\":\"Rebuild OS\"\n}\n\nheaders = {\"Authorization\": \"Bearer \" + str(accessToken) + \"\", \"Content-Type\": \"application/json\", \"Accept\": \"application/json\"}\nurl = \"${MCLOUD_DELETE_URL#}\"\ntry:\n  resp = requests.post(url, data=json.dumps(data), headers = headers)\n  jsonResponse = json.loads(resp.text)\n  print(resp.text)\n  print(\"deploymentId=\" + str(jsonResponse[\"deploymentId\"]))\n  print(\"EXITCODE=0\")\n  exit()\nexcept Exception as e:\n  print(\"------------------------------------------------------------------------------------------\")\n  print(\"ERROR: Unable to delete deployment with ID '${IN_DEPLOYMENT_ID#}'!\")\n  print(e)\n  print(\"EXITCODE=1\")\n  print(\"------------------------------------------------------------------------------------------\")\n  exit(1)"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_DEPLOYMENT_ID#",
+      "title": "IN_DEPLOYMENT_ID#"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${TOP_MCLOUD_USERNAME}",
+      "editorType": "TEXT",
+      "name": "IN_MCLOUD_USERNAME#",
+      "title": "IN_MCLOUD_USERNAME#"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${TOP_MCLOUD_PASSWORD}",
+      "editorType": "TEXT",
+      "name": "IN_MCLOUD_PASSWORD#",
+      "title": "IN_MCLOUD_PASSWORD#"
+    }
+  ]
+}

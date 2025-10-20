@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! Deploy failover modules\n:SET &WMS_FAIL_DEPLOY#  = \"false\"\n:SET &REFS_FAIL_DEPLOY# = \"false\"\n:SET &RW_FAIL_DEPLOY#   = \"false\"\n:SET &EMS_FAIL_DEPLOY#  = \"false\"\n\n:IF &WMS_FAILOVER_SERVER# <> \"\"\n:  SET &WMS_FAIL_DEPLOY# = \"true\"\n:ENDIF\n\n:IF &REFS_FAILOVER_SERVER# <> \"\"\n:  SET &REFS_FAIL_DEPLOY# = \"true\"\n:ENDIF\n\n:IF &RW_FAILOVER_SERVER# <> \"\"\n:  SET &RW_FAIL_DEPLOY# = \"true\"\n:ENDIF\n\n:IF &EMS_FAILOVER_SERVER# <> \"\"\n:  SET &EMS_FAIL_DEPLOY# = \"true\"\n:ENDIF\n\n:PUBLISH &WMS_FAIL_DEPLOY#,,WORKFLOW\n:PUBLISH &REFS_FAIL_DEPLOY#,,WORKFLOW\n:PUBLISH &RW_FAIL_DEPLOY#,,WORKFLOW\n:PUBLISH &EMS_FAIL_DEPLOY#,,WORKFLOW"
+  }
+}

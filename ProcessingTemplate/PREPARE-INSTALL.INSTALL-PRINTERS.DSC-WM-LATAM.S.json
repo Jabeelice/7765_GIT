@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":IF &WMS_PRIMARY_SERVER# = &RW_PRIMARY_SERVER#\n:  SET &RW_INSTALL# = \"false\"\n:ENDIF\n\n:IF &WMS_FAILOVER_SERVER# = &RW_FAILOVER_SERVER#\n:  SET &RW_FAIL_INSTALL# = \"false\"\n:ENDIF\n\n:PUBLISH &RW_INSTALL#,,WORKFLOW\n:PUBLISH &RW_FAIL_INSTALL#,,WORKFLOW\n\n"
+  }
+}

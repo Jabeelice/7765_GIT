@@ -1,0 +1,48 @@
+{
+  "description": "Create maintenance",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "${AGENT#}",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": "! maintenanceid:7083E\n:SET &ZABBIX_MAINTENANCESID# = \"\"\n:SET &HND# = PREP_PROCESS_REPORT(,,REP,\"*maintenanceid:*\")\n:PROCESS &HND#\n:  SET &LINE# = GET_PROCESS_LINE(&HND#)\n:  PRINT &LINE#\n:  SET &ZABBIX_MAINTENANCESID# = STR_FIND(&LINE#,\":\")\n:  SET &ZABBIX_MAINTENANCESID# = ADD(&ZABBIX_MAINTENANCESID#,1)\n:  SET &ZABBIX_MAINTENANCESID# = SUBSTR(&LINE#,&ZABBIX_MAINTENANCESID#)\n:  PUBLISH &ZABBIX_MAINTENANCESID#,,WORKFLOW\n:ENDPROCESS\n:CLOSE_PROCESS &HND#\n",
+  "preScript": "!:INC PICK.SYSTEM-CONFIG.ZABBIX.DSC-WM-LATAM.INCL\n!:INC READ.SYSTEM-CONFIG.ZABBIX.DSC-WM-LATAM.INCL\n!\n!:READ &ZABBIX_FULL_URL#,,,&SC_ZABBIX_FULL_URL#\n!:READ &ZABBIX_USERNAME#,,,&SC_ZABBIX_USERNAME#\n!:READ &ZABBIX_PASSWORD#,,,&SC_ZABBIX_PASSWORD#\n!\n!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB\n!\n!:SET &RUNNR# = SYS_ACT_ME_NR()\n!:SET &PNUM#  = SYS_ACT_PARENT_NR()\n!:IF &PNUM# = ''\n!:  SET &PNUM# = &RUNNR#\n!:ENDIF\n!:SET &ZABBIX_REQUESTID# = FORMAT(&PNUM#)\n!:PUBLISH &ZABBIX_REQUESTID#,,TASK\n!\n:DEFINE &AAGENT#,string,3\n:FILL &AAGENT#[] = STR_SPLIT(${IN_AGENT},\".\")\n:SET &AGENT_UC# = \"&AAGENT#[1]\"\n:SET &AGENT# = \"&AGENT_UC#.os\"\n:PUB &AGENT#\n\n!:SET &LOGIN# = &IN_LOGIN#\n!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB\n\n:SET &ZABBIX_MAINTENANCESID# = \"\"\n:PUBLISH &ZABBIX_MAINTENANCESID#,,WORKFLOW",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SHELL_SCRIPT",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "!====================================== SHELL SCRIPT =====================================\necho \">> Hostname: $HOSTNAME\"\necho \">> Executing: sudo su - ${IN_WMS_USER} -c \\\"/jda_scripts/zabbix/zabbix_automation/zabbix_create_maintenance_window.sh -a ${IN_WORKFLOW}\\\"\"\necho \">> Script output: \"\nsudo su - ${IN_WMS_USER} -c \"/jda_scripts/zabbix/zabbix_automation/zabbix_create_maintenance_window.sh -a ${IN_WORKFLOW}\"\nEXITCODE=$?\nif [[ $EXITCODE -eq 2 ]]; then\n  EXITCODE=0\n  echo \">> Warning: Script exited with exitcode 2!\"\n  echo \"EXITCODE=$EXITCODE\"\nelse\n  echo \"EXITCODE=$EXITCODE\"\nfi\nexit $EXITCODE\n\n!:INCLUDE PCK.ITPA_SHARED.PRV.INCLUDE.CHECK_SHELL_CMD@UNIX\n"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_WMS_USER",
+      "title": "IN_WMS_USER"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_WORKFLOW",
+      "title": "IN_WORKFLOW"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_AGENT",
+      "title": "IN_AGENT"
+    }
+  ]
+}

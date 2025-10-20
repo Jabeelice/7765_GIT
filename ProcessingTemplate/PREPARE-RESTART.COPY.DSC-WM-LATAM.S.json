@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "\n:SET &PRECHECK_SCRIPT_NAME# = GET_VAR(CONFIG.COPY.DSC-WM-LATAM.V,PRECHECK_SCRIPT_NAME,1)\n:SET &CRONTAB_SCRIPT_NAME# = GET_VAR(CONFIG.COPY.DSC-WM-LATAM.V,CRONTAB_SCRIPT_NAME,1)\n:SET &RESTART_SCRIPT_NAME# = GET_VAR(CONFIG.COPY.DSC-WM-LATAM.V,RESTART_SCRIPT_NAME,1)\n:SET &CHECK_SCRIPT_NAME# = GET_VAR(CONFIG.COPY.DSC-WM-LATAM.V, CHECK_SCRIPT_NAME,1)\n:SET &CHECK_COUNT_AFTER_RESTART# = GET_VAR(CONFIG.COPY.DSC-WM-LATAM.V,CHECK_COUNT_AFTER_RESTART,1)\n\n:PUB &PRECHECK_SCRIPT_NAME#\n:PUB &CRONTAB_SCRIPT_NAME#\n:PUB &RESTART_SCRIPT_NAME#\n:PUB &CHECK_SCRIPT_NAME#\n:PUB &CHECK_COUNT_AFTER_RESTART#"
+  }
+}

@@ -1,0 +1,278 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MACHINE_FUNCTION#",
+      "title": "MACHINE_FUNCTION#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE#",
+      "title": "MODULE#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_AGENT#",
+      "title": "MODULE_AGENT#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_URL#",
+      "title": "MODULE_URL#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_USERNAME#",
+      "title": "MODULE_USERNAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "RESTORE_PARAMETERS#",
+      "title": "RESTORE_PARAMETERS#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-DB-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-DB-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "APP_AUTOMIC_PRECHECK",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "${MODULE_USERNAME#}",
+        "SCRIPT_NAME#": "${AUTOMIC_PRECHECK_SCRIPT_NAME#}",
+        "STEP#": "APP_AUTOMIC_PRECHECK"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "APP_PRECHECK",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "",
+        "SCRIPT_NAME#": "${RESTORE_PRECHECK_SCRIPT_NAME#}",
+        "STEP#": "APP_PRECHECK"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-DB-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-DB-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "APP_CRONTAB_COMMENT",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "comment",
+        "SCRIPT_NAME#": "${CRONTAB_SCRIPT_NAME#}",
+        "STEP#": "APP_CRONTAB_COMMENT"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST.3",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "APP_RESTORE",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "${RESTORE_PARAMETERS#}",
+        "SCRIPT_NAME#": "${RESTORE_SCRIPT_NAME#}",
+        "STEP#": "APP_RESTORE"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST.2",
+          "predecessor": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST.4",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "APP_POSTCHECK",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "${MODULE#} ${MODULE_URL#}",
+        "SCRIPT_NAME#": "${RESTORE_POSTCHECK_SCRIPT_NAME#}",
+        "STEP#": "APP_POSTCHECK"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST.3",
+          "predecessor": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST.5",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "APP_CRONTAB_UNCOMMENT",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "uncomment",
+        "SCRIPT_NAME#": "${CRONTAB_SCRIPT_NAME#}",
+        "STEP#": "APP_CRONTAB_UNCOMMENT"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST.4",
+          "predecessor": "RUN-SCRIPT-RESTORE.REBUILD-OS.DSC-WM-LATAM.WST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    }
+  ]
+}

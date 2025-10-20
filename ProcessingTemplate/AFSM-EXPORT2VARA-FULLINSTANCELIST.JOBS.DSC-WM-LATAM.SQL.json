@@ -1,0 +1,28 @@
+{
+  "description": "AFSM | Export app instances names into VARA object",
+  "endpoint": "AFSM-EXPORT2VARA.CONN.DSC-WM-LATAM.SQL",
+  "endpointType": "ORACLE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Oracle.apf",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": "!==========================================\n!   GLOBAL DHL POST-PROCESS INCLUDE\n!==========================================\n\n!---------- params for OVO Monitoring -----\n! In case you want params from ProcessFlow - coment these two lines below\n:SET &GSN_GROUP# = \"GLOBAL-OPS.MAESTRO\"\n:SET &TICKET_PRIO# = \"R5\"\n!\n\n!Declare a variable, the row, and the value by echoing to the job report\n!in the form:\n!SUBVAR;key;value1;value2;value3;value4;value5\n\n:SET &VARA_OBJECT_NAME#=\"INSTANCE-LIST-FULL-AFSM.DR.DSC-WM-LATAM.V\"\n\n:SET &HND# = PREP_PROCESS_REPORT(,&$RESTART_RUNID#,\"REP\",\"SUBVAR*\")\n\n:PROCESS &HND#\n:   SET &RET# = GET_PROCESS_LINE(&HND#)\n:   PRINT &RET#\n:   SET &S_LEN# = STR_LENGTH(&RET#)\n:   SET &LEN# = &S_LEN# - 7\n:   SET &RET# = STR_CUT(&RET#,8,&LEN#)\n:   P &RET#\n\n:  IF &RET# <> \"\"\n:   DEFINE &DICT#, string, 150\n:   FILL &DICT#[] = STR_SPLIT(&RET#,\";\")\n:   P &DICT#[1]\n:   P &DICT#[2]\n:   P &DICT#[3]\n:   P &DICT#[4]\n:   P &DICT#[5]\n:   P &DICT#[6]\n:   PUT_VAR &VARA_OBJECT_NAME#, &DICT#[1], &DICT#[2], &DICT#[3], &DICT#[4], &DICT#[5], &DICT#[6]\n:  ENDIF\n:ENDPROCESS",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "ORACLE",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "RDBMS_SQL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "SELECT 'SUBVAR' as A,\nins.name,\nins.name as value1,\nCASE\nWHEN av.version LIKE '2009%' or av.version LIKE '2010%' THEN 'LEGACY'\nELSE 'NTV' end as value2,\n--CASE\n--WHEN mf.automic_code='WMS' THEN ins.name||'-WMS'\n--WHEN mf.automic_code='WMS-FAIL' THEN ins.name||'-WMS/FAIL'\n--WHEN mf.automic_code='REFS' THEN ins.name||'-REFS'\n--WHEN mf.automic_code='REFS-FAIL' THEN ins.name||'-REFS/FAIL'\n--WHEN mf.automic_code='RW' THEN ins.name||'-RW'\n--WHEN mf.automic_code='RW-FAIL' THEN ins.name||'-RW/FAIL'\n--WHEN mf.automic_code='EMS' THEN ins.name||'-EMS'\n--WHEN mf.automic_code='EMS-FAIL' THEN ins.name||'-EMS/FAIL'\n--WHEN mf.automic_code='DB_VIP_PRI' THEN ins.name||'-DB_VIP_PRI'\n--WHEN mf.automic_code='DB_WMS_DR' THEN ins.name||'-DB_WMS_DR'\n--WHEN mf.automic_code='DB_WMS' THEN ins.name||'-DB_WMS'\n--WHEN mf.automic_code='DB_WMS_SEC' THEN ins.name||'-DB_WMS_SEC'\n--ELSE 'UNKNOWN' end as key,\nav.version as value3,\nmach.hostname as value4,\n--CASE\n--WHEN mf.automic_code like 'WMS%' THEN ins.moca_port\n--WHEN mf.automic_code like 'REFS%' THEN ins.refs_port\n--WHEN mf.automic_code like 'RW%' THEN ins.rw_port\n--WHEN mf.automic_code like 'EMS%' THEN ins.ems_port\n--WHEN mf.automic_code like 'DB%' THEN mach.port\n--ELSE 'UNKNOWN' end as value2,\n--CASE\n--WHEN mf.automic_code like 'WMS%' THEN ins.name\n--WHEN mf.automic_code like 'REFS%' THEN ins.refs_user\n--WHEN mf.automic_code like 'RW%' THEN ins.rw_user\n--WHEN mf.automic_code like 'EMS%' THEN ins.ems_user\n--WHEN mf.automic_code like 'DB%' THEN mach.sid\n--ELSE 'UNKNOWN' end as value3,\n--CASE\n--WHEN mf.automic_code='WMS' THEN ins.application_url||','||ins.wms_big_ip_url\n--WHEN mf.automic_code='WMS-FAIL' THEN ins.application_failover_url||','||ins.wms_big_ip_url\n--WHEN mf.automic_code='REFS' THEN ins.web_url||','||ins.refs_big_ip_url\n--WHEN mf.automic_code='REFS-FAIL' THEN ins.web_failover_url||','||ins.refs_big_ip_url\n--WHEN mf.automic_code='RW' THEN ins.rw_url||','||ins.rw_big_ip_url\n--WHEN mf.automic_code='RW-FAIL' THEN ins.rw_failover_url||','||ins.rw_big_ip_url\n--WHEN mf.automic_code='EMS' THEN ins.ems_url||','||ins.ems_big_ip_url\n--WHEN mf.automic_code='EMS-FAIL' THEN ins.ems_failover_url||','||ins.ems_big_ip_url\n--WHEN mf.automic_code like 'DB%' THEN ','\n--ELSE 'UNKNOWN' end as value5,\nim.should_run||','||to_char(SYSDATE, 'yyyy-mm-dd') as value5\nFROM instance ins\ninner join instance_machine im on im.instance_id = ins.id and im.deleted != 'Y'\ninner join machine mach on im.machine_id = mach.id and mach.deleted != 'Y'\ninner join afsm_cdm.machine_function mf on mf.deleted != 'Y' and mf.id = machine_function_id\ninner join afsm.APPLICATION_VERSION av on av.id = ins.application_version_id\nwhere ins.deleted != 'Y'\n--and (mf.name like '%App%' or mf.automic_code='DB_VIP_PRI' or mf.automic_code='DB_WMS_DR' or mf.automic_code='DB_WMS' or mf.automic_code='DB_WMS_SEC')\nand (mf.name like 'WMS App')\nand hostname not like 'czchows%' and hostname not like 'czstlws%'\n-- we are interested only in NTV instances with failovers (instances with REFS-FAIL module)\n--and ins.name in (\n--SELECT ins.name as app_instance_name\n--FROM instance ins\n--inner join instance_machine im on im.instance_id = ins.id and im.deleted != 'Y'\n--inner join machine mach on im.machine_id = mach.id and mach.deleted != 'Y'\n--inner join afsm_cdm.machine_function mf on mf.deleted != 'Y' and mf.id = machine_function_id\n--where ins.deleted != 'Y'\n--and mf.automic_code='REFS-FAIL'\n--)\norder by 2"
+  }
+}

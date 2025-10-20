@@ -1,0 +1,674 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "actions": 
+  [
+    {
+      "duration": 10800000,
+      "durationThresholdType": "DURATION",
+      "processingActionType": "NOTIFY_GROUP",
+      "processingEventCategory": "PROCESSING",
+      "processingEventType": "EXECUTING_LONG",
+      "processingCommand": {
+        "notificationGroup": "Notification.DSC-WM-LATAM.grp",
+        "notificationMessageTemplate": "LongExec.DSC-WM-LATAM.msgt"
+      }
+    }
+  ],
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "MAIN-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "MAIN-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "defaultValue": "DB-PASS-CHANGE",
+      "editorType": "TEXT",
+      "name": "TOP_PART",
+      "title": "TOP_PART"
+    }
+  ],
+  "items": 
+  [
+    {
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "AFSM-EXPORT2VARA-FULLINSTANCELIST.JOBS.DSC-WM-LATAM.SQL",
+      "processingTemplate": "AFSM-EXPORT2VARA-FULLINSTANCELIST.JOBS.DSC-WM-LATAM.SQL",
+      "processingType": "TASK",
+      "serverNodeType": "ORACLE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "taskType": "RDBMS_SQL"
+    },
+    {
+      "name": "PREPARE.RUNID.DSC-WM-LATAM.S",
+      "processingTemplate": "PREPARE.RUNID.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "taskType": "AE_SCRIPT"
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PREPARE.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "taskType": "AE_SCRIPT",
+      "weight": "1",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "AFSM-EXPORT2VARA-FULLINSTANCELIST.JOBS.DSC-WM-LATAM.SQL",
+          "predecessor": "AFSM-EXPORT2VARA-FULLINSTANCELIST.JOBS.DSC-WM-LATAM.SQL",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "ORACLE",
+          "taskType": "RDBMS_SQL"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE.RUNID.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE.RUNID.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "GET-DB-SERVERS-DBP.AFSM.DSC-WM-LATAM.JREST",
+      "processingTemplate": "GET-DB-SERVERS-DBP.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "GET-INSTANCE-SERVERS-DBP.AFSM.DSC-WM-LATAM.JREST",
+      "processingTemplate": "GET-INSTANCE-SERVERS-DBP.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-DB-SERVERS-DBP.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "GET-DB-SERVERS-DBP.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "title": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "CHECK_COUNT_AFTER_RESTART#": null,
+        "CHECK_SCRIPT_NAME#": null,
+        "CRONTAB_SCRIPT_NAME#": null,
+        "INSTANCE_NAME#": null,
+        "IN_AGENT": "${WMS_PRIMARY_SERVER#}",
+        "IN_AGENT#": null,
+        "IN_LOGIN#": null,
+        "IN_WMS_USER": "${WMS_USERNAME#}",
+        "IN_WMS_USER#": null,
+        "IN_WORKFLOW": "DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+        "IN_WORKFLOW#": null,
+        "PRECHECK_SCRIPT_NAME#": null,
+        "RESTART_SCRIPT_NAME#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-INSTANCE-SERVERS-DBP.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "GET-INSTANCE-SERVERS-DBP.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE-STOP.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "processingTemplate": "PREPARE-STOP.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "PREPARE-STOP",
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "predecessor": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "STOP-CORE.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "processingTemplate": "STOP-CORE.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "STOP-CORE",
+      "workflowType": "STANDARD",
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE-STOP.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE-STOP.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "GENERATE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "GENERATE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "title": "GENERATE-PASS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "STOP-CORE.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+          "predecessor": "STOP-CORE.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE-CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PREPARE-CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "PREPARE-CHANGE-PASS",
+      "weight": "1",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GENERATE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+          "predecessor": "GENERATE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "title": "CHANGE-PASS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE-CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE-CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "UPDATE-ZABBIX.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "UPDATE-ZABBIX.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "title": "UPDATE-ZABBIX",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "IN_AGENT#": "${WMS_PRIMARY_SERVER#}",
+        "IN_WMS_USER#": "${WMS_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+          "predecessor": "CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE-UPDATE.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PREPARE-UPDATE.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "PREPARE-UPDATE",
+      "weight": "1",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "UPDATE-ZABBIX.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+          "predecessor": "UPDATE-ZABBIX.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "UPDATE-APP.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "UPDATE-APP.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "title": "UPDATE-APP",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE-UPDATE.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE-UPDATE.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE-RESTART.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PREPARE-RESTART.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "taskType": "AE_SCRIPT",
+      "weight": "1",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "UPDATE-APP.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+          "predecessor": "UPDATE-APP.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RESTART-CORE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RESTART-CORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "title": "RESTART-CORE.DSC-WM-LATAM.WST",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE-RESTART.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE-RESTART.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "BREAK.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "BREAK.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "BREAK-ASK",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "true",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RESTART-CORE.DSC-WM-LATAM.WST",
+          "predecessor": "RESTART-CORE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "BREAK.DB-PASS-CHANGE.DSC-WM-LATAM.S.2",
+      "priority": "0",
+      "processingTemplate": "BREAK.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "BREAK-ASK",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${NTV_LEGACY#}",
+            "operator": "NE",
+            "value": "LEGACY"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "BREAK.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+          "predecessor": "BREAK.DB-PASS-CHANGE.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CLOSE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "CLOSE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "title": "CLOSE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "CHECK_COUNT_AFTER_RESTART#": null,
+        "CHECK_SCRIPT_NAME#": null,
+        "CRONTAB_SCRIPT_NAME#": null,
+        "INSTANCE_NAME#": null,
+        "IN_AGENT": "${WMS_PRIMARY_SERVER#}",
+        "IN_AGENT#": null,
+        "IN_LOGIN#": null,
+        "IN_M_ID": "${ZABBIX_MAINTENANCESID#}",
+        "IN_M_ID#": null,
+        "IN_WMS_USER": "${WMS_USERNAME#}",
+        "IN_WMS_USER#": null,
+        "PRECHECK_SCRIPT_NAME#": null,
+        "RESTART_SCRIPT_NAME#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "BREAK.DB-PASS-CHANGE.DSC-WM-LATAM.S.2",
+          "predecessor": "BREAK.DB-PASS-CHANGE.DSC-WM-LATAM.S.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    }
+  ]
+}

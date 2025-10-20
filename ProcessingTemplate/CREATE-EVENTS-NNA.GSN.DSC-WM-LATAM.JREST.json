@@ -1,0 +1,71 @@
+{
+  "description": "Create Event node not active",
+  "endpoint": "ServiceNow.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "ignoreProcessingStateRegistry": true,
+  "node": "AnowEngine.Rest.rr",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": "!:PUBLISH &NUMBER_ID#,,WORKFLOW\n!:PUBLISH &SYS_ID#,,WORKFLOW\n\n\n:IF  ${EXITCODE#} > 0\n:   STOP MSG, 14, \"Error in script, waiting for manual action\"\n:ELSE\n:   PRINT \"Have a nice day!\"\n:ENDIF\n\n\n:IF  ${AGENT_ALIVE#} = N\n:   STOP MSG, 14, \"Agent is not running, waiting for manual action\"\n:ELSE\n:   PRINT \"Have a nice day!\"\n:ENDIF",
+  "preScript": ":INC PICK.EVENT-CONFIG.GSN.DSC-WM-LATAM.INCL\n:INC READ.EVENT-CONFIG.GSN.DSC-WM-LATAM.INCL\n\n!:READ &GSN_CREATE_URL#,,,&SC_GSN_CREATE_URL#\n!:SET &GSN_FULL_URL# = \"&GSN_CREATE_URL#\"\n\n:SET &GSN_CREATE_URL# = &SC_GSN_CONTEXT_CREATE#\n:SET &GSN_PART_URL# = \"&GSN_CREATE_URL#\"\n:PUB &GSN_PART_URL#\n\n:SET &IN_INCIDENT_TYPE#  = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,EVENT_INCIDENT_TYPE,1)\n:SET &IN_CONTACT_TYPE#  = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,EVENT_CONTACT_TYPE,1)\n:SET &IN_IMPACT#  = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,EVENT_IMPACT,1)\n:SET &IN_U_IMPACTED_BUSINESS_UNIT#  = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,EVENT_IMPACTED_BUSSINESS_UNIT,1)\n:SET &IN_CATEGORY_LEVEL1#  = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,EVENT_CATEGORY_LEVEL,1)\n:SET &IN_ASSIGNMENT_GROUP#  = '${EVENT_ASSIGNMENT_GROUP#}'\n:SET &IN_STATE#  = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,EVENT_STATE,1)\n:SET &IN_SHORT_DESCRIPTION#  = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,EVENT_SHORT_DESCRIPTION,1)\n:IF &IN_DESCRIPTION = '' \n:SET &IN_DESCRIPTION#  = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,EVENT_DESCRIPTION,1)\n:ENDIF\n:SET &IN_CALLER#  = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,EVENT_CALLER,1)\n:SET &IN_SERVICE#  = '${CHILD_SERVICE#}'\n:SET &IN_CMDB_CI#  = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,EVENT_CONFIGURATION_ITEM,1)\n:SET &IN_LOCATION#  = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,EVENT_LOCATION,1)\n:SET &NEWLINE# = UC_CRLF()\n:SET &TMP_STR# = STR_SUB(&IN_DESCRIPTION#,&NEWLINE#,\"\\n\")\n:RESOLVE &IN_DESCRIPTION# = \"&TMP_STR#\"\n:RESOLVE &IN_SHORT_DESCRIPTION# = \"&IN_SHORT_DESCRIPTION#\"\n:RESOLVE &IN_CMDB_CI# = \"&IN_CMDB_CI#\"\n\n:PUB &IN_INCIDENT_TYPE#,,TASK\n:PUB &IN_CONTACT_TYPE#,,TASK\n:PUB &IN_IMPACT#,,TASK \n:PUB &IN_U_IMPACTED_BUSINESS_UNIT#,,TASK \n:PUB &IN_CATEGORY_LEVEL1#,,TASK \n:PUB &IN_ASSIGNMENT_GROUP#,,TASK \n:PUB &IN_STATE#,,TASK \n:PUB &IN_SHORT_DESCRIPTION#,,TASK \n:PUB &IN_DESCRIPTION#,,TASK \n:PUB &IN_CALLER#,,TASK \n:PUB &IN_SERVICE#,,TASK \n:PUB &IN_CMDB_CI#,,TASK \n:PUB &IN_LOCATION#,,TASK ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "{\n \"assignment_group\": \"${IN_ASSIGNMENT_GROUP#}\",\n \"assigned_to\": \"\",\n \"impact\": \"${IN_IMPACT#}\",\n \"u_business_outage_duration\": \"\",\n \"u_business_outage_end\": \"\",\n \"u_business_outage_start\": \"\",\n \"caller_id\": \"${IN_CALLER#}\",\n \"u_category_level_1\": \"${IN_CATEGORY_LEVEL1#}\",\n \"u_category_level_2\": \"\",\n \"u_hpsd_change\": \"\",\n \"caused_by\": \"\",\n \"close_code\": \"\",\n \"cmdb_ci\": \"${IN_CMDB_CI#}\",\n \"contact_type\": \"${IN_CONTACT_TYPE#}\",\n \"u_spl_closure_code\": \"\",\n \"u_customer_company\": \"\",\n \"u_customer_impact\": \"\",\n \"description\": \"${IN_DESCRIPTION#}\",\n \"u_due_to_change\": \"\",\n \"u_email_notification\": \"\",\n \"u_external_id\": \"\",\n \"u_external_system\": \"\",\n \"comments\": \"\",\n \"u_form_type\": \"\",\n \"u_impacted_area\": \"\",\n \"u_impacted_business_unit\": \"${IN_U_IMPACTED_BUSINESS_UNIT#}\",\n \"u_service\": \"${IN_SERVICE#}\",\n \"u_impacted_solution\": \"\",\n \"u_incident_occurred\": \"\",\n \"incident_state\": \"${IN_STATE#}\",\n \"u_incident_type\": \"${IN_INCIDENT_TYPE#}\",\n \"work_notes\": \"\",\n \"u_service_recipient\": \"${IN_CALLER#}\",\n \"u_other_supplier\": \"\",\n \"parent_incident\": \"\",\n \"problem_id\": \"\",\n \"u_site_code\": \"\",\n \"u_reassignment_reason\": \"\",\n \"u_cause_service\": \"\",\n \"short_description\": \"${IN_SHORT_DESCRIPTION#}\",\n \"u_site\": \"\",\n \"close_notes\": \"\",\n \"u_spl_warehouse_code\": \"\",\n \"u_supplier\": \"\",\n \"urgency\": \"\",\n \"watch_list\": \"\",\n \"work_notes_list\": \"\",\n \"location\": \"${IN_LOCATION#}\"\n}",
+    "headers": "Content-Type=application/json\nrequestDataSource=text\nresponseTimeout=60\n",
+    "method": "POST",
+    "resultVariableLevel": "SELF",
+    "url": "${GSN_PART_URL#}"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "defaultValue": "${TOP_PART}",
+      "editorType": "TEXT",
+      "name": "PART",
+      "title": "PART"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "Agent ${MODULE_AGENT} is down",
+      "editorType": "TEXT",
+      "name": "IN_DESCRIPTION",
+      "title": "IN_DESCRIPTION"
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "NUMBER_ID#",
+      "outputFormat": "JSON",
+      "title": "NUMBER_ID#",
+      "outputDefinition": {
+        "dataPath": "$.result.number",
+        "outputLevel": "PARENT"
+      }
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "SYS_ID#",
+      "outputFormat": "JSON",
+      "title": "SYS_ID#",
+      "outputDefinition": {
+        "dataPath": "$.result.sys_id",
+        "outputLevel": "PARENT"
+      }
+    }
+  ]
+}

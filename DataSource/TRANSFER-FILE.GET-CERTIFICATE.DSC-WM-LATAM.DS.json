@@ -1,0 +1,11 @@
+{
+  "dataSourceType": "LOCAL_FILE_STORE",
+  "dataType": "STRING",
+  "errorHandling": "INIT",
+  "folder": "DSC-WM-LATAM",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "validity": "FREE"
+}

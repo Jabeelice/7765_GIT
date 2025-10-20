@@ -1,0 +1,162 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MACHINE_FUNCTION#",
+      "title": "MACHINE_FUNCTION#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE#",
+      "title": "MODULE#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_AGENT#",
+      "title": "MODULE_AGENT#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_USERNAME#",
+      "title": "MODULE_USERNAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "UNDEPLOY_PARAMETERS#",
+      "title": "UNDEPLOY_PARAMETERS#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SUDO-SCRIPT-UNDEPLOY.MOVE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SUDO-SCRIPT-UNDEPLOY.MOVE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MV"
+      ],
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "",
+        "SCRIPT_NAME#": "${UNDEPLOY_PRE_SCRIPT_NAME#}",
+        "STEP#": "APP_PRECHECK"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-ROOT-SCRIPT-UNDEPLOY.MOVE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-ROOT-SCRIPT-UNDEPLOY.MOVE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MV"
+      ],
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "${UNDEPLOY_PARAMETERS#}",
+        "SCRIPT_NAME#": "${UNDEPLOY_SCRIPT_NAME#}",
+        "STEP#": "APP_UNDEPLOY"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SUDO-SCRIPT-UNDEPLOY.MOVE.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-SUDO-SCRIPT-UNDEPLOY.MOVE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT.MOVE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT.MOVE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MV"
+      ],
+      "title": "APP_POSTCHECK",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "",
+        "SCRIPT_NAME#": "${UNDEPLOY_POS_SCRIPT_NAME#}",
+        "STEP#": "APP_POSTCHECK"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-ROOT-SCRIPT-UNDEPLOY.MOVE.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-ROOT-SCRIPT-UNDEPLOY.MOVE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    }
+  ]
+}

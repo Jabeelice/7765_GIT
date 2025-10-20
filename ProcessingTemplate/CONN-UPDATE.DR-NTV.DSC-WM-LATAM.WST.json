@@ -1,0 +1,104 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "name": "MODULE-DB-CONN-UPDT.DR-NTV.DSC-WM-LATAM.WST.3",
+      "priority": "0",
+      "processingTemplate": "MODULE-DB-CONN-UPDT.DR-NTV.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DRNTV"
+      ],
+      "title": "EMS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "INSTALL_PARAMETERS#": "${CONN_PARAMETERS_PRIMARY#}",
+        "MACHINE_FUNCTION#": "EMS",
+        "MODULE#": "EMS",
+        "MODULE_AGENT#": "${EMS_PRIMARY_SERVER#}",
+        "MODULE_USERNAME#": "${EMS_USERNAME#}"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "name": "MODULE-DB-CONN-UPDT.DR-NTV.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "MODULE-DB-CONN-UPDT.DR-NTV.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DRNTV"
+      ],
+      "title": "REFS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "INSTALL_PARAMETERS#": "${CONN_PARAMETERS_PRIMARY#}",
+        "MACHINE_FUNCTION#": "REFS",
+        "MODULE#": "REFS",
+        "MODULE_AGENT#": "${REFS_PRIMARY_SERVER#}",
+        "MODULE_USERNAME#": "${REFS_USERNAME#}"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "name": "MODULE-DB-CONN-UPDT.DR-NTV.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "MODULE-DB-CONN-UPDT.DR-NTV.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DRNTV"
+      ],
+      "title": "WMS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "INSTALL_PARAMETERS#": "${CONN_PARAMETERS_PRIMARY#}",
+        "MACHINE_FUNCTION#": "WMS",
+        "MODULE#": "WMS",
+        "MODULE_AGENT#": "${WMS_PRIMARY_SERVER#}",
+        "MODULE_USERNAME#": "${WMS_USERNAME#}"
+      }
+    }
+  ]
+}

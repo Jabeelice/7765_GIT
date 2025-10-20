@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! Backup modules\n:SET &MODULES# = \"\"\n\n:SET &FAILOVER#         = \"false\"\n:SET &WMS_BACKUP#       = \"false\"\n:SET &REFS_BACKUP#      = \"false\"\n:SET &RW_BACKUP#        = \"false\"\n:SET &EMS_BACKUP#       = \"false\"\n:SET &WMS_FAIL_BACKUP#  = \"false\"\n:SET &REFS_FAIL_BACKUP# = \"false\"\n:SET &RW_FAIL_BACKUP#   = \"false\"\n:SET &EMS_FAIL_BACKUP#  = \"false\"\n\n:SET &WMS_DB_BACKUP#    = \"false\"\n:SET &REFS_DB_BACKUP#   = \"false\"\n:SET &EMS_DB_BACKUP#    = \"false\"\n\n:IF &WMS_PRIMARY_SERVER# <> \"\"\n:  SET &WMS_BACKUP# = \"true\"\n:  SET &MODULES# = STR_CAT(&MODULES#, \"WMS,\")\n:ENDIF\n\n:IF &REFS_PRIMARY_SERVER# <> \"\"\n:  SET &REFS_BACKUP# = \"true\"\n:  SET &MODULES# = STR_CAT(&MODULES#, \"REFS,\")\n:ENDIF\n\n:IF &RW_PRIMARY_SERVER# <> \"\"\n:  SET &RW_BACKUP# = \"true\"\n:  SET &MODULES# = STR_CAT(&MODULES#, \"RW,\")\n:ENDIF\n\n:IF &EMS_PRIMARY_SERVER# <> \"\"\n:  SET &EMS_BACKUP# = \"true\"\n:  SET &MODULES# = STR_CAT(&MODULES#, \"EMS,\")\n:ENDIF\n\n:IF &WMS_FAILOVER_SERVER# <> \"\"\n:  SET &FAILOVER# = \"true\"\n:ENDIF\n\n:IF &REFS_FAILOVER_SERVER# <> \"\"\n: SET &FAILOVER# = \"true\"\n:ENDIF\n\n:IF &RW_FAILOVER_SERVER# <> \"\"\n: SET &FAILOVER# = \"true\"\n:ENDIF\n\n:IF &EMS_FAILOVER_SERVER# <> \"\"\n: SET &FAILOVER# = \"true\"\n:ENDIF\n\n:PUBLISH &WMS_BACKUP#,,WORKFLOW\n:PUBLISH &REFS_BACKUP#,,WORKFLOW\n:PUBLISH &RW_BACKUP#,,WORKFLOW\n:PUBLISH &EMS_BACKUP#,,WORKFLOW\n:PUBLISH &WMS_FAIL_BACKUP#,,WORKFLOW\n:PUBLISH &REFS_FAIL_BACKUP#,,WORKFLOW\n:PUBLISH &RW_FAIL_BACKUP#,,WORKFLOW\n:PUBLISH &EMS_FAIL_BACKUP#,,WORKFLOW\n\n:PUBLISH &WMS_DB_BACKUP#,,WORKFLOW\n:PUBLISH &REFS_DB_BACKUP#,,WORKFLOW\n:PUBLISH &EMS_DB_BACKUP#,,WORKFLOW\n\n:PUBLISH &FAILOVER#,,WORKFLOW\n\n:SET &INSTANCE_STOP# = \"N\"\n:PUBLISH &INSTANCE_STOP#,,WORKFLOW\n\n:SET &LENGTH# = STR_LENGTH(&MODULES#)\n:IF &LENGTH# > 0\n:  SET &LE# = &LENGTH# - 1\n:  SET &MODULES# = SUBSTR(&MODULES#, 1, &LE#)\n:ENDIF\n\n:PUBLISH &MODULES#,,WORKFLOW"
+  }
+}

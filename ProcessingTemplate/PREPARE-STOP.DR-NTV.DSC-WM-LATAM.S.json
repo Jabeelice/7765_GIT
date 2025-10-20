@@ -1,0 +1,20 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! Stop modules\n:SET &WMS_STOP#       = \"false\"\n:SET &REFS_STOP#      = \"false\"\n:SET &RW_STOP#        = \"false\"\n:SET &EMS_STOP#       = \"false\"\n:SET &WMS_FAIL_STOP#  = \"false\"\n:SET &REFS_FAIL_STOP# = \"false\"\n:SET &RW_FAIL_STOP#   = \"false\"\n:SET &EMS_FAIL_STOP#  = \"false\"\n\n\n:IF &WMS_PRIMARY_SERVER# <> \"\"\n:  SET &WMS_STOP# = \"true\"\n:ENDIF\n\n:IF &REFS_PRIMARY_SERVER# <> \"\"\n:  SET &REFS_STOP# = \"true\"\n:ENDIF\n\n:IF &EMS_PRIMARY_SERVER# <> \"\"\n:  SET &EMS_STOP# = \"true\"\n:ENDIF\n\n:IF &RW_PRIMARY_SERVER# <> \"\"\n:  SET &RW_STOP# = \"true\"\n:ENDIF\n\n:IF &WMS_FAILOVER_SERVER# <> \"\"\n:  SET &WMS_FAIL_STOP# = \"true\"\n:ENDIF\n\n:IF &REFS_FAILOVER_SERVER# <> \"\"\n:  SET &REFS_FAIL_STOP# = \"true\"\n:ENDIF\n\n:IF &RW_FAILOVER_SERVER# <> \"\"\n:  SET &RW_FAIL_STOP# = \"true\"\n:ENDIF\n\n:IF &EMS_FAILOVER_SERVER# <> \"\"\n:  SET &EMS_FAIL_STOP# = \"true\"\n:ENDIF\n\n:IF &EMS_PRIMARY_SERVER# <> \"\"\n:  SET &EMS_STOP# = \"true\"\n:ENDIF\n\n:PUBLISH &WMS_STOP#,,WORKFLOW\n:PUBLISH &REFS_STOP#,,WORKFLOW\n:PUBLISH &RW_STOP#,,WORKFLOW\n:PUBLISH &EMS_STOP#,,WORKFLOW\n:PUBLISH &WMS_FAIL_STOP#,,WORKFLOW\n:PUBLISH &REFS_FAIL_STOP#,,WORKFLOW\n:PUBLISH &RW_FAIL_STOP#,,WORKFLOW\n:PUBLISH &EMS_FAIL_STOP#,,WORKFLOW"
+  }
+}

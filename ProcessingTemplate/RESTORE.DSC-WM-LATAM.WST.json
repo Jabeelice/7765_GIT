@@ -1,0 +1,1440 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "actions": 
+  [
+    {
+      "duration": 10800000,
+      "durationThresholdType": "DURATION",
+      "processingActionType": "NOTIFY_GROUP",
+      "processingEventCategory": "PROCESSING",
+      "processingEventType": "EXECUTING_LONG",
+      "processingCommand": {
+        "notificationGroup": "Notification.DSC-WM-LATAM.grp",
+        "notificationMessageTemplate": "LongExec.DSC-WM-LATAM.msgt"
+      }
+    }
+  ],
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "MAIN-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "MAIN-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "defaultValue": "RESTORE",
+      "editorType": "TEXT",
+      "name": "TOP_PART",
+      "title": "TOP_PART"
+    }
+  ],
+  "items": 
+  [
+    {
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE.RUNID.DSC-WM-LATAM.S",
+      "processingTemplate": "PREPARE.RUNID.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "taskType": "AE_SCRIPT"
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE.RESTORE.DSC-WM-LATAM.S",
+      "processingTemplate": "PREPARE.RESTORE.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "PREPARE",
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE.RUNID.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE.RUNID.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Restore flow started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION": null,
+        "IN_DESCRIPTION#": "Restore flow has started - ANOW ID: ${RUN_ID#}",
+        "IN_FLOW_STATUS": null,
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME": null,
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE.RESTORE.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE.RESTORE.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CHECK-TICKET.GSN.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "CHECK-TICKET.GSN.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "title": "CHECK TICKET",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "IN_CHILD_SERVICE": "${CHILD_SERVICE#}",
+        "IN_INSTANCE_NAME": "${INSTANCE_NAME#}",
+        "IN_TICKET": "${TICKET#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "GET-DB-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "GET-DB-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "GET DB SERVERS",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${REST_MODULES_DB#}",
+            "operator": "EQ",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CHECK-TICKET.GSN.DSC-WM-LATAM.WST",
+          "predecessor": "CHECK-TICKET.GSN.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "GET-INSTANCE-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "GET-INSTANCE-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "GET SERVERS",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${REST_MODULES#}",
+            "operator": "EQ",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-DB-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "GET-DB-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CREATE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "CREATE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "CREATE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PART": "${TOP_PART}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-INSTANCE-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "GET-INSTANCE-SERVERS.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "ALERT.DSC-WM-LATAM.JLIN",
+      "priority": "0",
+      "processingTemplate": "ALERT.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "ALERT_RFSC",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${NUMBER_ID#}",
+            "operator": "NE",
+            "value": null
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": null
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "IN_MAIL": "RFSC_ALERT_EMAIL",
+        "IN_MESSAGE": "RFSC_ALERT_MESSAGE",
+        "IN_SUBJECT": "RFSC_ALERT_SUBJECT",
+        "PART": "${TOP_PART}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CREATE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "CREATE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "title": "ZABBIX - CREATE-MAINTENANCE",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTANCE_STOP#}",
+            "operator": "NE",
+            "value": "Y"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_AGENT": "${WMS_PRIMARY_SERVER#}",
+        "IN_WMS_USER": "${WMS_USERNAME#}",
+        "IN_WORKFLOW": "BACKUP.DSC-WM-LATAM.WST"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "ALERT.DSC-WM-LATAM.JLIN",
+          "predecessor": "ALERT.DSC-WM-LATAM.JLIN",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "ALERT.DSC-WM-LATAM.JLIN.2",
+      "priority": "0",
+      "processingTemplate": "ALERT.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "ALERT_ZABBIX",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTANCE_STOP#}",
+            "operator": "NE",
+            "value": "Y"
+          },
+          {
+            "fieldName": "${ZABBIX_MAINTENANCESID#}",
+            "operator": "NE",
+            "value": null
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "IN_MAIL": "ZABBIX_ALERT_EMAIL",
+        "IN_MESSAGE": "ZABBIX_ALERT_MESSAGE",
+        "IN_SUBJECT": "ZABBIX_ALERT_SUBJECT",
+        "PART": "${TOP_PART}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "predecessor": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "STOP-CORE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "STOP-CORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "title": "STOP-CORE",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTANCE_STOP#}",
+            "operator": "NE",
+            "value": "Y"
+          }
+        ],
+        "operator": "AND"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "ALERT.DSC-WM-LATAM.JLIN.2",
+          "predecessor": "ALERT.DSC-WM-LATAM.JLIN.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Restore Core started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION": null,
+        "IN_DESCRIPTION#": "Restore Core has started",
+        "IN_FLOW_STATUS": null,
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME": null,
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "STOP-CORE.DSC-WM-LATAM.WST",
+          "predecessor": "STOP-CORE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-DB.RESTORE.DSC-WM-LATAM.WST",
+      "processingTemplate": "MODULE-DB.RESTORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "WMS-DB-RESTORE",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${WMS_DB_RESTORE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "DB_RESTORE_PARAMETERS#": "'restore' '${WMS_DB_USERNAME#}' '${WMS_DB_PASSWORD#}' '${WMS_DB_VIP_PRI#}' '${WMS_DB_PORT#}' '${WMS_DB_SID#}' '${DB_DIRECTORY_NAME#}' '${WMS_DB_BACKUP#}' '${KEEP_EXST_USRS#}'",
+        "MACHINE_FUNCTION#": "WMS_DB",
+        "MODULE#": "WMS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-DB.RESTORE.DSC-WM-LATAM.WST.1",
+      "processingTemplate": "MODULE-DB.RESTORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "REFS-DB-RESTORE",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${REFS_DB_RESTORE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "DB_RESTORE_PARAMETERS#": "'restore' '${REFS_DB_USERNAME#}' '${REFS_DB_PASSWORD#}' '${REFS_DB_VIP_PRI#}' '${REFS_DB_PORT#}' '${REFS_DB_SID#}' '${DB_DIRECTORY_NAME#}' '${REFS_DB_BACKUP#}'",
+        "MACHINE_FUNCTION#": "REFS_DB",
+        "MODULE#": "REFS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-DB.RESTORE.DSC-WM-LATAM.WST.2",
+      "processingTemplate": "MODULE-DB.RESTORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "EMS-DB-RESTORE",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EMS_DB_RESTORE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "DB_RESTORE_PARAMETERS#": "'restore' '${EMS_DB_USERNAME#}' '${EMS_DB_PASSWORD#}' '${EMS_DB_VIP_PRI#}' '${EMS_DB_PORT#}' '${EMS_DB_SID#}' '${DB_DIRECTORY_NAME#}' '${EMS_DB_BACKUP#}'",
+        "MACHINE_FUNCTION#": "EMS_DB",
+        "MODULE#": "EMS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE.RESTORE.DSC-WM-LATAM.WST",
+      "processingTemplate": "MODULE.RESTORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "WMS-RESTORE",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${WMS_RESTORE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "FAILOVER#": "${WMS_FAIL_RESTORE#}",
+        "MACHINE_FUNCTION#": "WMS",
+        "MODULE#": "WMS",
+        "MODULE_AGENT#": "${WMS_PRIMARY_SERVER#}",
+        "MODULE_URL#": "${WMS_PRIMARY_SERVER_URL#}",
+        "MODULE_USERNAME#": "${WMS_USERNAME#}",
+        "RESTORE_PARAMETERS#": "'restore' '${APP_CODE_BACKUP_PATH#}/${WMS_APP_BACKUP#}'"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE.RESTORE.DSC-WM-LATAM.WST.1",
+      "processingTemplate": "MODULE.RESTORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "REFS-RESTORE",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${REFS_RESTORE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "FAILOVER#": "${REFS_FAIL_RESTORE#}",
+        "MACHINE_FUNCTION#": "REFS",
+        "MODULE#": "REFS",
+        "MODULE_AGENT#": "${REFS_PRIMARY_SERVER#}",
+        "MODULE_URL#": "${REFS_PRIMARY_SERVER_URL#}",
+        "MODULE_USERNAME#": "${REFS_USERNAME#}",
+        "RESTORE_PARAMETERS#": "'restore' '${APP_CODE_BACKUP_PATH#}/${REFS_APP_BACKUP#}'"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE.RESTORE.DSC-WM-LATAM.WST.2",
+      "processingTemplate": "MODULE.RESTORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "RW-RESTORE",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${RW_RESTORE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "FAILOVER#": "${RW_FAIL_RESTORE#}",
+        "MACHINE_FUNCTION#": "RW",
+        "MODULE#": "RW",
+        "MODULE_AGENT#": "${RW_PRIMARY_SERVER#}",
+        "MODULE_URL#": "${RW_PRIMARY_SERVER_URL#}",
+        "MODULE_USERNAME#": "${RW_USERNAME#}",
+        "RESTORE_PARAMETERS#": "'restore' '${APP_CODE_BACKUP_PATH#}/${RW_APP_BACKUP#}'"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE.RESTORE.DSC-WM-LATAM.WST.3",
+      "processingTemplate": "MODULE.RESTORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "EMS-RESTORE",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EMS_RESTORE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "FAILOVER#": "${EMS_FAIL_RESTORE#}",
+        "MACHINE_FUNCTION#": "EMS",
+        "MODULE#": "EMS",
+        "MODULE_AGENT#": "${EMS_PRIMARY_SERVER#}",
+        "MODULE_URL#": "${EMS_PRIMARY_SERVER_URL#}",
+        "MODULE_USERNAME#": "${EMS_USERNAME#}",
+        "RESTORE_PARAMETERS#": "'restore' '${APP_CODE_BACKUP_PATH#}/${EMS_APP_BACKUP#}'"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.12",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.13",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Restore Core finished",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION": null,
+        "IN_DESCRIPTION#": "Restore Core has finished",
+        "IN_FLOW_STATUS": null,
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME": null,
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-DB.RESTORE.DSC-WM-LATAM.WST",
+          "predecessor": "MODULE-DB.RESTORE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-DB.RESTORE.DSC-WM-LATAM.WST.1",
+          "predecessor": "MODULE-DB.RESTORE.DSC-WM-LATAM.WST.1",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-DB.RESTORE.DSC-WM-LATAM.WST.2",
+          "predecessor": "MODULE-DB.RESTORE.DSC-WM-LATAM.WST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.RESTORE.DSC-WM-LATAM.WST",
+          "predecessor": "MODULE.RESTORE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.RESTORE.DSC-WM-LATAM.WST.1",
+          "predecessor": "MODULE.RESTORE.DSC-WM-LATAM.WST.1",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.RESTORE.DSC-WM-LATAM.WST.2",
+          "predecessor": "MODULE.RESTORE.DSC-WM-LATAM.WST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.RESTORE.DSC-WM-LATAM.WST.3",
+          "predecessor": "MODULE.RESTORE.DSC-WM-LATAM.WST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RESTART-CORE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RESTART-CORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "title": "RESTART-CORE",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTANCE_STOP#}",
+            "operator": "NE",
+            "value": "Y"
+          }
+        ],
+        "operator": "AND"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.13",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.13",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CLOSE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "CLOSE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "title": "ZABBIX - CLOSE-MAINTENANCE",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTANCE_STOP#}",
+            "operator": "NE",
+            "value": "Y"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_AGENT": "${WMS_PRIMARY_SERVER#}",
+        "IN_M_ID": "${ZABBIX_MAINTENANCESID#}",
+        "IN_WMS_USER": "${WMS_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RESTART-CORE.DSC-WM-LATAM.WST",
+          "predecessor": "RESTART-CORE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "GET-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "GET-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "GET-INCIDENT-SITE",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "EQ",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_TICKET_ID": "${NUMBER_ID#}${TICKET#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CLOSE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "predecessor": "CLOSE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CLOSE-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "CLOSE-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "CLOSE-INCIDENT-SITE",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INC_SITE_UPDATE#}",
+            "operator": "NE",
+            "value": "true"
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "EQ",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "IN_NUMBER_ID": "${NUMBER_ID#}${TICKET#}",
+        "IN_SITE": "${INC_SITE#}",
+        "IN_TICKET_ID": "${NUMBER_ID#}${TICKET#}",
+        "PART": "${TOP_PART}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "GET-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CLOSE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "CLOSE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "CLOSE-INCIDENT",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INC_SITE_UPDATE#}",
+            "operator": "NE",
+            "value": "false"
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "EQ",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "IN_NUMBER_ID": "${NUMBER_ID#}${TICKET#}",
+        "IN_TICKET_ID": "${NUMBER_ID#}${TICKET#}",
+        "PART": "${TOP_PART}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "GET-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "ALERT.DSC-WM-LATAM.JLIN.3",
+      "priority": "0",
+      "processingTemplate": "ALERT.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "ALERT_RFSC_CLOSE",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${CLOSE_NUMBER_ID#}",
+            "operator": "NE",
+            "value": ""
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "EQ",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "IN_MAIL": "RFSC_ALERT_EMAIL",
+        "IN_MESSAGE": "RFSC_CLOSE_ALERT_MESSAGE",
+        "IN_SUBJECT": "RFSC_CLOSE_ALERT_SUBJECT",
+        "PART": "${TOP_PART}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CLOSE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "CLOSE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CLOSE-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "CLOSE-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "GET-TASK-CHANGE.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "GET-TASK-CHANGE.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "GET-TASK-CHANGE",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_CTASK": "${TICKET#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "ALERT.DSC-WM-LATAM.JLIN.3",
+          "predecessor": "ALERT.DSC-WM-LATAM.JLIN.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CLOSE-CHANGE-TASK.GSN.DSC-WM-LATAM.JSOAP",
+      "priority": "0",
+      "processingTemplate": "CLOSE-CHANGE-TASK.GSN.DSC-WM-LATAM.JSOAP",
+      "processingType": "TASK",
+      "serverNodeType": "SOAP_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "SOAP_WEB_SERVICE_CALL",
+      "title": "CLOSE-CHANGE-TASK.GSN.DSC-WM-LATAM.JSOAP",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "AND"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-TASK-CHANGE.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "GET-TASK-CHANGE.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "ALERT.DSC-WM-LATAM.JLIN.4",
+      "priority": "0",
+      "processingTemplate": "ALERT.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "ALERT_CTASK",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${CTASK_UPDATE_STATUS#}",
+            "operator": "EQ",
+            "value": "OK"
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "IN_MAIL": "CTASK_ALERT_EMAIL",
+        "IN_MESSAGE": "CTASK_ALERT_MESSAGE",
+        "IN_SUBJECT": "CTASK_ALERT_SUBJECT",
+        "PART": "${TOP_PART}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CLOSE-CHANGE-TASK.GSN.DSC-WM-LATAM.JSOAP",
+          "predecessor": "CLOSE-CHANGE-TASK.GSN.DSC-WM-LATAM.JSOAP",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "SOAP_WEB_SERVICE",
+          "taskType": "SOAP_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.22",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "BCK",
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Restore flow finished",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION": null,
+        "IN_DESCRIPTION#": "Restore flow has finished - ANOW ID: ${RUN_ID#}",
+        "IN_FLOW_STATUS": null,
+        "IN_FLOW_STATUS#": "1900",
+        "IN_INSTANCE_NAME": null,
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "ALERT.DSC-WM-LATAM.JLIN.4",
+          "predecessor": "ALERT.DSC-WM-LATAM.JLIN.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "description": "Get instance servers from AFSM",
+  "endpoint": "Afsm.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Rest.rr",
+  "owner": "TDROBISZ",
+  "postScript": ":SWITCH \"Y\"\n:  CASE \"${IN_MODULES#}\" = \"WMS\"\n:    SET &SERVER# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'WMS')].servers[?(@.machine_function == 'WMS')].server\")\n:    SET &USERNAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'WMS')].app_username\")\n:  CASE \"${IN_MODULES#}\" = \"REFS\"\n:    SET &SERVER# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'REFS')].servers[?(@.machine_function == 'REFS')].server\")\n:    SET &USERNAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'REFS')].app_username\")\n:  CASE \"${IN_MODULES#}\" = \"RW\"\n:    SET &SERVER# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'RW')].servers[?(@.machine_function == 'RW')].server\")\n:    SET &USERNAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'RW')].app_username\")\n:  CASE \"${IN_MODULES#}\" = \"EMS\"\n:    SET &SERVER# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'EMS')].servers[?(@.machine_function == 'EMS')].server\")\n:    SET &USERNAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'EMS')].app_username\")\n:  CASE \"${IN_MODULES#}\" = \"WMS-FAIL\"\n:    SET &SERVER# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'WMS')].servers[?(@.machine_function == 'WMS-FAIL')].server\")\n:    SET &USERNAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'WMS')].app_username\")\n:  CASE \"${IN_MODULES#}\" = \"REFS-FAIL\"\n:    SET &SERVER# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'REFS')].servers[?(@.machine_function == 'REFS-FAIL')].server\")\n:    SET &USERNAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'REFS')].app_username\")\n:  CASE \"${IN_MODULES#}\" = \"RW-FAIL\"\n:    SET &SERVER# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'RW')].servers[?(@.machine_function == 'RW-FAIL')].server\")\n:    SET &USERNAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'RW')].app_username\")\n:  CASE \"${IN_MODULES#}\" = \"EMS-FAIL\"\n:    SET &SERVER# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'EMS')].servers[?(@.machine_function == 'EMS-FAIL')].server\")\n:    SET &USERNAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'EMS')].app_username\")\n:ENDSWITCH\n\n:PUBLISH &SERVER#,,WORKFLOW\n:PUBLISH &USERNAME#,,WORKFLOW\n\n:SET &APP_JSON_DATA# = &RESPONSE_CONTENT#\n:PUBLISH &APP_JSON_DATA#",
+  "preScript": ":SET &IN_INSTANCE# = ${INSTANCE_NAME#}\n:SET &IN_MODULES# =\"${MODULES#}\"\n:PUB &IN_MODULES#,,TASK\n\n:INC PICK.SYSTEM-CONFIG.AFSM.DSC-WM-LATAM.INCL\n:INC READ.SYSTEM-CONFIG.AFSM.DSC-WM-LATAM.INCL\n\n!:READ &AFSM_URL#,,,&SC_AFSM_URL#\n!:READ &AFSM_CONTEXT_INSTANCE#,,,&SC_AFSM_CONTEXT_INSTANCE#\n!:SET &AFSM_FULL_URL# = \"&AFSM_URL#/&AFSM_CONTEXT_INSTANCE#/&IN_INSTANCE#/&SC_RUN_ID#/machines/app/modules/&IN_MODULES#\"\n\n!:READ &AFSM_URL#,,,&SC_AFSM_URL#\n:SET &AFSM_CONTEXT_INSTANCE# = &SC_AFSM_CONTEXT_INSTANCE#\n:SET &AFSM_PART_URL# = \"&AFSM_CONTEXT_INSTANCE#/&IN_INSTANCE#/&SC_RUN_ID#/machines/app/modules/&IN_MODULES#\"\n:PUB &AFSM_PART_URL#,,TASK",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "",
+    "headers": "responseTimeout=60\n",
+    "method": "GET",
+    "resultVariableLevel": "SELF",
+    "url": "${AFSM_PART_URL#}"
+  },
+  "designParameters": 
+  [
+    {
+      "editorType": "OUTPUT",
+      "name": "RESPONSE_CONTENT#",
+      "outputFormat": "JSON",
+      "title": "RESPONSE_CONTENT#",
+      "outputDefinition": {
+        "dataPath": "$"
+      }
+    }
+  ]
+}

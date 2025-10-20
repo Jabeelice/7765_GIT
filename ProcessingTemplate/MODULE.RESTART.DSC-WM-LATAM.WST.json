@@ -1,0 +1,281 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "addUnknownValues": true,
+      "allowExpressions": true,
+      "editorType": "LIST",
+      "listOfValues": "{\"WMS\":\"WMS\",\"REFS\":\"REFS\",\"RW\":\"RW\",\"EMS\":\"EMS\"}",
+      "name": "MODULE",
+      "title": "MODULE"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_AGENT",
+      "title": "MODULE_AGENT"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_USERNAME",
+      "title": "MODULE_USERNAME"
+    },
+    {
+      "addUnknownValues": true,
+      "allowExpressions": true,
+      "editorType": "LIST",
+      "listOfValues": "{\"WMS\":\"WMS\",\"REFS\":\"REFS\",\"RW\":\"RW\",\"EMS\":\"EMS\"}",
+      "name": "MACHINE_FUNCTION",
+      "title": "MACHINE_FUNCTION"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_URL",
+      "title": "MODULE_URL"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_RPTAB_Y",
+      "title": "MODULE_RPTAB_Y"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "title": "PRECHECK",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS": "1550",
+        "SCRIPT_NAME": "${PRECHECK_SCRIPT_NAME#}"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "title": "CRONTAB_comm",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${MODULE_RPTAB_Y}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MODULE_STATUS": "1550",
+        "PARAMETERS": "comment",
+        "SCRIPT_NAME": "${CRONTAB_SCRIPT_NAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST.3",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "title": "RESTART",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${MODULE_RPTAB_Y}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MODULE_STATUS": "1550",
+        "PARAMETERS": "${RESTART_TYPE_PARAMETER#}",
+        "SCRIPT_NAME": "${RESTART_SCRIPT_NAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST.2",
+          "predecessor": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-POSTCHECK-SCRIPT.RESTART.DSC-WM-LATAM.WST",
+      "processingTemplate": "RUN-POSTCHECK-SCRIPT.RESTART.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "POSTCHECK",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${MODULE_RPTAB_Y}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MODULE_STATUS": "1550",
+        "PARAMETERS": "${MODULE} ${MODULE_URL}",
+        "SCRIPT_NAME": "${CHECK_SCRIPT_NAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST.3",
+          "predecessor": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST.4",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT.RESTART.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "title": "CRONTAB_uncomm",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${MODULE_RPTAB_Y}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MODULE_STATUS": "1550",
+        "PARAMETERS": "uncomment",
+        "SCRIPT_NAME": "${CRONTAB_SCRIPT_NAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-POSTCHECK-SCRIPT.RESTART.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-POSTCHECK-SCRIPT.RESTART.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "description": "Read Change Task",
+  "endpoint": "ServiceNow.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Rest.rr",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &TEST_ASSIGNMENT_GROUPS# = GET_VAR(MAIN-CONFIG.GSN.DSC-WM-LATAM.V, \"TEST_ASSIGNMENT_GROUPS\", 1)\n:SET &CTASK_ASSIGNMENT_GROUP# = GET_VAR(MAIN-CONFIG.GSN.DSC-WM-LATAM.V, \"CTASK_ASSIGNMENT_GROUP\", 1)\n:SET &CHILD_SERVICE_TEST# = \"false\"\n\n:DEFINE &ATEST_ASSIGNMENT_GROUPS#, string, 10\n:FILL &ATEST_ASSIGNMENT_GROUPS#[] = STR_SPLIT(\"&TEST_ASSIGNMENT_GROUPS#\", \",\")\n:SET &LEN# = LENGTH(&ATEST_ASSIGNMENT_GROUPS#[])\n:SET &RUNVAR# = 1\n\n:WHILE &RUNVAR# LE &LEN#\n:  SET &LENGTH# = STR_LENGTH(&ATEST_ASSIGNMENT_GROUPS#[&RUNVAR#])\n:  IF  &LENGTH# > 0\n:    IF &IN_CHILD_SERVICE# = \"&ATEST_ASSIGNMENT_GROUPS#[&RUNVAR#]\"\n:      SET &CHILD_SERVICE_TEST# = \"true\"\n:      SET &RUNVAR# = &LEN#\n:    ENDIF\n:  ENDIF\n:  SET &RUNVAR# = &RUNVAR# + 1\n:ENDWHILE\n\n\n:IF &CTASK_STATE# < 0\n:  PRINT \"ERROR - The status of the change task is not actionable!\"\n:  SET &CTASK_VALID# = \"false\"\n:  SET &ALERT_MESSAGE# = GET_VAR(MAIN-CONFIG.GSN.DSC-WM-LATAM.V, \"ALERT_MESSAGE_STATE\", 1)\n:ELSE\n:  IF &CTASK_STATE# > 1\n:    PRINT \"ERROR - The status of the change task is not actionable!\"\n:    SET &CTASK_VALID# = \"false\"\n:    SET &ALERT_MESSAGE# = GET_VAR(MAIN-CONFIG.GSN.DSC-WM-LATAM.V, \"ALERT_MESSAGE_STATE\", 1)\n:  ELSE\n:    IF &CTASK_ASSIGNED_TO# = &CTASK_ASSIGNMENT_GROUP#\n:      IF &CTASK_TYPE# = \"build\"\n:        IF &CHILD_SERVICE_TEST# = \"true\"\n:          PRINT \"INFO - The change task is valid\"\n:          SET &CTASK_VALID# = \"true\"\n:        ELSE\n:          PRINT \"ERROR - The child_service and ctask_type of the change task is not valid!\"\n:          SET &CTASK_VALID# = \"false\"\n:        ENDIF\n:      ELSE\n:        PRINT \"INFO - The change task is valid\"\n:        SET &CTASK_VALID# = \"true\"\n:      ENDIF\n:    ELSE\n:      PRINT \"ERROR - The assignee of the change task is not actionable!\"\n:      SET &CTASK_VALID# = \"false\"\n:      SET &ALERT_MESSAGE# = GET_VAR(MAIN-CONFIG.GSN.DSC-WM-LATAM.V, \"ALERT_MESSAGE_ASSIGNEE\", 1)\n:    ENDIF\n:  ENDIF\n:ENDIF\n\n:PUBLISH &CTASK_VALID#,,WORKFLOW\n:PUBLISH &ALERT_MESSAGE#,,WORKFLOW\n\n:SET &TMP# = STR_SUB('${SYS_ID#}', '[','')\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n:SET &SYS_ID# = &TMP#\n:PUBLISH &SYS_ID#,,TOP",
+  "preScript": ":INC PICK.CHANGE-CONFIG.GSN.DSC-WM-LATAM.INCL\n:INC READ.CHANGE-CONFIG.GSN.DSC-WM-LATAM.INCL\n\n:SET &GSN_FULL_URL# = \"&SC_GSN_PROTOCOL#://&SC_GSN_URL#/&SC_GSN_CONTEXT_CHANGE_TASK_READ#${IN_TICKET_ID}\"\n:SET &GSN_PART_URL# = \"&SC_GSN_CONTEXT_CHANGE_TASK_READ#${IN_TICKET_ID}\"\n:PUB &GSN_PART_URL#,,TASK",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "",
+    "headers": "responseTimeout=60\n",
+    "method": "GET",
+    "resultVariableLevel": "SELF",
+    "url": "${GSN_PART_URL#}"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_TICKET_ID",
+      "title": "IN_TICKET_ID"
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "CTASK_ASSIGNED_TO#",
+      "outputFormat": "JSON",
+      "title": "&CTASK_ASSIGNED_TO#",
+      "outputDefinition": {
+        "dataPath": "$.result[0].assigned_to.value"
+      }
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "CTASK_STATE#",
+      "outputFormat": "JSON",
+      "title": "&CTASK_STATE#",
+      "outputDefinition": {
+        "dataPath": "$.result[0].state"
+      }
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "CTASK_TYPE#",
+      "outputFormat": "JSON",
+      "title": "&CTASK_TYPE#",
+      "outputDefinition": {
+        "dataPath": "$.result[0].u_task_type"
+      }
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "SYS_ID#",
+      "outputFormat": "JSON",
+      "title": "&SYS_ID#",
+      "outputDefinition": {
+        "dataPath": "$.result[*].sys_id"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1885 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "actions": 
+  [
+    {
+      "duration": 10800000,
+      "durationThresholdType": "DURATION",
+      "processingActionType": "NOTIFY_GROUP",
+      "processingEventCategory": "PROCESSING",
+      "processingEventType": "EXECUTING_LONG",
+      "processingCommand": {
+        "notificationGroup": "Notification.DSC-WM-LATAM.grp",
+        "notificationMessageTemplate": "LongExec.DSC-WM-LATAM.msgt"
+      }
+    }
+  ],
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "MAIN-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "MAIN-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "defaultValue": "MW-PATCHING",
+      "editorType": "TEXT",
+      "name": "TOP_PART",
+      "title": "TOP_PART"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE.RUNID.DSC-WM-LATAM.S",
+      "processingTemplate": "PREPARE.RUNID.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "taskType": "AE_SCRIPT"
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE.MW-PATCHING.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PREPARE.MW-PATCHING.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "AE_SCRIPT",
+      "weight": "1",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE.RUNID.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE.RUNID.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Middleware patching flow started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Middleware patching flow has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE.MW-PATCHING.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE.MW-PATCHING.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CHECK-TICKET-MACHINE.GSN.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "CHECK-TICKET-MACHINE.GSN.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "title": "CHECK-TICKET-MACHINE.GSN.DSC-WM-LATAM.WST",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "CATALOG_ITEM_ID#": null,
+        "CHILD_SERVICE#": null,
+        "CONFIGURATION_ITEM#": null,
+        "IBM_MQ_INSTALL#": null,
+        "IBM_MQ_PATH#": null,
+        "IBM_MQ_SCRIPT_NAME#": null,
+        "IBM_MQ_VERSION#": null,
+        "INSTANCES#": null,
+        "IN_CHILD_SERVICE": "${CHILD_SERVICE#}",
+        "IN_CHILD_SERVICE#": null,
+        "IN_INSTANCE_NAME": "${INSTANCE_NAME#}",
+        "IN_SERVER_NAME#": null,
+        "IN_TICKET": "${TICKET#}",
+        "IN_TICKET#": null,
+        "OPENJDK11_64_SCRIPT_NAME#": null,
+        "OPENJDK17_64_SCRIPT_NAME#": null,
+        "OPENJDK1_8_64_SCRIPT_NAME#": null,
+        "OPENJDK_11_64_INSTALL#": null,
+        "OPENJDK_11_64_VERSION#": null,
+        "OPENJDK_17_64_INSTALL#": null,
+        "OPENJDK_17_64_VERSION#": null,
+        "OPENJDK_1_8_64_INSTALL#": null,
+        "OPENJDK_1_8_64_VERSION#": null,
+        "ORACLE_JAVA_INSTALL#": null,
+        "ORACLE_JAVA_PATH#": null,
+        "ORACLE_JAVA_SCRIPT_NAME#": null,
+        "ORACLE_JAVA_VERSION#": null,
+        "POSTCHECK_SCRIPT_NAME#": null,
+        "PRECHECK_SCRIPT_NAME#": null,
+        "SERVER_NAME#": null,
+        "TICKET#": null,
+        "TZ#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Creating RFSC started",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Creating RFSC has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CHECK-TICKET-MACHINE.GSN.DSC-WM-LATAM.WST",
+          "predecessor": "CHECK-TICKET-MACHINE.GSN.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CREATE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "CREATE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "CREATE-INCIDENT",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PART": "MW-PATCHING"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "ALERT.DSC-WM-LATAM.JLIN",
+      "priority": "0",
+      "processingTemplate": "ALERT.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "ALERT.DSC-WM-LATAM.JLIN",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${NUMBER_ID#}",
+            "operator": "NE",
+            "value": ""
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": null
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "CATALOG_ITEM_ID#": null,
+        "CHILD_SERVICE#": null,
+        "CONFIGURATION_ITEM#": null,
+        "IBM_MQ_INSTALL#": null,
+        "IBM_MQ_PATH#": null,
+        "IBM_MQ_SCRIPT_NAME#": null,
+        "IBM_MQ_VERSION#": null,
+        "INSTANCES#": null,
+        "IN_EMAIL#": null,
+        "IN_MAIL": "RFSC_ALERT_EMAIL",
+        "IN_MESSAGE": "RFSC_ALERT_MESSAGE",
+        "IN_MESSAGE#": null,
+        "IN_SUBJECT": "RFSC_ALERT_SUBJECT",
+        "IN_SUBJECT#": null,
+        "OPENJDK11_64_SCRIPT_NAME#": null,
+        "OPENJDK17_64_SCRIPT_NAME#": null,
+        "OPENJDK1_8_64_SCRIPT_NAME#": null,
+        "OPENJDK_11_64_INSTALL#": null,
+        "OPENJDK_11_64_VERSION#": null,
+        "OPENJDK_17_64_INSTALL#": null,
+        "OPENJDK_17_64_VERSION#": null,
+        "OPENJDK_1_8_64_INSTALL#": null,
+        "OPENJDK_1_8_64_VERSION#": null,
+        "ORACLE_JAVA_INSTALL#": null,
+        "ORACLE_JAVA_PATH#": null,
+        "ORACLE_JAVA_SCRIPT_NAME#": null,
+        "ORACLE_JAVA_VERSION#": null,
+        "PART": "MW-PATCHING",
+        "POSTCHECK_SCRIPT_NAME#": null,
+        "PRECHECK_SCRIPT_NAME#": null,
+        "SERVER_NAME#": null,
+        "TICKET#": null,
+        "TZ#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CREATE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "CREATE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_RFSC creation failed",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${NUMBER_ID#}",
+            "operator": "NE",
+            "value": ""
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": null
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "RFSC creation has failed",
+        "IN_FLOW_STATUS#": "1560",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CREATE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "CREATE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_RFSC created",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": null
+          },
+          {
+            "fieldName": "${NUMBER_ID#}",
+            "operator": "EQ",
+            "value": null
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "CATALOG_ITEM_ID#": null,
+        "CHILD_SERVICE#": null,
+        "CONFIGURATION_ITEM#": null,
+        "IBM_MQ_INSTALL#": null,
+        "IBM_MQ_PATH#": null,
+        "IBM_MQ_SCRIPT_NAME#": null,
+        "IBM_MQ_VERSION#": null,
+        "INSTANCES#": null,
+        "IN_DESCRIPTION#": "RFSC - ${NUMBER_ID#} was created",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": "",
+        "OPENJDK11_64_SCRIPT_NAME#": null,
+        "OPENJDK17_64_SCRIPT_NAME#": null,
+        "OPENJDK1_8_64_SCRIPT_NAME#": null,
+        "OPENJDK_11_64_INSTALL#": null,
+        "OPENJDK_11_64_VERSION#": null,
+        "OPENJDK_17_64_INSTALL#": null,
+        "OPENJDK_17_64_VERSION#": null,
+        "OPENJDK_1_8_64_INSTALL#": null,
+        "OPENJDK_1_8_64_VERSION#": null,
+        "ORACLE_JAVA_INSTALL#": null,
+        "ORACLE_JAVA_PATH#": null,
+        "ORACLE_JAVA_SCRIPT_NAME#": null,
+        "ORACLE_JAVA_VERSION#": null,
+        "POSTCHECK_SCRIPT_NAME#": null,
+        "PRECHECK_SCRIPT_NAME#": null,
+        "SERVER_NAME#": null,
+        "TICKET#": null,
+        "TZ#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "ALERT.DSC-WM-LATAM.JLIN",
+          "predecessor": "ALERT.DSC-WM-LATAM.JLIN",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "STOP-INSTANCES.MW-PATCHING.DSC-WM-LATAM.WFE",
+      "priority": "0",
+      "processingTemplate": "STOP-INSTANCES.MW-PATCHING.DSC-WM-LATAM.WFE",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "weight": "1",
+      "workflowType": "FOR_EACH",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "title": "INSTALL_IBM_MQ",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${IBM_MQ_INSTALL#}",
+            "operator": "NE",
+            "value": "Y"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PARAMETERS#": "'${IBM_MQ_VERSION#}' '${IBM_MQ_PATH#}'",
+        "SCRIPT_NAME#": "${IBM_MQ_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "",
+        "STEP#": "INSTALL_IBM_MQ"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "STOP-INSTANCES.MW-PATCHING.DSC-WM-LATAM.WFE",
+          "predecessor": "STOP-INSTANCES.MW-PATCHING.DSC-WM-LATAM.WFE",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "FOR_EACH"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "title": "INSTALL_OPENJDK_1_8_64",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${OPENJDK_1_8_64_INSTALL#}",
+            "operator": "NE",
+            "value": "Y"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PARAMETERS#": "'${OPENJDK_1_8_64_VERSION#}'",
+        "SCRIPT_NAME#": "${OPENJDK1_8_64_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "",
+        "STEP#": "INSTALL_OPENJDK_1_8_64"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.3",
+      "priority": "0",
+      "processingTemplate": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "title": "INSTALL_OPENJDK_11_64",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${OPENJDK_11_64_INSTALL#}",
+            "operator": "NE",
+            "value": "Y"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PARAMETERS#": "'${OPENJDK_11_64_VERSION#}'",
+        "SCRIPT_NAME#": "${OPENJDK11_64_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "",
+        "STEP#": "INSTALL_OPENJDK_11_64"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.2",
+          "predecessor": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.4",
+      "priority": "0",
+      "processingTemplate": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "title": "INSTALL_OPENJDK_17_64",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${OPENJDK_17_64_INSTALL#}",
+            "operator": "NE",
+            "value": "Y"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PARAMETERS#": "'${OPENJDK_17_64_VERSION#}'",
+        "SCRIPT_NAME#": "${OPENJDK17_64_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "",
+        "STEP#": "INSTALL_OPENJDK_17_64"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.3",
+          "predecessor": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.5",
+      "priority": "0",
+      "processingTemplate": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "title": "INSTALL_ORACLE_JAVA",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${ORACLE_JAVA_INSTALL#}",
+            "operator": "NE",
+            "value": "Y"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PARAMETERS#": "'${ORACLE_JAVA_VERSION#}' '${ORACLE_JAVA_PATH#}'",
+        "SCRIPT_NAME#": "${ORACLE_JAVA_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "",
+        "STEP#": "INSTALL_ORACLE_JAVA"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.6",
+      "passBy": true,
+      "priority": "0",
+      "processingTemplate": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "title": "INSTALL_ORACLE_JAVA_64",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${ORACLE_JAVA_64_INSTALL#}",
+            "operator": "NE",
+            "value": "Y"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "PARAMETERS#": "'${ORACLE_JAVA_64_VERSION#}' '${ORACLE_JAVA_64_PATH#}'",
+        "SCRIPT_NAME#": "${ORACLE_JAVA_64_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "",
+        "STEP#": "INSTALL_ORACLE_JAVA_64"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RESTART-INSTANCES.MW-PATCHING.DSC-WM-LATAM.WFE",
+      "priority": "0",
+      "processingTemplate": "RESTART-INSTANCES.MW-PATCHING.DSC-WM-LATAM.WFE",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "weight": "1",
+      "workflowType": "FOR_EACH",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.4",
+          "predecessor": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.5",
+          "predecessor": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.5",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.6",
+          "predecessor": "RUN-ROOT-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST.6",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.5",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_RFSC closing started",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "EQ",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "RFSC - ${NUMBER_ID#}${TICKET#} closing has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RESTART-INSTANCES.MW-PATCHING.DSC-WM-LATAM.WFE",
+          "predecessor": "RESTART-INSTANCES.MW-PATCHING.DSC-WM-LATAM.WFE",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "FOR_EACH"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "GET-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "GET-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "GET-INCIDENT-SITE",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "EQ",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "CATALOG_ITEM_ID#": null,
+        "CHILD_SERVICE#": null,
+        "CONFIGURATION_ITEM#": null,
+        "IBM_MQ_INSTALL#": null,
+        "IBM_MQ_PATH#": null,
+        "IBM_MQ_SCRIPT_NAME#": null,
+        "IBM_MQ_VERSION#": null,
+        "INSTANCES#": null,
+        "IN_TICKET_ID": "${NUMBER_ID#}${TICKET#}",
+        "IN_TICKET_ID#": null,
+        "OPENJDK11_64_SCRIPT_NAME#": null,
+        "OPENJDK17_64_SCRIPT_NAME#": null,
+        "OPENJDK1_8_64_SCRIPT_NAME#": null,
+        "OPENJDK_11_64_INSTALL#": null,
+        "OPENJDK_11_64_VERSION#": null,
+        "OPENJDK_17_64_INSTALL#": null,
+        "OPENJDK_17_64_VERSION#": null,
+        "OPENJDK_1_8_64_INSTALL#": null,
+        "OPENJDK_1_8_64_VERSION#": null,
+        "ORACLE_JAVA_INSTALL#": null,
+        "ORACLE_JAVA_PATH#": null,
+        "ORACLE_JAVA_SCRIPT_NAME#": null,
+        "ORACLE_JAVA_VERSION#": null,
+        "POSTCHECK_SCRIPT_NAME#": null,
+        "PRECHECK_SCRIPT_NAME#": null,
+        "SERVER_NAME#": null,
+        "TICKET#": null,
+        "TZ#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.5",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.5",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CLOSE-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "CLOSE-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "CLOSE-INCIDENT-SITE",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INC_SITE_UPDATE#}",
+            "operator": "NE",
+            "value": "true"
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "EQ",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "CATALOG_ITEM_ID#": null,
+        "CHILD_SERVICE#": null,
+        "CONFIGURATION_ITEM#": null,
+        "IBM_MQ_INSTALL#": null,
+        "IBM_MQ_PATH#": null,
+        "IBM_MQ_SCRIPT_NAME#": null,
+        "IBM_MQ_VERSION#": null,
+        "INSTANCES#": null,
+        "IN_ASSIGNED_TO#": null,
+        "IN_ASSIGNMENT_GROUP#": null,
+        "IN_CATEGORY_LEVEL1#": null,
+        "IN_CATEGORY_LEVEL2#": null,
+        "IN_CLOSE_CODE#": null,
+        "IN_CLOSE_NOTES#": null,
+        "IN_CMDB_CI#": null,
+        "IN_COMMENTS#": null,
+        "IN_INCIDENT_TYPE#": null,
+        "IN_NUMBER_ID": "${NUMBER_ID#}${TICKET#}",
+        "IN_NUMBER_ID#": null,
+        "IN_SITE": "${INC_SITE#}",
+        "IN_SITE#": null,
+        "IN_STATE#": null,
+        "IN_TICKET_ID": "${NUMBER_ID#}${TICKET#}",
+        "OPENJDK11_64_SCRIPT_NAME#": null,
+        "OPENJDK17_64_SCRIPT_NAME#": null,
+        "OPENJDK1_8_64_SCRIPT_NAME#": null,
+        "OPENJDK_11_64_INSTALL#": null,
+        "OPENJDK_11_64_VERSION#": null,
+        "OPENJDK_17_64_INSTALL#": null,
+        "OPENJDK_17_64_VERSION#": null,
+        "OPENJDK_1_8_64_INSTALL#": null,
+        "OPENJDK_1_8_64_VERSION#": null,
+        "ORACLE_JAVA_INSTALL#": null,
+        "ORACLE_JAVA_PATH#": null,
+        "ORACLE_JAVA_SCRIPT_NAME#": null,
+        "ORACLE_JAVA_VERSION#": null,
+        "PART": "${TOP_PART}",
+        "POSTCHECK_SCRIPT_NAME#": null,
+        "PRECHECK_SCRIPT_NAME#": null,
+        "SERVER_NAME#": null,
+        "TICKET#": null,
+        "TZ#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "GET-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CLOSE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "CLOSE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "CLOSE-INCIDENT",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INC_SITE_UPDATE#}",
+            "operator": "NE",
+            "value": "false"
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "EQ",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "CATALOG_ITEM_ID#": null,
+        "CHILD_SERVICE#": null,
+        "CONFIGURATION_ITEM#": null,
+        "IBM_MQ_INSTALL#": null,
+        "IBM_MQ_PATH#": null,
+        "IBM_MQ_SCRIPT_NAME#": null,
+        "IBM_MQ_VERSION#": null,
+        "INSTANCES#": null,
+        "IN_ASSIGNED_TO#": null,
+        "IN_ASSIGNMENT_GROUP#": null,
+        "IN_CATEGORY_LEVEL1#": null,
+        "IN_CATEGORY_LEVEL2#": null,
+        "IN_CLOSE_CODE#": null,
+        "IN_CLOSE_NOTES#": null,
+        "IN_CMDB_CI#": null,
+        "IN_COMMENTS#": null,
+        "IN_INCIDENT_TYPE#": null,
+        "IN_NUMBER_ID": "${NUMBER_ID#}${TICKET#}",
+        "IN_NUMBER_ID#": null,
+        "IN_SITE#": null,
+        "IN_STATE#": null,
+        "IN_TICKET_ID": "${NUMBER_ID#}${TICKET#}",
+        "OPENJDK11_64_SCRIPT_NAME#": null,
+        "OPENJDK17_64_SCRIPT_NAME#": null,
+        "OPENJDK1_8_64_SCRIPT_NAME#": null,
+        "OPENJDK_11_64_INSTALL#": null,
+        "OPENJDK_11_64_VERSION#": null,
+        "OPENJDK_17_64_INSTALL#": null,
+        "OPENJDK_17_64_VERSION#": null,
+        "OPENJDK_1_8_64_INSTALL#": null,
+        "OPENJDK_1_8_64_VERSION#": null,
+        "ORACLE_JAVA_INSTALL#": null,
+        "ORACLE_JAVA_PATH#": null,
+        "ORACLE_JAVA_SCRIPT_NAME#": null,
+        "ORACLE_JAVA_VERSION#": null,
+        "PART": "${TOP_PART}",
+        "POSTCHECK_SCRIPT_NAME#": null,
+        "PRECHECK_SCRIPT_NAME#": null,
+        "SERVER_NAME#": null,
+        "TICKET#": null,
+        "TZ#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "GET-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "ALERT.DSC-WM-LATAM.JLIN.2",
+      "priority": "0",
+      "processingTemplate": "ALERT.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "ALERT.DSC-WM-LATAM.JLIN.2",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${CLOSE_NUMBER_ID#}",
+            "operator": "NE",
+            "value": ""
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "EQ",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "CATALOG_ITEM_ID#": null,
+        "CHILD_SERVICE#": null,
+        "CONFIGURATION_ITEM#": null,
+        "IBM_MQ_INSTALL#": null,
+        "IBM_MQ_PATH#": null,
+        "IBM_MQ_SCRIPT_NAME#": null,
+        "IBM_MQ_VERSION#": null,
+        "INSTANCES#": null,
+        "IN_EMAIL#": null,
+        "IN_MAIL": "RFSC_ALERT_EMAIL",
+        "IN_MESSAGE": "RFSC_CLOSE_ALERT_MESSAGE",
+        "IN_MESSAGE#": null,
+        "IN_SUBJECT": "RFSC_ALERT_SUBJECT",
+        "IN_SUBJECT#": null,
+        "OPENJDK11_64_SCRIPT_NAME#": null,
+        "OPENJDK17_64_SCRIPT_NAME#": null,
+        "OPENJDK1_8_64_SCRIPT_NAME#": null,
+        "OPENJDK_11_64_INSTALL#": null,
+        "OPENJDK_11_64_VERSION#": null,
+        "OPENJDK_17_64_INSTALL#": null,
+        "OPENJDK_17_64_VERSION#": null,
+        "OPENJDK_1_8_64_INSTALL#": null,
+        "OPENJDK_1_8_64_VERSION#": null,
+        "ORACLE_JAVA_INSTALL#": null,
+        "ORACLE_JAVA_PATH#": null,
+        "ORACLE_JAVA_SCRIPT_NAME#": null,
+        "ORACLE_JAVA_VERSION#": null,
+        "PART": "${TOP_PART}",
+        "POSTCHECK_SCRIPT_NAME#": null,
+        "PRECHECK_SCRIPT_NAME#": null,
+        "SERVER_NAME#": null,
+        "TICKET#": null,
+        "TZ#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CLOSE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "CLOSE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CLOSE-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "CLOSE-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.6",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_RFSC closing failed",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${CLOSE_NUMBER_ID#}",
+            "operator": "NE",
+            "value": ""
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "EQ",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "RFSC ${NUMBER_ID#}${TICKET#} closing failed",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CLOSE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "CLOSE-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CLOSE-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "CLOSE-INCIDENT-SITE.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.7",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_RFSC closed",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${CLOSE_NUMBER_ID#}",
+            "operator": "EQ",
+            "value": ""
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "EQ",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "CATALOG_ITEM_ID#": null,
+        "CHILD_SERVICE#": null,
+        "CONFIGURATION_ITEM#": null,
+        "IBM_MQ_INSTALL#": null,
+        "IBM_MQ_PATH#": null,
+        "IBM_MQ_SCRIPT_NAME#": null,
+        "IBM_MQ_VERSION#": null,
+        "INSTANCES#": null,
+        "IN_DESCRIPTION#": "RFSC - ${NUMBER_ID#}${TICKET#} was closed",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": "",
+        "OPENJDK11_64_SCRIPT_NAME#": null,
+        "OPENJDK17_64_SCRIPT_NAME#": null,
+        "OPENJDK1_8_64_SCRIPT_NAME#": null,
+        "OPENJDK_11_64_INSTALL#": null,
+        "OPENJDK_11_64_VERSION#": null,
+        "OPENJDK_17_64_INSTALL#": null,
+        "OPENJDK_17_64_VERSION#": null,
+        "OPENJDK_1_8_64_INSTALL#": null,
+        "OPENJDK_1_8_64_VERSION#": null,
+        "ORACLE_JAVA_INSTALL#": null,
+        "ORACLE_JAVA_PATH#": null,
+        "ORACLE_JAVA_SCRIPT_NAME#": null,
+        "ORACLE_JAVA_VERSION#": null,
+        "POSTCHECK_SCRIPT_NAME#": null,
+        "PRECHECK_SCRIPT_NAME#": null,
+        "SERVER_NAME#": null,
+        "TICKET#": null,
+        "TZ#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "ALERT.DSC-WM-LATAM.JLIN.2",
+          "predecessor": "ALERT.DSC-WM-LATAM.JLIN.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.6",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.6",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.8",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_CTASK closing started",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "CTASK - ${TICKET#} - closing has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.7",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.7",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "GET-TASK-CHANGE.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "GET-TASK-CHANGE.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "GET-TASK-CHANGE",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.8",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.8",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "UPDATE-CTASK-STATE.GSN.DSC-WM-LATAM.JSOAP",
+      "passBy": true,
+      "priority": "0",
+      "processingTemplate": "UPDATE-CTASK-STATE.GSN.DSC-WM-LATAM.JSOAP",
+      "processingType": "TASK",
+      "serverNodeType": "SOAP_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "SOAP_WEB_SERVICE_CALL",
+      "title": "UPDATE-CTASK-STATE.GSN.DSC-WM-LATAM.JSOAP",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-TASK-CHANGE.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "GET-TASK-CHANGE.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CLOSE-CHANGE-TASK.GSN.DSC-WM-LATAM.JSOAP",
+      "priority": "0",
+      "processingTemplate": "CLOSE-CHANGE-TASK.GSN.DSC-WM-LATAM.JSOAP",
+      "processingType": "TASK",
+      "serverNodeType": "SOAP_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "SOAP_WEB_SERVICE_CALL",
+      "title": "CLOSE-CHANGE-TASK.GSN.DSC-WM-LATAM.JSOAP",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "UPDATE-CTASK-STATE.GSN.DSC-WM-LATAM.JSOAP",
+          "predecessor": "UPDATE-CTASK-STATE.GSN.DSC-WM-LATAM.JSOAP",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "SOAP_WEB_SERVICE",
+          "taskType": "SOAP_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "ALERT.DSC-WM-LATAM.JLIN.3",
+      "priority": "0",
+      "processingTemplate": "ALERT.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "ALERT.DSC-WM-LATAM.JLIN.3",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${CTASK_UPDATE_STATUS#}",
+            "operator": "EQ",
+            "value": "OK"
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "CATALOG_ITEM_ID#": null,
+        "CHILD_SERVICE#": null,
+        "CONFIGURATION_ITEM#": null,
+        "IBM_MQ_INSTALL#": null,
+        "IBM_MQ_PATH#": null,
+        "IBM_MQ_SCRIPT_NAME#": null,
+        "IBM_MQ_VERSION#": null,
+        "INSTANCES#": null,
+        "IN_EMAIL#": null,
+        "IN_MAIL": "CTASK_ALERT_EMAIL",
+        "IN_MESSAGE": "CTASK_ALERT_MESSAGE",
+        "IN_MESSAGE#": null,
+        "IN_SUBJECT": "CTASK_ALERT_SUBJECT",
+        "IN_SUBJECT#": null,
+        "OPENJDK11_64_SCRIPT_NAME#": null,
+        "OPENJDK17_64_SCRIPT_NAME#": null,
+        "OPENJDK1_8_64_SCRIPT_NAME#": null,
+        "OPENJDK_11_64_INSTALL#": null,
+        "OPENJDK_11_64_VERSION#": null,
+        "OPENJDK_17_64_INSTALL#": null,
+        "OPENJDK_17_64_VERSION#": null,
+        "OPENJDK_1_8_64_INSTALL#": null,
+        "OPENJDK_1_8_64_VERSION#": null,
+        "ORACLE_JAVA_INSTALL#": null,
+        "ORACLE_JAVA_PATH#": null,
+        "ORACLE_JAVA_SCRIPT_NAME#": null,
+        "ORACLE_JAVA_VERSION#": null,
+        "PART": "${TOP_PART}",
+        "POSTCHECK_SCRIPT_NAME#": null,
+        "PRECHECK_SCRIPT_NAME#": null,
+        "SERVER_NAME#": null,
+        "TICKET#": null,
+        "TZ#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CLOSE-CHANGE-TASK.GSN.DSC-WM-LATAM.JSOAP",
+          "predecessor": "CLOSE-CHANGE-TASK.GSN.DSC-WM-LATAM.JSOAP",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "SOAP_WEB_SERVICE",
+          "taskType": "SOAP_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.9",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_CTASK closing failed",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${CTASK_UPDATE_STATUS#}",
+            "operator": "EQ",
+            "value": "OK"
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "CTASK - ${TICKET#} closing failed",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CLOSE-CHANGE-TASK.GSN.DSC-WM-LATAM.JSOAP",
+          "predecessor": "CLOSE-CHANGE-TASK.GSN.DSC-WM-LATAM.JSOAP",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "SOAP_WEB_SERVICE",
+          "taskType": "SOAP_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.10",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_CTASK closed",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${CTASK_UPDATE_STATUS#}",
+            "operator": "NE",
+            "value": "OK"
+          },
+          {
+            "fieldName": "${TICKET_TYPE#}",
+            "operator": "NE",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "CATALOG_ITEM_ID#": null,
+        "CHILD_SERVICE#": null,
+        "CONFIGURATION_ITEM#": null,
+        "IBM_MQ_INSTALL#": null,
+        "IBM_MQ_PATH#": null,
+        "IBM_MQ_SCRIPT_NAME#": null,
+        "IBM_MQ_VERSION#": null,
+        "INSTANCES#": null,
+        "IN_DESCRIPTION#": "CTASK - ${TICKET#} - was closed",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": "",
+        "OPENJDK11_64_SCRIPT_NAME#": null,
+        "OPENJDK17_64_SCRIPT_NAME#": null,
+        "OPENJDK1_8_64_SCRIPT_NAME#": null,
+        "OPENJDK_11_64_INSTALL#": null,
+        "OPENJDK_11_64_VERSION#": null,
+        "OPENJDK_17_64_INSTALL#": null,
+        "OPENJDK_17_64_VERSION#": null,
+        "OPENJDK_1_8_64_INSTALL#": null,
+        "OPENJDK_1_8_64_VERSION#": null,
+        "ORACLE_JAVA_INSTALL#": null,
+        "ORACLE_JAVA_PATH#": null,
+        "ORACLE_JAVA_SCRIPT_NAME#": null,
+        "ORACLE_JAVA_VERSION#": null,
+        "POSTCHECK_SCRIPT_NAME#": null,
+        "PRECHECK_SCRIPT_NAME#": null,
+        "SERVER_NAME#": null,
+        "TICKET#": null,
+        "TZ#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "ALERT.DSC-WM-LATAM.JLIN.3",
+          "predecessor": "ALERT.DSC-WM-LATAM.JLIN.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.9",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.9",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.11",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Middleware patching flow finished",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Middleware patching flow has finished",
+        "IN_FLOW_STATUS#": "1900",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.10",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.10",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    }
+  ]
+}

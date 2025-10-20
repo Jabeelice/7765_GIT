@@ -1,0 +1,86 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "DB_COPY_PARAMETERS#",
+      "title": "DB_COPY_PARAMETERS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MACHINE_FUNCTION#",
+      "title": "MACHINE_FUNCTION#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE#",
+      "title": "MODULE#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_AGENT#",
+      "title": "MODULE_AGENT#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-GENERATE-SCRIPT.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-GENERATE-SCRIPT.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "title": "GENERATE_DB_PASS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "",
+        "PARAMETERS#": "${DB_COPY_PARAMETERS#}",
+        "SCRIPT_NAME#": "${GENERATE_DB_PASS_SCRIPT#}",
+        "STEP#": "GENERATE_DB_PASS"
+      }
+    }
+  ]
+}

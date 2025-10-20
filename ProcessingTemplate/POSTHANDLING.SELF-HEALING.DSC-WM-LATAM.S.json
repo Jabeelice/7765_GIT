@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":IF &EXITCODE# > 0\n:  SET &CLOSE_RFSC_MESSAGE# = \"with NON-ZERO EXIT-CODE!. Please fix underlying issue manually.\"\n:ELSE\n:  SET &CLOSE_RFSC_MESSAGE# = \"\"\n:ENDIF\n:PUBLISH &CLOSE_RFSC_MESSAGE#,,TOP"
+  }
+}

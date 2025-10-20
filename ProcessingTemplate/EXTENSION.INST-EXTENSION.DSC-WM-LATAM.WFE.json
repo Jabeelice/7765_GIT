@@ -1,0 +1,79 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "lazyLoad": true,
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "FOR_EACH",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "forEachCollection": "${EXTENSION_LIST}",
+    "forEachCollectionType": "TEXT",
+    "forEachIteratorName": "EXTENSION#",
+    "forEachSeparator": ",",
+    "onUnresolvedVariables": "FAIL",
+    "sequentialProcessing": true
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "FOR_EACH"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "editorType": "TEXT",
+      "name": "IN_EXTENSIONS#",
+      "title": "IN_EXTENSIONS#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-INSTALL.INST-EXTENSION.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-INSTALL.INST-EXTENSION.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS": null,
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS": null,
+        "PARAMETERS#": "${EXTENSION#} ${TICKET#}",
+        "SCRIPT_NAME": null,
+        "SCRIPT_NAME#": "${INSTALL_SCRIPT_NAME#}",
+        "STEP": null,
+        "STEP#": "INSTALL_EXTENSION"
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! Get DB management server\n:SET &DB_MANAGEMENT_SERVER# = \"\"\n:DEFINE &IAGENTS#,string,2\n:DEFINE &OAGENTS#,string,2\n:DEFINE &AAGENT#,string,3\n\n:FILL &IAGENTS#[] = STR_SPLIT(\"&DB_MANAGEMENT_SERVER_PRIMARY#,&DB_MANAGEMENT_SERVER_SECONDARY#\",\",\")\n:SET &RUNVAR# = 1\n:SET &LEN# = LENGTH(&IAGENTS#[])\n\n:WHILE &RUNVAR# LE &LEN#\n:  FILL &AAGENT#[] = STR_SPLIT(&IAGENTS#[&RUNVAR#],\".\")\n:  SET &AGENT_UC# = \"&AAGENT#[1]\"\n:  SET &OAGENTS#[&RUNVAR#] = \"&AGENT_UC#.os\"\n:  SET &AGENT_ALIVE# = SYS_HOST_ALIVE(&OAGENTS#[&RUNVAR#])\n:  PRINT \"Agent &OAGENTS#[&RUNVAR#], Alive: &AGENT_ALIVE#\"\n:  IF &AGENT_ALIVE# = \"Y\"\n:    SET &DB_MANAGEMENT_SERVER# = &IAGENTS#[&RUNVAR#]\n:    SET &RUNVAR# = &LEN# + 1\n:  ENDIF\n:  SET &RUNVAR# = &RUNVAR# + 1\n:ENDWHILE\n\n:PUBLISH &DB_MANAGEMENT_SERVER#,,WORKFLOW"
+  }
+}

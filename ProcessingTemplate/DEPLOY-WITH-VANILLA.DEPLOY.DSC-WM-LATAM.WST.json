@@ -1,0 +1,584 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Deploy with vanilla started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Deploy with vanilla has been started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "",
+        "IN_MODULE#": "",
+        "IN_MODULE_STATUS#": ""
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "VANILLA-GET-AFSM.DEPLOY.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "VANILLA-GET-AFSM.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "VANILLA-GET-AFSM",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-DB-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "MODULE-DB-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "WMS_DB",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${WMS_USERNAME#}",
+            "operator": "EQ",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "INSTALL_PARAMETERS#": "'copyvanilla' '${VANILLA_APP_RUN_MODE#}' '${APP_RUN_MODE#}' '${VANILLA_WMS_DB_USERNAME#}' '${VANILLA_WMS_DB_PASSWORD#}' '${VANILLA_WMS_DB_VIP_PRI#}' '${VANILLA_WMS_DB_PORT#}' '${VANILLA_WMS_DB_SID#}' '${VANILLA_DB_DIRECTORY_NAME#}' '${WMS_DB_USERNAME#}' '${WMS_DB_PASSWORD#}' '${WMS_DB_VIP_PRI#}' '${WMS_DB_PORT#}' '${WMS_DB_SID#}' '${DB_DIRECTORY_NAME#}' '${DATA_COPY_DAYS#}' '${APPLICATION_MAJOR_VERSION#}' '${TARGET_DISABLE_JOBS#}'",
+        "MACHINE_FUNCTION#": "WMS_DB",
+        "MODULE#": "WMS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}",
+        "MODULE_USERNAME#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "VANILLA-GET-AFSM.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "VANILLA-GET-AFSM.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-DB-VANILLA.DEPLOY.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "MODULE-DB-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "REFS_DB",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${REFS_USERNAME#}",
+            "operator": "EQ",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "INSTALL_PARAMETERS#": "'copyvanilla' '${VANILLA_APP_RUN_MODE#}' '${APP_RUN_MODE#}' '${VANILLA_REFS_DB_USERNAME#}' '${VANILLA_REFS_DB_PASSWORD#}' '${VANILLA_REFS_DB_VIP_PRI#}' '${VANILLA_REFS_DB_PORT#}' '${VANILLA_REFS_DB_SID#}' '${VANILLA_DB_DIRECTORY_NAME#}' '${REFS_DB_USERNAME#}' '${REFS_DB_PASSWORD#}' '${REFS_DB_VIP_PRI#}' '${REFS_DB_PORT#}' '${REFS_DB_SID#}' '${DB_DIRECTORY_NAME#}' '${DATA_COPY_DAYS#}' '${APPLICATION_MAJOR_VERSION#}' '${TARGET_DISABLE_JOBS#}'",
+        "MACHINE_FUNCTION#": "REFS_DB",
+        "MODULE#": "REFS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}",
+        "MODULE_USERNAME#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "VANILLA-GET-AFSM.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "VANILLA-GET-AFSM.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-DB-VANILLA.DEPLOY.DSC-WM-LATAM.WST.3",
+      "passBy": true,
+      "priority": "0",
+      "processingTemplate": "MODULE-DB-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "EMS_DB",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EMS_USERNAME#}",
+            "operator": "EQ",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "INSTALL_PARAMETERS#": "'copyvanilla' '${VANILLA_APP_RUN_MODE#}' '${APP_RUN_MODE#}' '${VANILLA_EMS_DB_USERNAME#}' '${VANILLA_EMS_DB_PASSWORD#}' '${VANILLA_EMS_DB_VIP_PRI#}' '${VANILLA_EMS_DB_PORT#}' '${VANILLA_EMS_DB_SID#}' '${VANILLA_DB_DIRECTORY_NAME#}' '${EMS_DB_USERNAME#}' '${EMS_DB_PASSWORD#}' '${EMS_DB_VIP_PRI#}' '${EMS_DB_PORT#}' '${EMS_DB_SID#}' '${DB_DIRECTORY_NAME#}' '${DATA_COPY_DAYS#}' '${APPLICATION_MAJOR_VERSION#}' '${TARGET_DISABLE_JOBS#}'",
+        "MACHINE_FUNCTION#": "EMS_DB",
+        "MODULE#": "EMS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}",
+        "MODULE_USERNAME#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "VANILLA-GET-AFSM.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "VANILLA-GET-AFSM.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "VANILLA-BACKUP",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "VANILLA-GET-AFSM.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "VANILLA-GET-AFSM.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-EMS-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "passBy": true,
+      "priority": "0",
+      "processingTemplate": "MODULE-EMS-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "EMS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EMS_PRIMARY_SERVER#}",
+            "operator": "EQ",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "INSTALL_PARAMETERS#": "",
+        "MACHINE_FUNCTION#": "EMS",
+        "MODULE#": "EMS",
+        "MODULE_AGENT#": "${EMS_PRIMARY_SERVER#}",
+        "MODULE_USERNAME#": "${EMS_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-REFS-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "MODULE-REFS-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "REFS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${REFS_PRIMARY_SERVER#}",
+            "operator": "EQ",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "INSTALL_PARAMETERS#": "",
+        "MACHINE_FUNCTION#": "REFS",
+        "MODULE#": "REFS",
+        "MODULE_AGENT#": "${REFS_PRIMARY_SERVER#}",
+        "MODULE_USERNAME#": "${REFS_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-RW-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "MODULE-RW-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "RW",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${RW_PRIMARY_SERVER#}",
+            "operator": "EQ",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "INSTALL_PARAMETERS#": "",
+        "MACHINE_FUNCTION#": "RW",
+        "MODULE#": "RW",
+        "MODULE_AGENT#": "${RW_PRIMARY_SERVER#}",
+        "MODULE_USERNAME#": "${RW_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-WMS-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "MODULE-WMS-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "WMS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${WMS_PRIMARY_SERVER#}",
+            "operator": "EQ",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "INSTALL_PARAMETERS#": "",
+        "MACHINE_FUNCTION#": "WMS",
+        "MODULE#": "WMS",
+        "MODULE_AGENT#": "${WMS_PRIMARY_SERVER#}",
+        "MODULE_USERNAME#": "${WMS_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-DB-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "MODULE-DB-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-DB-VANILLA.DEPLOY.DSC-WM-LATAM.WST.2",
+          "predecessor": "MODULE-DB-VANILLA.DEPLOY.DSC-WM-LATAM.WST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-DB-VANILLA.DEPLOY.DSC-WM-LATAM.WST.3",
+          "predecessor": "MODULE-DB-VANILLA.DEPLOY.DSC-WM-LATAM.WST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "POSTDEPLOY-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "POSTDEPLOY-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "POSTDEPLOY-VANILLA",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-EMS-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "MODULE-EMS-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-REFS-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "MODULE-REFS-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-RW-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "MODULE-RW-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-WMS-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "MODULE-WMS-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Deploy with vanilla finished",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Deploy with vanilla has been finished",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "",
+        "IN_MODULE#": "",
+        "IN_MODULE_STATUS#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "POSTDEPLOY-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "POSTDEPLOY-VANILLA.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    }
+  ]
+}

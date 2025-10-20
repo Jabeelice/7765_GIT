@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! Configure Modules\n:DEFINE &AMODULES#, string, 20\n:FILL &AMODULES#[] = STR_SPLIT(\"&MODULES#\", \",\")\n:SET &LEN# = LENGTH(&AMODULES#[])\n\n:SET &WMS_CONF#          = \"false\"\n:SET &REFS_CONF#         = \"false\"\n:SET &RW_CONF#           = \"false\"\n:SET &EMS_CONF#          = \"false\"\n:SET &WMS_FAIL_CONF#     = \"false\"\n:SET &REFS_FAIL_CONF#    = \"false\"\n:SET &RW_FAIL_CONF#      = \"false\"\n:SET &EMS_FAIL_CONF#     = \"false\"\n\n:SET &RUNVAR# = 1\n:WHILE &RUNVAR# LE &LEN#\n:  SWITCH \"Y\"\n:    CASE &AMODULES#[&RUNVAR#] = \"WMS\"\n:      SET &WMS_CONF# = \"true\"\n:    CASE &AMODULES#[&RUNVAR#] = \"REFS\"\n:      SET &REFS_CONF# = \"true\"\n:    CASE &AMODULES#[&RUNVAR#] = \"RW\"\n:      SET &RW_CONF# = \"true\"\n:    CASE &AMODULES#[&RUNVAR#] = \"EMS\"\n:      SET &EMS_CONF# = \"true\"\n:    CASE &AMODULES#[&RUNVAR#] = \"WMS-FAIL\"\n:      SET &WMS_FAIL_CONF# = \"true\"\n:    CASE &AMODULES#[&RUNVAR#] = \"REFS-FAIL\"\n:      SET &REFS_FAIL_CONF# = \"true\"\n:    CASE &AMODULES#[&RUNVAR#] = \"RW-FAIL\"\n:      SET &RW_FAIL_CONF# = \"true\"\n:    CASE &AMODULES#[&RUNVAR#] = \"EMS-FAIL\"\n:      SET &EMS_FAIL_CONF# = \"true\"\n:  ENDSWITCH\n:  SET &RUNVAR# = &RUNVAR# + 1\n:ENDWHILE\n\n:PUBLISH &WMS_CONF#,,WORKFLOW\n:PUBLISH &REFS_CONF#,,WORKFLOW\n:PUBLISH &RW_CONF#,,WORKFLOW\n:PUBLISH &EMS_CONF#,,WORKFLOW\n:PUBLISH &WMS_FAIL_CONF#,,WORKFLOW\n:PUBLISH &REFS_FAIL_CONF#,,WORKFLOW\n:PUBLISH &RW_FAIL_CONF#,,WORKFLOW\n:PUBLISH &EMS_FAIL_CONF#,,WORKFLOW"
+  }
+}

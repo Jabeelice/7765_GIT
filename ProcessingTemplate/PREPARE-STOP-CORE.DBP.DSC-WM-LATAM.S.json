@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "\n:SET &PRECHECK_SCRIPT_NAME# = GET_VAR(CONFIG.DB-PASS-CHANGE.DSC-WM-LATAM.V,PRECHECK_SCRIPT_NAME,1)\n:SET &CRONTAB_SCRIPT_NAME# = GET_VAR(CONFIG.DB-PASS-CHANGE.DSC-WM-LATAM.V,CRONTAB_SCRIPT_NAME,1)\n:SET &STOP_SCRIPT_NAME# = GET_VAR(CONFIG.DB-PASS-CHANGE.DSC-WM-LATAM.V,STOP_SCRIPT_NAME,1)\n\n:PUB &PRECHECK_SCRIPT_NAME#,,WORKFLOW\n:PUB &CRONTAB_SCRIPT_NAME#,,WORKFLOW\n:PUB &STOP_SCRIPT_NAME#,,WORKFLOW"
+  }
+}

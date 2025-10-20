@@ -1,0 +1,321 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "ignoreProcessingStateRegistry": true,
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "forceCompletedCondition": {
+    "criteria": 
+    [
+      {
+        "fieldName": "${TICKET#}",
+        "operator": "IS_NULL",
+        "value": null
+      }
+    ],
+    "operator": "AND"
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "defaultValue": "${TICKET#}",
+      "editorType": "TEXT",
+      "name": "IN_TICKET",
+      "title": "IN_TICKET"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${INSTANCE_NAME#}",
+      "editorType": "TEXT",
+      "name": "IN_INSTANCE_NAME",
+      "title": "IN_INSTANCE_NAME"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${CHILD_SERVICE#}",
+      "editorType": "TEXT",
+      "name": "IN_CHILD_SERVICE",
+      "title": "IN_CHILD_SERVICE"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE.GSN.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PREPARE.GSN.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "PREPARE",
+      "weight": "1"
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "READ-CHANGE-TASK.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "READ-CHANGE-TASK.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "READ-CHANGE-TASK",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TYPE#}",
+            "operator": "NE",
+            "value": "CTASK"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_TICKET_ID": "${IN_TICKET}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE.GSN.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE.GSN.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "ALERT-TICKET.DSC-WM-LATAM.JLIN",
+      "processingTemplate": "ALERT-TICKET.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "Alert_1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TYPE#}",
+            "operator": "NE",
+            "value": "CTASK"
+          },
+          {
+            "fieldName": "${CTASK_VALID#}",
+            "operator": "EQ",
+            "value": "true"
+          }
+        ],
+        "operator": "OR"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "READ-CHANGE-TASK.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "READ-CHANGE-TASK.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "READ-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "READ-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "READ-INCIDENT",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TYPE#}",
+            "operator": "NE",
+            "value": "INC"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_TICKET_ID": "${IN_TICKET}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "ALERT-TICKET.DSC-WM-LATAM.JLIN",
+          "predecessor": "ALERT-TICKET.DSC-WM-LATAM.JLIN",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "ALERT-TICKET.DSC-WM-LATAM.JLIN.1",
+      "processingTemplate": "ALERT-TICKET.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "Alert_2",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INC_VALID#}",
+            "operator": "EQ",
+            "value": "true"
+          },
+          {
+            "fieldName": "${TYPE#}",
+            "operator": "NE",
+            "value": "INC"
+          }
+        ],
+        "operator": "OR"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "READ-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "predecessor": "READ-INCIDENT.GSN.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "UPDATE-INCIDENT-STATE.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "UPDATE-INCIDENT-STATE.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "UPDATE-INCIDENT",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${TYPE#}",
+            "operator": "NE",
+            "value": "INC"
+          },
+          {
+            "fieldName": "${INC_VALID#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "OR"
+      },
+      "templateParameters": {
+        "IN_INCIDENT_STATE": "40",
+        "IN_NUMBER_ID": "${IN_TICKET}",
+        "IN_STATE": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "ALERT-TICKET.DSC-WM-LATAM.JLIN.1",
+          "predecessor": "ALERT-TICKET.DSC-WM-LATAM.JLIN.1",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        }
+      ]
+    }
+  ]
+}

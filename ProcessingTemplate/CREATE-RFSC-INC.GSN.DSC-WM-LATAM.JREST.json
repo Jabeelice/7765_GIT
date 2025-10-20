@@ -1,0 +1,61 @@
+{
+  "description": "Create Incident",
+  "endpoint": "ServiceNow.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Rest.rr",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "preScript": ":SET &IN_ASSIGNMENT_GROUP# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_ASSIGNMENT_GROUP,2)\n:PUB &IN_ASSIGNMENT_GROUP#,,TASK\n:SET &IN_IMPACT# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_IMPACT,1)\n:PUB &IN_IMPACT#,,TASK\n:SET &IN_CALLER# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_CALLER,1)\n:PUB &IN_CALLER#,,TASK\n:SET &IN_CATEGORY_LEVEL1# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_CATEGORY_LEVEL1,1)\n:PUB &IN_CATEGORY_LEVEL1#,,TASK\n:SET &IN_CONTACT_TYPE# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_CONTACT_TYPE,1)\n:PUB &IN_CONTACT_TYPE#,,TASK\n:SET &IN_U_IMPACTED_BUSINESS_UNIT# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_IMPACTED_BUSSINESS_UNIT,1)\n:PUB &IN_U_IMPACTED_BUSINESS_UNIT#,,TASK \n:SET &IN_SERVICE# = &CHILD_SERVICE#\n:PUB &IN_SERVICE#,,TASK\n:SET &IN_STATE# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_STATE,1)\n:PUB &IN_STATE#,,TASK\n:SET &IN_INCIDENT_TYPE# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_INCIDENT_TYPE,1)\n:PUB &IN_INCIDENT_TYPE#,,TASK\n:SET &IN_LOCATION# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_LOCATION,1)\n:PUB &IN_LOCATION#,,TASK\n\n:INC PICK.INCIDENT-CONFIG.GSN.DSC-WM-LATAM.INCL\n:INC READ.INCIDENT-CONFIG.GSN.DSC-WM-LATAM.INCL\n\n!:READ &GSN_CREATE_URL#,,,&SC_GSN_CREATE_URL#\n!:SET &GSN_CREATE_URL# = &SC_GSN_CREATE_URL#\n!:SET &GSN_FULL_URL# = \"&GSN_CREATE_URL#\"\n\n:SET &GSN_CREATE_URL# = &SC_GSN_CONTEXT_CREATE#\n:SET &GSN_PART_URL# = \"&GSN_CREATE_URL#\"\n:PUB &GSN_PART_URL#,,TASK\n\n:SET &IN_SHORT_DESCRIPTION# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_SHORT_DESCRIPTION,2)\n:RESOLVE &SHORT_DESCRIPTION# = \"&IN_SHORT_DESCRIPTION#\"\n:PUB &SHORT_DESCRIPTION#,,TASK\n\n:SET &IN_CMDB_CI# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_CONFIGURATION_ITEM,1)\n:RESOLVE &CMDB_CI# = \"&IN_CMDB_CI#\"\n:PUB &CMDB_CI#,,TASK\n\n:SET &IN_DESCRIPTION# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_DESCRIPTION,2)\n:SET &NEWLINE# = UC_CRLF()\n:SET &TMP_STR# = STR_SUB(&IN_DESCRIPTION#,&NEWLINE#,\"\\n\")\n:RESOLVE &DESCRIPTION# = \"&TMP_STR#\"\n:PUB &DESCRIPTION#,,TASK\n",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "{\n \"assignment_group\": \"${IN_ASSIGNMENT_GROUP#}\",\n \"assigned_to\": \"\",\n \"impact\": \"${IN_IMPACT#}\",\n \"u_business_outage_duration\": \"\",\n \"u_business_outage_end\": \"\",\n \"u_business_outage_start\": \"\",\n \"caller_id\": \"${IN_CALLER#}\",\n \"u_category_level_1\": \"${IN_CATEGORY_LEVEL1#}\",\n \"u_category_level_2\": \"\",\n \"u_hpsd_change\": \"\",\n \"caused_by\": \"\",\n \"close_code\": \"\",\n \"cmdb_ci\": \"${CMDB_CI#}\",\n \"contact_type\": \"${IN_CONTACT_TYPE#}\",\n \"u_spl_closure_code\": \"\",\n \"u_customer_company\": \"\",\n \"u_customer_impact\": \"\",\n \"description\": \"${DESCRIPTION#}\",\n \"u_due_to_change\": \"\",\n \"u_email_notification\": \"\",\n \"u_external_id\": \"\",\n \"u_external_system\": \"\",\n \"comments\": \"\",\n \"u_form_type\": \"\",\n \"u_impacted_area\": \"\",\n \"u_impacted_business_unit\": \"${IN_U_IMPACTED_BUSINESS_UNIT#}\",\n \"u_service\": \"${IN_SERVICE#}\",\n \"u_impacted_solution\": \"\",\n \"u_incident_occurred\": \"\",\n \"incident_state\": \"${IN_STATE#}\",\n \"u_incident_type\": \"${IN_INCIDENT_TYPE#}\",\n \"work_notes\": \"\",\n \"u_service_recipient\": \"${IN_CALLER#}\",\n \"u_other_supplier\": \"\",\n \"parent_incident\": \"\",\n \"problem_id\": \"\",\n \"u_site_code\": \"\",\n \"u_reassignment_reason\": \"\",\n \"u_cause_service\": \"\",\n \"short_description\": \"${SHORT_DESCRIPTION#}\",\n \"u_site\": \"\",\n \"close_notes\": \"\",\n \"u_spl_warehouse_code\": \"\",\n \"u_supplier\": \"\",\n \"urgency\": \"\",\n \"watch_list\": \"\",\n \"work_notes_list\": \"\",\n \"location\": \"${IN_LOCATION#}\"\n}",
+    "headers": "Content-Type=application/json\nrequestDataSource=text\nresponseTimeout=60\n",
+    "method": "POST",
+    "resultVariableLevel": "SELF",
+    "url": "${GSN_PART_URL#}"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "PART",
+      "title": "PART"
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "NUMBER_ID#",
+      "outputFormat": "JSON",
+      "title": "NUMBER_ID#",
+      "outputDefinition": {
+        "dataPath": "$.result.number",
+        "outputLevel": "PARENT"
+      }
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "SYS_ID#",
+      "outputFormat": "JSON",
+      "title": "SYS_ID#",
+      "outputDefinition": {
+        "dataPath": "$.result.sys_id",
+        "outputLevel": "PARENT"
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! Restart modules\n:IF &RESTART_TYPE_PARAMETER# = \"Mbuild\"\n:  SET &RESTART_TYPE_MESSAGE# = \"with mbuild\"\n:ELSE\n:  SET &RESTART_TYPE_MESSAGE# = \"without mbuild\"\n:ENDIF\n:PUBLISH &RESTART_TYPE_MESSAGE#,,WORKFLOW\n\n:SET &MODULES# = \"\"\n\n:SET &WMS_RESTART#       = \"false\"\n:SET &REFS_RESTART#      = \"false\"\n:SET &RW_RESTART#        = \"false\"\n:SET &EMS_RESTART#       = \"false\"\n:SET &WMS_FAIL_RESTART#  = \"false\"\n:SET &REFS_FAIL_RESTART# = \"false\"\n:SET &RW_FAIL_RESTART#   = \"false\"\n:SET &EMS_FAIL_RESTART#  = \"false\"\n\n\n:IF &WMS_PRIMARY_SERVER# <> \"\"\n: IF &WMS_PRIMARY_SHOULD_RUN# = \"true\"\n:   SET &WMS_RESTART# = \"true\"\n:   SET &MODULES# = STR_CAT(&MODULES#, \"WMS,\")\n: ENDIF\n:ENDIF\n\n:IF &REFS_PRIMARY_SERVER# <> \"\"\n: IF &REFS_PRIMARY_SHOULD_RUN# = \"true\"\n:   SET &REFS_RESTART# = \"true\"\n:   SET &MODULES# = STR_CAT(&MODULES#, \"REFS,\")\n: ENDIF\n:ENDIF\n\n:IF &RW_PRIMARY_SERVER# <> \"\"\n: IF &RW_PRIMARY_SHOULD_RUN# = \"true\"\n:   SET &RW_RESTART# = \"true\"\n:   SET &MODULES# = STR_CAT(&MODULES#, \"RW,\")\n: ENDIF\n:ENDIF\n\n:IF &EMS_PRIMARY_SERVER# <> \"\"\n: IF &EMS_PRIMARY_SHOULD_RUN# = \"true\"\n:   SET &EMS_RESTART# = \"true\"\n:   SET &MODULES# = STR_CAT(&MODULES#, \"EMS,\")\n: ENDIF\n:ENDIF\n\n:IF &WMS_FAILOVER_SERVER# <> \"\"\n:  IF &WMS_FAILOVER_SHOULD_RUN# = \"true\"\n:    SET &RET# = STR_MATCH(&MODULES#, \"*WMS*\")\n:    IF &RET# = \"N\"\n:      SET &MODULES# = STR_CAT(&MODULES#, \"WMS,\")\n:    ENDIF\n:    SET &WMS_FAIL_RESTART# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF &REFS_FAILOVER_SERVER# <> \"\"\n:  IF &REFS_FAILOVER_SHOULD_RUN# = \"true\"\n:    SET &RET# = STR_MATCH(&MODULES#, \"*REFS*\")\n:    IF &RET# = \"N\"\n:      SET &MODULES# = STR_CAT(&MODULES#, \"REFS,\")\n:    ENDIF\n:    SET &REFS_FAIL_RESTART# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF &RW_FAILOVER_SERVER# <> \"\"\n:  IF &RW_FAILOVER_SHOULD_RUN# = \"true\"\n:    SET &RET# = STR_MATCH(&MODULES#, \"*RW*\")\n:    IF &RET# = \"N\"\n:      SET &MODULES# = STR_CAT(&MODULES#, \"RW,\")\n:    ENDIF\n:    SET &RW_FAIL_RESTART# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF &EMS_FAILOVER_SERVER# <> \"\"\n:  IF &EMS_FAILOVER_SHOULD_RUN# = \"true\"\n:    SET &RET# = STR_MATCH(&MODULES#, \"*EMS*\")\n:    IF &RET# = \"N\"\n:      SET &MODULES# = STR_CAT(&MODULES#, \"EMS,\")\n:    ENDIF\n:    SET &EMS_FAIL_RESTART# = \"true\"\n:  ENDIF\n:ENDIF\n\n:PUBLISH &WMS_RESTART#,,WORKFLOW\n:PUBLISH &REFS_RESTART#,,WORKFLOW\n:PUBLISH &RW_RESTART#,,WORKFLOW\n:PUBLISH &EMS_RESTART#,,WORKFLOW\n:PUBLISH &WMS_FAIL_RESTART#,,WORKFLOW\n:PUBLISH &REFS_FAIL_RESTART#,,WORKFLOW\n:PUBLISH &RW_FAIL_RESTART#,,WORKFLOW\n:PUBLISH &EMS_FAIL_RESTART#,,WORKFLOW\n\n:SET &LENGTH# = STR_LENGTH(&MODULES#)\n:IF &LENGTH# > 0\n:  SET &LE# = &LENGTH# - 1\n:  SET &MODULES# = SUBSTR(&MODULES#, 1, &LE#)\n:ENDIF\n\n:PUBLISH &MODULES#,,WORKFLOW"
+  }
+}

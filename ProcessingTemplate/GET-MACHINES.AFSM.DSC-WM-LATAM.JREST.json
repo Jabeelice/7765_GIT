@@ -1,0 +1,57 @@
+{
+  "description": "Get machines from AFSM",
+  "endpoint": "Afsm.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Rest.rr",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &M_DB_VIP_PRI# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.machine_hostname\")\n:SET &M_DB_SID# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.sid\")\n:SET &M_DB_ADMIN_PASSWORD# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.db_admin_password\")\n:SET &M_DB_ADMIN_USERNAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.db_admin_username\")\n:SET &M_DB_PORT# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.db_port\")\n:SET &M_DB_NAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.db_name\")\n:SET &M_CERTIFICATE_PASSWORD# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.certificate_password\")\n\n!:PUBLISH &M_DB_VIP_PRI#,,WORKFLOW\n!:PUBLISH &M_DB_SID#,,WORKFLOW\n!:PUBLISH &M_DB_ADMIN_PASSWORD#,,WORKFLOW\n!:PUBLISH &M_DB_ADMIN_USERNAME#,,WORKFLOW\n!:PUBLISH &M_DB_PORT#,,WORKFLOW\n!:PUBLISH &M_DB_NAME#,,WORKFLOW\n:PUBLISH &M_CERTIFICATE_PASSWORD#,,WORKFLOW",
+  "preScript": ":INC PICK.SYSTEM-CONFIG.AFSM.DSC-WM-LATAM.INCL\n:INC READ.SYSTEM-CONFIG.AFSM.DSC-WM-LATAM.INCL\n\n!:READ &AFSM_URL#,,,&SC_AFSM_URL#\n!:READ &SC_AFSM_CONTEXT_MACHINE#,,,&SC_AFSM_CONTEXT_MACHINE#\n:SET &SC_AFSM_CONTEXT_MACHINE# = &SC_AFSM_CONTEXT_MACHINE#\n:SET &AFSM_PART_URL# = \"&SC_AFSM_CONTEXT_MACHINE#/${IN_HOSTNAME#}/${IN_SID#}/&SC_RUN_ID#\"\n:PUB &AFSM_PART_URL#\n\n!:INC CREST.AFSM.DSC-WM-LATAM.INCL",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "",
+    "headers": "responseTimeout=60\n",
+    "method": "GET",
+    "resultVariableLevel": "SELF",
+    "url": "${AFSM_PART_URL#}"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_HOSTNAME#",
+      "title": "IN_HOSTNAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_SID#",
+      "title": "IN_SID#"
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "RESPONSE_CONTENT#",
+      "outputFormat": "JSON",
+      "title": "RESPONSE_CONTENT#",
+      "outputDefinition": {
+        "dataPath": "$"
+      }
+    }
+  ]
+}

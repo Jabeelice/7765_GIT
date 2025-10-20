@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! DB ARCH Machine\n\n:SET &TGT_WMS_ARCH_DB_VIP_PRI# = ${M_DB_VIP_PRI#}\n:SET &TGT_WMS_ARCH_DB_PORT#    = ${M_DB_PORT#}\n:SET &TGT_WMS_ARCH_DB_SID#     = ${M_DB_SID#}\n:SET &TGT_DB_ADMIN_PASSWORD#   = ${M_DB_ADMIN_PASSWORD#}\n:SET &TGT_DB_ADMIN_USERNAME#   = ${M_DB_ADMIN_USERNAME#}\n\n:PUBLISH &TGT_WMS_ARCH_DB_VIP_PRI#,,WORKFLOW\n:PUBLISH &TGT_WMS_ARCH_DB_PORT#,,WORKFLOW\n:PUBLISH &TGT_WMS_ARCH_DB_SID#,,WORKFLOW\n:PUBLISH &TGT_DB_ADMIN_PASSWORD#,,WORKFLOW\n:PUBLISH &TGT_DB_ADMIN_USERNAME#,,WORKFLOW"
+  }
+}

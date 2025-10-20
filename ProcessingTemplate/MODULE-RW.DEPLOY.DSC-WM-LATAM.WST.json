@@ -1,0 +1,135 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "evaluateExpressions": true,
+      "name": "INSTALL_PARAMETERS#",
+      "title": "INSTALL_PARAMETERS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "evaluateExpressions": true,
+      "name": "MACHINE_FUNCTION#",
+      "title": "MACHINE_FUNCTION#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "evaluateExpressions": true,
+      "name": "MODULE#",
+      "title": "MODULE#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "evaluateExpressions": true,
+      "name": "MODULE_AGENT#",
+      "title": "MODULE_AGENT#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "evaluateExpressions": true,
+      "name": "MODULE_USERNAME#",
+      "title": "MODULE_USERNAME#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SUDO-SCRIPT.DEPLOY.DSC-WM-LATAM.WST",
+      "passBy": true,
+      "priority": "0",
+      "processingTemplate": "RUN-SUDO-SCRIPT.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "USERINSTALL",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "${MODULE#} ${RW_USERINSTALL_RESPONSE_FILE#} ${APPLICATION_VERSION_PATH#}",
+        "SCRIPT_NAME#": "${USERINSTALL_SCRIPT_NAME#}",
+        "STEP#": "USERINSTALL"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SUDO-SCRIPT.DEPLOY.DSC-WM-LATAM.WST.2",
+      "passBy": true,
+      "priority": "0",
+      "processingTemplate": "RUN-SUDO-SCRIPT.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "MOCAREG",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "${MODULE#} ${RW_MOCAREG_RESPONSE_FILE#} ${WMS_PRIMARY_SERVER_URL#} ${REFS_PRIMARY_SERVER_URL#} ${RW_PRIMARY_SERVER_URL#} ${EMS_PRIMARY_SERVER_URL#}",
+        "SCRIPT_NAME#": "${MOCAREG_SCRIPT_NAME#}",
+        "STEP#": "MOCAREG"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SUDO-SCRIPT.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-SUDO-SCRIPT.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":SET &TMP# = STR_SUB('${IN_AGENT}', '[','')\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n\n:DEFINE &AAGENT#,string,3\n:FILL &AAGENT#[] = STR_SPLIT(&TMP#,\".\")\n:SET &AGENT_UC# = \"&AAGENT#[1]\"\n:SET &AGENT# = \"&AGENT_UC#.os\"\n\n:SET &DELAY# = 60\n:SET &CHECK_COUNT# = 1\n:SET &CHECK_COUNT_MAX# = 10\n\n:WHILE &CHECK_COUNT# LE &CHECK_COUNT_MAX#\n:  SET &AGENT_ALIVE# = SYS_HOST_ALIVE(&AGENT#)\n:  SET &CHECK_COUNT_F# = FORMAT(&CHECK_COUNT#)\n:  PRINT \"Checking agent: &AGENT# status &CHECK_COUNT_F# time(s) ...\"\n:  IF  &AGENT_ALIVE# = \"Y\"\n:    PRINT \"Agent: &AGENT# is up.\"\n:    SET &CHECK_COUNT# =  &CHECK_COUNT_MAX#\n:  ELSE\n:    SET &DELAY_F# = FORMAT(&DELAY#)\n:    PRINT \"Agent: &AGENT# is down!\"\n:    PRINT \"&DELAY_F# seconds waiting for next check\"\n:    WAIT &DELAY#\n:  ENDIF\n:  SET &CHECK_COUNT# = &CHECK_COUNT# + 1\n:ENDWHILE\n:PUBLISH &AGENT_ALIVE#"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_AGENT",
+      "title": "IN_AGENT"
+    }
+  ]
+}

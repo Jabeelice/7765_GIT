@@ -1,0 +1,45 @@
+{
+  "description": "Get db servers from AFSM",
+  "endpoint": "Afsm.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Rest.rr",
+  "owner": "TDROBISZ",
+  "postScript": ":DEFINE &IAGENTS#,STRING,2\n:DEFINE &OAGENTS#,STRING,2\n:DEFINE &AAGENT#,STRING,3\n\n:SET &DB_MANAGEMENT_SERVER_PRIMARY# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.mngm_srv_pri\")\n:SET &DB_MANAGEMENT_SERVER_SECONDARY# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.mngm_srv_sec\")\n:SET &AGENTS# = \"&DB_MANAGEMENT_SERVER_PRIMARY#,&DB_MANAGEMENT_SERVER_SECONDARY#\"\n\n:FILL &IAGENTS#[] = STR_SPLIT(&AGENTS#,\",\")\n:SET &RUNVAR# = 1\n:SET &LEN# = LENGTH(&IAGENTS#[])\n\n:WHILE &RUNVAR# LE &LEN#\n:  FILL &AAGENT#[] = STR_SPLIT(&IAGENTS#[&RUNVAR#],\".\")\n:  SET &AGENT_UC# = \"&AAGENT#[1]\"\n:  SET &OAGENTS#[&RUNVAR#] = \"&AGENT_UC#.os\"\n:  SET &AGENT_ALIVE# = SYS_HOST_ALIVE(&OAGENTS#[&RUNVAR#])\n:  PRINT \"Agent &OAGENTS#[&RUNVAR#], Alive: &AGENT_ALIVE#\"\n:  IF &AGENT_ALIVE# = \"Y\"\n:    SET &SERVER# = &OAGENTS#[&RUNVAR#]\n:    SET &RUNVAR# = &LEN# + 1\n:  ENDIF\n:  SET &RUNVAR# = &RUNVAR# + 1\n:ENDWHILE\n\n:PUBLISH &SERVER#,,WORKFLOW\n:SET &USERNAME# = \"\"\n:PUBLISH &USERNAME#,,WORKFLOW\n\n:SET &DB_JSON_DATA# = &RESPONSE_CONTENT#\n:PUBLISH &DB_JSON_DATA#",
+  "preScript": ":SET &IN_INSTANCE# = ${INSTANCE_NAME#}\n:SET &IN_MODULES# =\"${MODULES#}\"\n\n:INC PICK.SYSTEM-CONFIG.AFSM.DSC-WM-LATAM.INCL\n:INC READ.SYSTEM-CONFIG.AFSM.DSC-WM-LATAM.INCL\n\n!:READ &AFSM_URL#,,,&SC_AFSM_URL#\n!:READ &AFSM_CONTEXT_DB#,,,&SC_AFSM_CONTEXT_DB#\n!:SET &AFSM_FULL_URL#  = \"&AFSM_URL#/&AFSM_CONTEXT_DB#/&IN_INSTANCE#/&SC_RUN_ID#/machines/db/modules/&IN_MODULES#\"\n\n\n:SET &AFSM_CONTEXT_DB# = &SC_AFSM_CONTEXT_DB#\n:SET &AFSM_PART_URL#  = \"&AFSM_CONTEXT_DB#/&IN_INSTANCE#/&SC_RUN_ID#/machines/db/modules/&IN_MODULES#\"\n:PUB &AFSM_PART_URL#,,TASK",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "",
+    "headers": "responseTimeout=60\n",
+    "method": "GET",
+    "resultVariableLevel": "SELF",
+    "url": "$[AFSM_PART_URL#}"
+  },
+  "designParameters": 
+  [
+    {
+      "editorType": "OUTPUT",
+      "name": "RESPONSE_CONTENT#",
+      "outputFormat": "JSON",
+      "title": "RESPONSE_CONTENT#",
+      "outputDefinition": {
+        "dataPath": "$"
+      }
+    }
+  ]
+}

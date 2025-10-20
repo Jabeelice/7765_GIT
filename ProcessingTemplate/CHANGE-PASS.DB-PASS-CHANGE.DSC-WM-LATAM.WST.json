@@ -1,0 +1,148 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "MODULE-CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "title": "WMS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${WMS_CHANGE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "COL2UP#": "wms_db_pass",
+        "DB_COPY_PARAMETERS#": "'${WMS_DB_USERNAME#}' '${WMS_DB_PASSWORD#}' '${WMS_DB_VIP_PRI#}' '${WMS_DB_PORT#}' '${WMS_DB_SID#}' '${WMS_DB_PASS_NEW#}'",
+        "MACHINE_FUNCTION#": "WMS_DB",
+        "MODULE#": "WMS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}",
+        "NVAL#": "${WMS_DB_PASS_NEW#}"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "MODULE-CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "title": "EMS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EMS_CHANGE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "COL2UP#": "ems_db_pass",
+        "DB_COPY_PARAMETERS#": "'${EMS_DB_USERNAME#}' '${EMS_DB_PASSWORD#}' '${EMS_DB_VIP_PRI#}' '${EMS_DB_PORT#}' '${EMS_DB_SID#}' '${EMS_DB_PASS_NEW#}'",
+        "MACHINE_FUNCTION#": "EMS_DB",
+        "MODULE#": "EMS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}",
+        "NVAL#": "${EMS_DB_PASS_NEW#}"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST.3",
+      "priority": "0",
+      "processingTemplate": "MODULE-CHANGE-PASS.DB-PASS-CHANGE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "title": "REFS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${REFS_CHANGE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "COL2UP#": "refs_db_pass",
+        "DB_COPY_PARAMETERS#": "'${REFS_DB_USERNAME#}' '${REFS_DB_PASSWORD#}' '${REFS_DB_VIP_PRI#}' '${REFS_DB_PORT#}' '${REFS_DB_SID#}' '${REFS_DB_PASS_NEW#}'",
+        "MACHINE_FUNCTION#": "REFS_DB",
+        "MODULE#": "REFS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}",
+        "NVAL#": "${REFS_DB_PASS_NEW#}"
+      }
+    }
+  ]
+}

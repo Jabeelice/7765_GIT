@@ -1,0 +1,31 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":SET &TMP# = STR_SUB('${IN_AGENT}', '[','')\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n:PRINT &TMP#\n\n:DEFINE &IAGENTS#,string,2\n:DEFINE &OAGENTS#,string,2\n:DEFINE &AAGENT#,string,3\n\n:SET &DELAY# = 60\n:SET &CHECK_COUNT# = 1\n:SET &CHECK_COUNT_MAX# = 10\n\n:FILL &IAGENTS#[] = STR_SPLIT(&TMP#,\",\")\n:SET &LEN# = LENGTH(&IAGENTS#[])\n\n:WHILE &CHECK_COUNT# LE &CHECK_COUNT_MAX#\n:  SET &RUNVAR# = 1\n:  SET &ALIVE_COUNT# = 0\n:  SET &CHECK_COUNT_F# = FORMAT(&CHECK_COUNT#)\n:  PRINT \"Checking agents status &CHECK_COUNT_F# time(s) ...\"\n:  WHILE &RUNVAR# LE &LEN#\n:    FILL &AAGENT#[] = STR_SPLIT(&IAGENTS#[&RUNVAR#],\".\")\n:    SET &AGENT_UC# = \"&AAGENT#[1]\"\n:    SET &OAGENTS#[&RUNVAR#] = \"&AGENT_UC#.os\"\n:    SET &AGENT_ALIVE# = SYS_HOST_ALIVE(&OAGENTS#[&RUNVAR#])\n:    IF &AGENT_ALIVE# = \"Y\"\n:      SET &ALIVE_COUNT# = &ALIVE_COUNT# + 1\n:    ENDIF\n:    SET &RUNVAR_F# = FORMAT(&RUNVAR#)\n:    PRINT \"Agent &RUNVAR_F#: &OAGENTS#[&RUNVAR#], Alive: &AGENT_ALIVE#\"\n:    SET &RUNVAR# = &RUNVAR# + 1\n:  ENDWHILE\n:  IF &ALIVE_COUNT# > 0\n:    SET &CHECK_COUNT# =  &CHECK_COUNT_MAX#\n:  ELSE\n:    SET &DELAY_F# = FORMAT(&DELAY#)\n:    PRINT \"&DELAY_F# seconds waiting for next check\"\n:    WAIT &DELAY#\n:  ENDIF\n: SET &CHECK_COUNT# = &CHECK_COUNT# + 1\n:ENDWHILE\n\n:IF &ALIVE_COUNT# > 0\n:  SET &AGENT_ALIVE# = \"Y\"\n:ELSE\n:  SET &AGENT_ALIVE# = \"N\"\n:ENDIF\n\n:PUBLISH &AGENT_ALIVE#,,WORKFLOW\n\n:SET &EXITCODE# = \"1\"\n:PUBLISH &EXITCODE#,,WORKFLOW"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_AGENT",
+      "title": "IN_AGENT"
+    }
+  ]
+}

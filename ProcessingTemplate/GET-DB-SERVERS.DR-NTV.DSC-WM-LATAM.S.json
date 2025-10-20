@@ -1,0 +1,20 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":PRINT \"Get DB servers\"\n:SET &DB_VARA# = GET_VAR(CONFIG.DR-NTV.DSC-WM-LATAM.V, \"AFSM_DB_VARA\", 1)\n\n:SET &WMS_DB_SERVER# = \"\"\n:SET &WMS_DB_VIP_PRI# = \"\"\n:SET &WMS_DB_PORT# = \"\"\n:SET &WMS_DB_SID# = \"\"\n:SET &WMS_DB_SEC# = \"\"\n:SET &WMS_DB_DR# = \"\"\n:SET &WMS_DB_DR_SID# = \"\"\n\n\n:SET &SEQ_HND# = PREP_PROCESS_VAR(&DB_VARA#)\n:PROCESS &SEQ_HND#\n:  SET &KEY# = GET_PROCESS_LINE(&SEQ_HND#, 1)\n:  SWITCH \"Y\"\n:    CASE &KEY# = \"&INSTANCE_NAME#-DB_VIP_PRI\"\n:        SET &WMS_DB_VIP_PRI# = GET_VAR(&DB_VARA#, &KEY#, 1)\n:        SET &WMS_DB_PORT# = GET_VAR(&DB_VARA#, &KEY#, 2)\n:        SET &WMS_DB_SID# = GET_VAR(&DB_VARA#, &KEY#, 3)\n:    CASE &KEY# = \"&INSTANCE_NAME#-DB_WMS_DR\"\n:        SET &WMS_DB_DR# = GET_VAR(&DB_VARA#, &KEY#, 1)\n:        SET &WMS_DB_PORT# = GET_VAR(&DB_VARA#, &KEY#, 2)\n:        SET &WMS_DB_DR_SID# = GET_VAR(&DB_VARA#, &KEY#, 3)\n:        SET &URLS# = GET_VAR(&DB_VARA#, &KEY#, 4)\n:    CASE &KEY# = \"&INSTANCE_NAME#-DB_WMS_SEC\"\n:        SET &WMS_DB_SEC# = GET_VAR(&DB_VARA#, &KEY#, 1)\n:    CASE &KEY# = \"&INSTANCE_NAME#-DB_WMS\"\n:        SET &WMS_DB_SERVER# = GET_VAR(&DB_VARA#, &KEY#, 1)\n:        SET &URLS# = GET_VAR(&DB_VARA#, &KEY#, 4)\n:  ENDSWITCH\n:ENDPROCESS\n\n:PUBLISH &WMS_DB_SERVER#,,WORKFLOW\n:PUBLISH &WMS_DB_VIP_PRI#,,WORKFLOW\n:PUBLISH &WMS_DB_PORT#,,WORKFLOW\n:PUBLISH &WMS_DB_SID#,,WORKFLOW\n:PUBLISH &WMS_DB_SEC#,,WORKFLOW\n:PUBLISH &WMS_DB_DR_SID#,,WORKFLOW\n:PUBLISH &WMS_DB_DR#,,WORKFLOW\n"
+  }
+}

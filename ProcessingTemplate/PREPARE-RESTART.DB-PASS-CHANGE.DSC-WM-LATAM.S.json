@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! Restart modules\n:SET &WMS_RESTART#       = \"false\"\n:SET &REFS_RESTART#      = \"false\"\n:SET &RW_RESTART#        = \"false\"\n:SET &EMS_RESTART#       = \"false\"\n:SET &WMS_FAIL_RESTART#  = \"false\"\n:SET &REFS_FAIL_RESTART# = \"false\"\n:SET &RW_FAIL_RESTART#   = \"false\"\n:SET &EMS_FAIL_RESTART#  = \"false\"\n\n:IF &WMS_PRIMARY_SERVER# <> \"\"\n:  IF &WMS_PRIMARY_SHOULD_RUN# = \"true\"\n:    SET &WMS_RESTART# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF &REFS_PRIMARY_SERVER# <> \"\"\n:  IF &REFS_PRIMARY_SHOULD_RUN# = \"true\"\n:    SET &REFS_RESTART# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF &RW_PRIMARY_SERVER# <> \"\"\n:  IF &RW_PRIMARY_SHOULD_RUN# = \"true\"\n:    SET &RW_RESTART# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF &EMS_PRIMARY_SERVER# <> \"\"\n:  IF &EMS_PRIMARY_SHOULD_RUN# = \"true\"\n:    SET &EMS_RESTART# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF &WMS_FAILOVER_SERVER# <> \"\"\n:  IF &WMS_FAILOVER_SHOULD_RUN# = \"true\"\n:    SET &WMS_FAIL_RESTART# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF &REFS_FAILOVER_SERVER# <> \"\"\n:  IF &REFS_FAILOVER_SHOULD_RUN# = \"true\"\n:    SET &REFS_FAIL_RESTART# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF &RW_FAILOVER_SERVER# <> \"\"\n:  IF &RW_FAILOVER_SHOULD_RUN# = \"true\"\n:    SET &RW_FAIL_RESTART# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF &EMS_FAILOVER_SERVER# <> \"\"\n:  IF &EMS_FAILOVER_SHOULD_RUN# = \"true\"\n:    SET &EMS_FAIL_RESTART# = \"true\"\n:  ENDIF\n:ENDIF\n\n:PUBLISH &WMS_RESTART#,,WORKFLOW\n:PUBLISH &REFS_RESTART#,,WORKFLOW\n:PUBLISH &RW_RESTART#,,WORKFLOW\n:PUBLISH &EMS_RESTART#,,WORKFLOW\n:PUBLISH &WMS_FAIL_RESTART#,,WORKFLOW\n:PUBLISH &REFS_FAIL_RESTART#,,WORKFLOW\n:PUBLISH &RW_FAIL_RESTART#,,WORKFLOW\n:PUBLISH &EMS_FAIL_RESTART#,,WORKFLOW"
+  }
+}

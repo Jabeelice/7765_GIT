@@ -1,0 +1,39 @@
+{
+  "dataSourceType": "LOCAL_KEY_VALUE_STORE",
+  "dataType": "STRING",
+  "description": "Cmdb main config",
+  "errorHandling": "INIT",
+  "folder": "DSC-WM-LATAM",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "validity": "FREE",
+  "records": 
+  [
+    {
+      "key": "gsn_context_cmdb",
+      "value": "api/now/table/u_dhl_ci_hw_server,,,,"
+    },
+    {
+      "key": "gsn_context_cmdb_active",
+      "value": "%5Eactive=true,,,,"
+    },
+    {
+      "key": "gsn_context_cmdb_parameters",
+      "value": "?sysparm_display_value=true&sysparm_display_value=true&sysparm_fields=u_folder.u_name%2Cu_os_build_version.name%2Cu_network_name%2Cinstall_status,,,,"
+    },
+    {
+      "key": "gsn_context_cmdb_query",
+      "value": "&sysparm_query=nameIN,,,,"
+    },
+    {
+      "key": "gsn_protocol",
+      "value": "https,,,,"
+    },
+    {
+      "key": "gsn_url",
+      "value": "servicenow.dhl.com,,,,"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "dataSourceType": "LOCAL_KEY_VALUE_STORE",
+  "dataType": "STRING",
+  "description": "Main config",
+  "errorHandling": "INIT",
+  "folder": "DSC-WM-LATAM",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "validity": "FREE",
+  "records": 
+  [
+    {
+      "key": "____Key____",
+      "value": "___ Value ___,,,,"
+    },
+    {
+      "key": "zabbix_context",
+      "value": "api_jsonrpc.php,,,,"
+    },
+    {
+      "key": "zabbix_login",
+      "value": "ZABBIX-REST.DSC-WM-LATAM.LLIN,,,,"
+    },
+    {
+      "key": "zabbix_protocol",
+      "value": "https,,,,"
+    },
+    {
+      "key": "zabbix_url",
+      "value": "zabbix-wm.dhl.com,,,,"
+    }
+  ]
+}

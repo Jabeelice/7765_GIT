@@ -1,0 +1,26 @@
+{
+  "description": "Close maintenance",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "${AGENT#}",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "preScript": "!:INC PICK.SYSTEM-CONFIG.ZABBIX.DSC-WM-LATAM.INCL\n!:INC READ.SYSTEM-CONFIG.ZABBIX.DSC-WM-LATAM.INCL\n!\n!:READ &ZABBIX_FULL_URL#,,,&SC_ZABBIX_FULL_URL#\n!:READ &ZABBIX_USERNAME#,,,&SC_ZABBIX_USERNAME#\n!:READ &ZABBIX_PASSWORD#,,,&SC_ZABBIX_PASSWORD#\n!\n!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB\n!\n!:SET &RUNNR# = SYS_ACT_ME_NR()\n!:SET &PNUM#  = SYS_ACT_PARENT_NR()\n!:IF &PNUM# = ''\n!:  SET &PNUM# = &RUNNR#\n!:ENDIF\n!:SET &ZABBIX_REQUESTID# = FORMAT(&PNUM#)\n!:PUBLISH &ZABBIX_REQUESTID#,,TASK\n!\n:DEFINE &AAGENT#,string,3\n:FILL &AAGENT#[] = STR_SPLIT(${IN_AGENT},\".\")\n:SET &AGENT_UC# = \"&AAGENT#[1]\"\n:SET &AGENT# = \"&AGENT_UC#.os\"\n:PUB &AGENT#\n\n!:SET &LOGIN# = &IN_LOGIN#\n!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SHELL_SCRIPT",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "!====================================== SHELL SCRIPT =====================================\necho \">> Hostname: $HOSTNAME\"\necho \">> Executing: sudo su - ${IN_WMS_USER} -c \\\"/jda_scripts/zabbix/zabbix_automation/zabbix_close_maintenance_window.sh ${IN_M_ID}\\\"\"\necho \">> Script output: \"\nsudo su - ${IN_WMS_USER} -c \"/jda_scripts/zabbix/zabbix_automation/zabbix_close_maintenance_window.sh ${IN_M_ID}\"\nEXITCODE=$?\nif [[ $EXITCODE -eq 2 ]]; then\n  EXITCODE=0\n  echo \">> Warning: Script exited with exitcode 2!\"\n  echo \"EXITCODE=$EXITCODE\"\nelse\n  echo \"EXITCODE=$EXITCODE\"\nfi\nexit $EXITCODE\n\n!:INCLUDE PCK.ITPA_SHARED.PRV.INCLUDE.CHECK_SHELL_CMD@UNIX\n"
+  }
+}

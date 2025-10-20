@@ -1,0 +1,52 @@
+{
+  "description": "Get Incident Site",
+  "endpoint": "ServiceNow.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Rest.rr",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":IF &INC_SITE# = \"\"\n:  SET &INC_SITE# = \"Campinas-SP-Head Office\"\n:  SET &INC_SITE_UPDATE# = \"true\"\n:  PUBLISH &INC_SITE#,,WORKFLOW\n:  PUBLISH &INC_SITE_UPDATE#,,WORKFLOW\n:ENDIF\n\n",
+  "preScript": ":INC PICK.INCIDENT-CONFIG.GSN.DSC-WM-LATAM.INCL\n:INC READ.INCIDENT-CONFIG.GSN.DSC-WM-LATAM.INCL\n\n!:READ &GSN_READ_URL#,,,&SC_GSN_READ_URL#\n!:SET &GSN_FULL_URL# = \"&GSN_READ_URL#&IN_TICKET_ID#\"\n\n!:SET &IN_TICKET_ID# =FORMAT(&IN_TICKET_ID#)\n\n:SET &GSN_PART_URL# = \"&SC_GSN_CONTEXT_READ#${IN_TICKET_ID}\"\n:PUB &GSN_PART_URL#",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "",
+    "headers": "responseTimeout=60\n",
+    "method": "GET",
+    "resultVariableLevel": "SELF",
+    "url": "${GSN_PART_URL#}"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_TICKET_ID",
+      "title": "IN_TICKET_ID"
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "INC_SITE#",
+      "outputFormat": "JSON",
+      "title": "&INC_SITE#",
+      "outputDefinition": {
+        "dataPath": "$.result[0].u_site",
+        "outputLevel": "PARENT"
+      }
+    }
+  ]
+}

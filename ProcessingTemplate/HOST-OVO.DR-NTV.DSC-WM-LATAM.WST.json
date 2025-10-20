@@ -1,0 +1,99 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "OVO_HOST#",
+      "title": "OVO_HOST#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "name": "HOST-OVO-DISABLE.DR-NTV.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "HOST-OVO-DISABLE.DR-NTV.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DRNTV"
+      ],
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${OVO_ACTION#}",
+            "operator": "NE",
+            "value": "DISABLE"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "name": "HOST-OVO-ENABLE.DR-NTV.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "HOST-OVO-ENABLE.DR-NTV.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DRNTV"
+      ],
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${OVO_ACTION#}",
+            "operator": "NE",
+            "value": "ENABLE"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+      }
+    }
+  ]
+}

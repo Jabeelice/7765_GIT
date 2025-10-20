@@ -1,0 +1,66 @@
+{
+  "description": "Run bash script",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "${AGENT#}",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &RID# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=*\")\n:PROCESS &RID#\n:  SET &LINE# = GET_PROCESS_LINE(&RID#)\n:  PRINT &LINE#\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,WORKFLOW\n!:  IF &EXITCODE# > 0\n!:    MODIFY_STATE RETCODE=1800\n!:  ENDIF\n:ENDPROCESS\n:CLOSE_PROCESS &RID#\n\n! CSR FILE\n:SET &HND# = PREP_PROCESS_REPORT(,,REP,\"*CSRFILE=*\")\n:PROCESS &HND#\n:  SET &LINE# = GET_PROCESS_LINE(&HND#)\n:  PRINT &LINE#\n:  SET &CSR_FILE# = STR_FIND(&LINE#,\"=\")\n:  SET &CSR_FILE# = ADD(&CSR_FILE#,1)\n:  SET &CSR_FILE# = SUBSTR(&LINE#,&CSR_FILE#)\n:  IF &CSR_FILE# <> \"\"\n:    PUBLISH &CSR_FILE#,,TOP\n:  ENDIF\n:ENDPROCESS\n:CLOSE_PROCESS &HND#\n\n! KEY FILE\n:SET &HND# = PREP_PROCESS_REPORT(,,REP,\"*KEYFILE=*\")\n:PROCESS &HND#\n:  SET &LINE# = GET_PROCESS_LINE(&HND#)\n:  PRINT &LINE#\n:  SET &KEY_FILE# = STR_FIND(&LINE#,\"=\")\n:  SET &KEY_FILE# = ADD(&KEY_FILE#,1)\n:  SET &KEY_FILE# = SUBSTR(&LINE#,&KEY_FILE#)\n:  IF &KEY_FILE# <> \"\"\n:    PUBLISH &KEY_FILE#,,TOP\n:  ENDIF\n:ENDPROCESS\n:CLOSE_PROCESS &HND#\n\n! PEM FILE\n:SET &HND# = PREP_PROCESS_REPORT(,,REP,\"*PEMFILE=*\")\n:PROCESS &HND#\n:  SET &LINE# = GET_PROCESS_LINE(&HND#)\n:  PRINT &LINE#\n:  SET &PEM_FILE# = STR_FIND(&LINE#,\"=\")\n:  SET &PEM_FILE# = ADD(&PEM_FILE#,1)\n:  SET &PEM_FILE# = SUBSTR(&LINE#,&PEM_FILE#)\n:  IF &PEM_FILE# <> \"\"\n:    PUBLISH &PEM_FILE#,,TOP\n:  ENDIF\n:ENDPROCESS\n:CLOSE_PROCESS &HND#\n\n! KEYSTORE FILE\n:SET &HND# = PREP_PROCESS_REPORT(,,REP,\"*KEYSTOREFILE=*\")\n:PROCESS &HND#\n:  SET &LINE# = GET_PROCESS_LINE(&HND#)\n:  PRINT &LINE#\n:  SET &KEYSTORE_FILE# = STR_FIND(&LINE#,\"=\")\n:  SET &KEYSTORE_FILE# = ADD(&KEYSTORE_FILE#,1)\n:  SET &KEYSTORE_FILE# = SUBSTR(&LINE#,&KEYSTORE_FILE#)\n:  IF &KEYSTORE_FILE# <> \"\"\n:    PUBLISH &KEYSTORE_FILE#,,TOP\n:  ENDIF\n:ENDPROCESS\n:CLOSE_PROCESS &HND#",
+  "preScript": ":DEFINE &AAGENT#,string,3\n\n:SET &TMP# = STR_SUB('${IN_AGENT}', '[','')\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n\n:FILL &AAGENT#[] = STR_SPLIT(&TMP#,\".\")\n:SET &AGENT_UC# = \"&AAGENT#[1]\"\n:SET &AGENT# = \"&AGENT_UC#.os\"\n:PUB &AGENT#\n\n!:SET &LOGIN# = &AFSM_MANAGEMENT_LOGIN#\n!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SHELL_SCRIPT",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "echo \">> Server: ${SERVER_NAME#}\"\necho \">> Hostname: `hostname`\"\necho \">> Shell: $SHELL\"\necho \">> Username: `whoami`\"\necho \">> Parameters: ${IN_PARAMETERS#}\"\necho \">> Executing: ${IN_SCRIPT_NAME#} ${IN_PARAMETERS#}\"\necho \">> Script output: \"\n${IN_SCRIPT_NAME#} ${IN_PARAMETERS#}\nEXITCODE=$?\nif [[ $EXITCODE -eq 2 ]]; then\n  EXITCODE=0\n  echo \">> Warning: Script exited with exitcode 2!\"\n  echo \"EXITCODE=$EXITCODE\"\nelse\n  echo \"EXITCODE=$EXITCODE\"\nfi\nexit $EXITCODE\n"
+  },
+  "actions": 
+  [
+    {
+      "processingActionType": "RESTART",
+      "processingEventCategory": "PROCESSING",
+      "processingEventType": "PROCESSING_FAILED",
+      "processingCommand": {
+        "actionTargetType": "SELF",
+        "keepForcedStatus": true,
+        "restartCounter": 5,
+        "restartDelay": 60000,
+        "restartDelayMode": "FINISH_TO_START",
+        "restartMode": "COUNTER",
+        "restartType": "RESTART_FROM_BEGINNING"
+      }
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "defaultValue": "${AFSM_MANAGEMENT_SERVER#}",
+      "editorType": "TEXT",
+      "name": "IN_AGENT",
+      "title": "IN_AGENT"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_PARAMETERS#",
+      "title": "IN_PARAMETERS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_SCRIPT_NAME#",
+      "title": "IN_SCRIPT_NAME#"
+    }
+  ]
+}

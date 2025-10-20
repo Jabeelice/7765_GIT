@@ -1,0 +1,41 @@
+{
+  "description": "AFSM | Update new DB passwords",
+  "endpoint": "AFSM-EXPORT2VARA.CONN.DSC-WM-LATAM.SQL",
+  "endpointType": "ORACLE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Oracle.apf",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "ORACLE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "RDBMS_SQL",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "UPDATE instance SET ${COLUMN2UPDATE#}='${NEWVALUE#}',updated_by='1',updated=CURRENT_DATE WHERE name='${INSTANCE_NAME#}';"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "COLUMN2UPDATE#",
+      "title": "COLUMN2UPDATE#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "NEWVALUE#",
+      "title": "NEWVALUE#"
+    }
+  ]
+}

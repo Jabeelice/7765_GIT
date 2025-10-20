@@ -1,0 +1,49 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Linux.apf",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &LHND# = PREP_PROCESS_REPORT(,,REP,\"*MARK_ID=*\")\n:PROCESS &LHND#\n:  SET &LINE# = GET_PROCESS_LINE(&LHND#)\n:  PRINT &LINE#\n:  SET &MARK_ID# = STR_FIND(&LINE#, \"=\")\n:  SET &MARK_ID# = ADD(&MARK_ID#, 1)\n:  SET &MARK_ID# = SUBSTR(&LINE#, &MARK_ID#)\n:  PUBLISH &MARK_ID#,,TOP\n:ENDPROCESS\n\n:IF &MARK_ID# = \"\"\n:  SET  &EXITCODE# = \"1\"\n:  PUBLISH &EXITCODE#,,WORKFLOW\n:  MODIFY_STATE RETCODE=1800\n:ENDIF\n\n:SET &RID# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=*\")\n:PROCESS &RID#\n:  SET &LINE# = GET_PROCESS_LINE(&RID#)\n:  PRINT &LINE#\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,WORKFLOW\n!:  IF &EXITCODE# > 0\n!:    MODIFY_STATE RETCODE=1800\n!:  ENDIF\n:ENDPROCESS\n",
+  "preScript": ":SET &SYSTEM_CONFIG_DATABASE# = 'CONFIG.MCLOUD.DSC-WM-LATAM.V'\n\n:SET &SC_MCLOUD_URL#                = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_url\", 1)\n:SET &SC_MCLOUD_PROTOCOL#           = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_protocol\", 1)\n:SET &SC_MCLOUD_LOGIN#              = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_login\", 1)\n:SET &SC_MCLOUD_LOGIN_API#          = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_login_api\", 1)\n   \n:SET &SC_MCLOUD_CREATE_DEPLOYMENT#  = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_create_deployment\", 1)\n:SET &SC_MCLOUD_DELETE_DEPLOYMENT#  = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_delete_deployment\", 1)\n:SET &SC_MCLOUD_DEPLOYMENT_STATUS#  = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_deployment_status\", 1)\n:SET &SC_MCLOUD_GET_DEPLOYMENT#     = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_get_deployment\", 1)\n:SET &SC_MCLOUD_EXEC_NAS_SCRIPT#    = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_execute_nas_script\", 1)\n!:SET &SC_MCLOUD_LOGIN_OBJECT#       = GET_VAR(&SYSTEM_CONFIG_DATABASE#, \"mcloud_login_object\", 1)\n   \n:SET &SC_MCLOUD_LOGIN_URL#          = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_LOGIN#\"\n:SET &SC_MCLOUD_LOGIN_API_URL#      = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_LOGIN_API#\"\n:SET &SC_MCLOUD_CREATE_URL#         = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_CREATE_DEPLOYMENT#\"\n:SET &SC_MCLOUD_DELETE_URL#         = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_DELETE_DEPLOYMENT#\"\n:SET &SC_MCLOUD_GET_URL#            = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_GET_DEPLOYMENT#\"\n:SET &SC_MCLOUD_EXEC_URL#           = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_EXEC_NAS_SCRIPT#\"\n:SET &SC_MCLOUD_STATUS_URL#         = \"&SC_MCLOUD_PROTOCOL#://&SC_MCLOUD_URL#/&SC_MCLOUD_DEPLOYMENT_STATUS#\"\n   \n:SET &MCLOUD_LOGIN_URL# = &SC_MCLOUD_LOGIN_URL#\n:SET &MCLOUD_LOGIN_API_URL# = &SC_MCLOUD_LOGIN_API_URL#\n:SET &MCLOUD_STATUS_URL# = &SC_MCLOUD_STATUS_URL#\n:SET &MCLOUD_STATUS_URL# = STR_SUBSTITUTE(&MCLOUD_STATUS_URL#, \"{ID}\", ${IN_DEPLOYMENT_ID#})\n\n:PUB &MCLOUD_LOGIN_URL#\n:PUB &MCLOUD_LOGIN_API_URL#\n:PUB &MCLOUD_STATUS_URL#\n\n\n!:SET &SC_MCLOUD_USERNAME#           = GET_LOGIN(&SC_MCLOUD_LOGIN_OBJECT#,'*', CUSTOM, LOGIN_INFO)\n!:SET &SC_MCLOUD_PASSWORD#           = GET_LOGIN(&SC_MCLOUD_LOGIN_OBJECT#,'*', CUSTOM, PASSWORD)\n!:SET &MCLOUD_USERNAME# = &SC_MCLOUD_USERNAME#\n!:SET &MCLOUD_PASSWORD# = &SC_MCLOUD_PASSWORD#",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "PYTHON",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "# CHECK DEPLOYMENT STATUS\n\nimport requests\nimport json\nimport os\nimport getpass\nimport sys\nimport time\n\nuser = str(getpass.getuser())\nhost = str(os.uname()[1])\nprint(\">> Hostname: \" + host)\nprint(\">> Username: \" + user)\nprint(\">> Login URL: ${MCLOUD_LOGIN_URL#}\")\nprint(\">> Login API URL: ${MCLOUD_LOGIN_API_URL#}\")\nprint(\">> Mark deployment URL: ${MCLOUD_STATUS_URL#}\")\n\n# GET REFRESH TOKEN\ndef getRefreshToken():\n  print(\"------------------------------------------------------------------------------------------\")\n  print(\"Getting refresh token ...\")\n  print(\"------------------------------------------------------------------------------------------\")\n\n  username=\"${IN_MCLOUD_USERNAME#}\"\n  password=\"${IN_MCLOUD_PASSWORD#}\"\n  headers = {\"Content-Type\": \"application/json\", \"Accept\": \"application/json\"}\n  data = {\"username\":\"${IN_MCLOUD_USERNAME#}\",\"password\":\"${IN_MCLOUD_PASSWORD#}\",\"domain\":\"prg-dc.dhl.com\",\"scope\":\"\"}\n  url = \"${MCLOUD_LOGIN_URL#}\"\n\n  try:\n    resp = requests.post(url, data=json.dumps(data), auth=(username, password), headers = headers)\n    jsonResponse = json.loads(resp.text)\n    refreshToken = jsonResponse[\"refresh_token\"]\n    print(\"------------------------------------------------------------------------------------------\")\n    print(\"refreshToken = \" + refreshToken)\n    print(\"------------------------------------------------------------------------------------------\")\n    return refreshToken\n  except Exception as e:\n    print(\"------------------------------------------------------------------------------------------\")\n    print(\"ERROR: Unable to get refresh token!\")\n    print(e)\n    print(\"EXITCODE=1\")\n    print(\"------------------------------------------------------------------------------------------\")\n    exit(1)\n\n# GET ACCESS TOKEN\ndef getAccessToken(refreshToken):\n  print(\"------------------------------------------------------------------------------------------\")\n  print(\"Getting access token ...\")\n  print(\"------------------------------------------------------------------------------------------\")\n\n  data = {\"refreshToken\":\"\" + refreshToken +\"\"}\n  url = \"${MCLOUD_LOGIN_API_URL#}\"\n  headers = {\"Content-Type\": \"application/json\", \"Accept\": \"application/json\"}\n  try:\n    resp = requests.post(url, data=json.dumps(data), headers = headers)\n    jsonResponse = json.loads(resp.text)\n    accessToken = jsonResponse[\"token\"]\n    print(\"------------------------------------------------------------------------------------------\")\n    print(\"accessToken = \" + accessToken)\n    print(\"------------------------------------------------------------------------------------------\")\n    return accessToken\n  except Exception as e:\n    print(\"------------------------------------------------------------------------------------------\")\n    print(\"ERROR: Unable to get access token!\")\n    print(e)\n    print(\"EXITCODE=1\")\n    print(\"------------------------------------------------------------------------------------------\")\n    exit(1)\n\n# CHECK DEPLOYMENT STATUS\nrefreshToken = getRefreshToken()\naccessToken = getAccessToken(refreshToken)\n\nprint(\"------------------------------------------------------------------------------------------\")\nprint(\"Mark deployment ...\")\nprint(\"------------------------------------------------------------------------------------------\")\n\nheaders = {\"Authorization\": \"Bearer \" + str(accessToken) + \"\", \"Content-Type\": \"application/json\", \"Accept\": \"application/json\"}\ndata = {\"actionId\":\"Deployment.custom.mark.jda.rebuild\",\"inputs\":{},\"reason\":\"\"}\nurl = \"${MCLOUD_STATUS_URL#}\"\n\nresp = requests.post(url, data=json.dumps(data), headers = headers)\nprint(resp)\nprint(resp.text)\njsonResponse = json.loads(resp.text)\nprint(jsonResponse)\nif \"statusCode\" in jsonResponse:\n  statusCode = jsonResponse[\"statusCode\"]\n  print(resp.text)\n  if statusCode == 404:\n    print(\"------------------------------------------------------------------------------------------\")\n    print(\"Mark deployment failed ...\")\n    print(\"StatusCode = \" + str(statusCode))\n    print(\"------------------------------------------------------------------------------------------\")\n    print(\"EXITCODE=1\")\n    exit(1)\nelse:\n  status = jsonResponse[\"status\"]\n  mark_id = jsonResponse[\"id\"]\n  print(\"------------------------------------------------------------------------------------------\")\n  print(\"Mark deployment = \" + status)\n  print(\"Mark deployment mark id = \" + mark_id)\n  print(\"------------------------------------------------------------------------------------------\")\n  print(\"MARK_ID=\" + str(mark_id))\n  print(\"EXITCODE=0\")\n  exit()"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_DEPLOYMENT_ID#",
+      "title": "IN_DEPLOYMENT_ID#"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${TOP_MCLOUD_USERNAME}",
+      "editorType": "TEXT",
+      "name": "IN_MCLOUD_USERNAME#",
+      "title": "IN_MCLOUD_USERNAME#"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${TOP_MCLOUD_PASSWORD}",
+      "editorType": "TEXT",
+      "name": "IN_MCLOUD_PASSWORD#",
+      "title": "IN_MCLOUD_PASSWORD#"
+    }
+  ]
+}

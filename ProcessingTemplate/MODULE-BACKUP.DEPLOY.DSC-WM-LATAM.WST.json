@@ -1,0 +1,260 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "evaluateExpressions": true,
+      "name": "BACKUP_PARAMETERS#",
+      "title": "BACKUP_PARAMETERS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "evaluateExpressions": true,
+      "name": "MACHINE_FUNCTION#",
+      "title": "MACHINE_FUNCTION#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "evaluateExpressions": true,
+      "name": "MODULE#",
+      "title": "MODULE#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "evaluateExpressions": true,
+      "name": "MODULE_AGENT#",
+      "title": "MODULE_AGENT#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "evaluateExpressions": true,
+      "name": "MODULE_URL#",
+      "title": "MODULE_URL#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "evaluateExpressions": true,
+      "name": "MODULE_USERNAME#",
+      "title": "MODULE_USERNAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "evaluateExpressions": true,
+      "name": "PUBLISH_PARAMETER#",
+      "title": "PUBLISH_PARAMETER#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "APP_PRECHECK",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "",
+        "PUBLISH#": "",
+        "SCRIPT_NAME#": "${PRECHECK_BACKUP_SCRIPT_NAME#}",
+        "STEP#": "APP_PRECHECK"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "APP_CRONTAB_COMMENT",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "comment",
+        "PUBLISH#": "",
+        "SCRIPT_NAME#": "${CRONTAB_SCRIPT_NAME#}",
+        "STEP#": "APP_CRONTAB_COMMENT"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST.3",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "APP_BACKUP",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "${BACKUP_PARAMETERS#}",
+        "PUBLISH#": "${PUBLISH_PARAMETER#}",
+        "SCRIPT_NAME#": "${BACKUP_SCRIPT_NAME#}",
+        "STEP#": "APP_BACKUP"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST.2",
+          "predecessor": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST.4",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "APP_POSTCHECK",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "${MODULE#} ${MODULE_URL#}",
+        "PUBLISH#": "",
+        "SCRIPT_NAME#": "${POSTCHECK_BACKUP_SCRIPT_NAME#}",
+        "STEP#": "APP_POSTCHECK"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST.3",
+          "predecessor": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST.5",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "APP_CRONTAB_UNCOMMENT",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "uncomment",
+        "PUBLISH#": "",
+        "SCRIPT_NAME#": "${CRONTAB_SCRIPT_NAME#}",
+        "STEP#": "APP_CRONTAB_UNCOMMENT"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST.4",
+          "predecessor": "RUN-SCRIPT-BACKUP.DEPLOY.DSC-WM-LATAM.WST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    }
+  ]
+}

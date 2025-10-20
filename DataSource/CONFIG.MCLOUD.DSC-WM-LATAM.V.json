@@ -1,0 +1,59 @@
+{
+  "dataSourceType": "LOCAL_KEY_VALUE_STORE",
+  "dataType": "STRING",
+  "description": "Main config",
+  "errorHandling": "INIT",
+  "folder": "DSC-WM-LATAM",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "validity": "FREE",
+  "records": 
+  [
+    {
+      "key": "____Key____",
+      "value": "___ Value for PROD ___,___ Value for DEV___,,,"
+    },
+    {
+      "key": "mcloud_create_deployment",
+      "value": "catalog/api/items/{ID}/request,,,,"
+    },
+    {
+      "key": "mcloud_delete_deployment",
+      "value": "deployment/api/deployments/{ID},,,,"
+    },
+    {
+      "key": "mcloud_deployment_status",
+      "value": "deployment/api/deployments/{ID}/requests,,,,"
+    },
+    {
+      "key": "mcloud_execute_nas_script",
+      "value": "deployment/api/resources/{ID}/requests,,,,"
+    },
+    {
+      "key": "mcloud_get_deployment",
+      "value": "deployment/api/deployments/{ID},,,,"
+    },
+    {
+      "key": "mcloud_login",
+      "value": "csp/gateway/am/api/login?access_token,,,,"
+    },
+    {
+      "key": "mcloud_login_api",
+      "value": "iaas/api/login,,,,"
+    },
+    {
+      "key": "mcloud_login_object",
+      "value": "MCLOUD-REST.DSC-WM-LATAM.LLIN,,,,"
+    },
+    {
+      "key": "mcloud_protocol",
+      "value": "https,https,,,"
+    },
+    {
+      "key": "mcloud_url",
+      "value": "vra-prod-itscloud.prg-dc.dhl.com,czchoap0413.prg-dc.dhl.com,,,"
+    }
+  ]
+}

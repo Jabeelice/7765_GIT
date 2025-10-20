@@ -1,0 +1,59 @@
+{
+  "description": "Get db servers from AFSM",
+  "endpoint": "Afsm.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Rest.rr",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &DB_MANAGEMENT_SERVER_PRIMARY# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.mngm_srv_pri\")\n:SET &DB_MANAGEMENT_SERVER_SECONDARY# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.mngm_srv_sec\")\n:SET &DB_DIRECTORY_NAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.db_directory_name\")\n:SET &DB_BACKUP_PATH# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.db_backup_path\")\n:SET &DB_RUN_MODE# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.run_mode\")\n\n:PUBLISH &DB_MANAGEMENT_SERVER_PRIMARY#,,WORKFLOW\n:PUBLISH &DB_MANAGEMENT_SERVER_SECONDARY#,,WORKFLOW\n:PUBLISH &DB_DIRECTORY_NAME#,,WORKFLOW\n:PUBLISH &DB_BACKUP_PATH#,,WORKFLOW\n:PUBLISH &DB_RUN_MODE#,,WORKFLOW\n\n:SET &AFSM_CHECK# = 0\n\n! WMS DB\n:SET &RET# = STR_MATCH(&RESPONSE_CONTENT#, '*\"module_name\":\"WMS\"*')\n:IF &RET# = \"Y\"\n:  SET &WMS_DB_VIP_PRI# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'WMS')].dbDetails.url\")\n:  SET &WMS_DB_PORT# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'WMS')].dbDetails.db_port\")\n:  SET &WMS_DB_SID# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'WMS')].dbDetails.db_sid\")\n:  SET &WMS_DB_USERNAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'WMS')].dbDetails.db_username\")\n:  SET &WMS_DB_PASSWORD# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'WMS')].dbDetails.db_password\")\n:  SET &WMS_DB_SCHEMA# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'WMS')].dbDetails.db_schema\")\n:  SET &AFSM_CHECK# = &AFSM_CHECK# + 1\n:ELSE\n:  SET &WMS_DB_VIP_PRI# = \"\"\n:  SET &WMS_DB_PORT# = \"\"\n:  SET &WMS_DB_SID# = \"\"\n:  SET &WMS_DB_USERNAME# = \"\"\n:  SET &WMS_DB_PASSWORD# = \"\"\n:  SET &WMS_DB_SCHEMA# = \"\"\n:ENDIF\n:PUBLISH &WMS_DB_VIP_PRI#,,WORKFLOW\n:PUBLISH &WMS_DB_PORT#,,WORKFLOW\n:PUBLISH &WMS_DB_SID#,,WORKFLOW\n:PUBLISH &WMS_DB_USERNAME#,,WORKFLOW\n:PUBLISH &WMS_DB_PASSWORD#,,WORKFLOW\n:PUBLISH &WMS_DB_SCHEMA#,,WORKFLOW\n\n! REFS DB\n:SET &RET# = STR_MATCH(&RESPONSE_CONTENT#, '*\"module_name\":\"REFS\"*')\n:IF &RET# = \"Y\"\n:  SET &REFS_DB_VIP_PRI# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'REFS')].dbDetails.url\")\n:  SET &REFS_DB_PORT# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'REFS')].dbDetails.db_port\")\n:  SET &REFS_DB_SID# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'REFS')].dbDetails.db_sid\")\n:  SET &REFS_DB_USERNAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'REFS')].dbDetails.db_username\")\n:  SET &REFS_DB_PASSWORD# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'REFS')].dbDetails.db_password\")\n:  SET &REFS_DB_SCHEMA# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'REFS')].dbDetails.db_schema\")\n:  SET &AFSM_CHECK# = &AFSM_CHECK# + 1\n:ELSE\n:  SET &REFS_DB_VIP_PRI# = \"\"\n:  SET &REFS_DB_PORT# = \"\"\n:  SET &REFS_DB_SID# = \"\"\n:  SET &REFS_DB_USERNAME# = \"\"\n:  SET &REFS_DB_PASSWORD# = \"\"\n:  SET &REFS_DB_SCHEMA# = \"\"\n:ENDIF\n:PUBLISH &REFS_DB_VIP_PRI#,,WORKFLOW\n:PUBLISH &REFS_DB_PORT#,,WORKFLOW\n:PUBLISH &REFS_DB_SID#,,WORKFLOW\n:PUBLISH &REFS_DB_USERNAME#,,WORKFLOW\n:PUBLISH &REFS_DB_PASSWORD#,,WORKFLOW\n:PUBLISH &REFS_DB_SCHEMA#,,WORKFLOW\n\n! EMS DB\n:SET &RET# = STR_MATCH(&RESPONSE_CONTENT#, '*\"module_name\":\"EMS\"*')\n:IF &RET# = \"Y\"\n:  SET &EMS_DB_VIP_PRI# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'EMS')].dbDetails.url\")\n:  SET &EMS_DB_PORT# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'EMS')].dbDetails.db_port\")\n:  SET &EMS_DB_SID# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'EMS')].dbDetails.db_sid\")\n:  SET &EMS_DB_USERNAME# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'EMS')].dbDetails.db_username\")\n:  SET &EMS_DB_PASSWORD# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'EMS')].dbDetails.db_password\")\n:  SET &EMS_DB_SCHEMA# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.modules[?(@.module_name == 'EMS')].dbDetails.db_schema\")\n:  SET &AFSM_CHECK# = &AFSM_CHECK# + 1\n:ELSE\n:  SET &EMS_DB_VIP_PRI# = \"\"\n:  SET &EMS_DB_PORT# = \"\"\n:  SET &EMS_DB_SID# = \"\"\n:  SET &EMS_DB_USERNAME# = \"\"\n:  SET &EMS_DB_PASSWORD# = \"\"\n:  SET &EMS_DB_SCHEMA# = \"\"\n:ENDIF\n:PUBLISH &EMS_DB_VIP_PRI#,,WORKFLOW\n:PUBLISH &EMS_DB_PORT#,,WORKFLOW\n:PUBLISH &EMS_DB_SID#,,WORKFLOW\n:PUBLISH &EMS_DB_USERNAME#,,WORKFLOW\n:PUBLISH &EMS_DB_PASSWORD#,,WORKFLOW\n:PUBLISH &EMS_DB_SCHEMA#,,WORKFLOW\n\n:PUBLISH &AFSM_CHECK#,,TASK",
+  "preScript": ":SET &IN_INSTANCE# = ${IN_INSTANCE}\n:SET &IN_MODULES# =\"${IN_MODULES}\"\n\n:INC PICK.SYSTEM-CONFIG.AFSM.DSC-WM-LATAM.INCL\n:INC READ.SYSTEM-CONFIG.AFSM.DSC-WM-LATAM.INCL\n\n!:READ &AFSM_URL#,,,&SC_AFSM_URL#\n!:READ &AFSM_CONTEXT_DB#,,,&SC_AFSM_CONTEXT_DB#\n!:SET &AFSM_FULL_URL#  = \"&AFSM_URL#/&AFSM_CONTEXT_DB#/&IN_INSTANCE#/&SC_RUN_ID#/machines/db/modules/&IN_MODULES#\"\n\n:SET &AFSM_CONTEXT_DB# = &SC_AFSM_CONTEXT_INSTANCE#\n:SET &AFSM_PART_URL#  = \"&AFSM_CONTEXT_DB#/&IN_INSTANCE#/&SC_RUN_ID#/machines/db/modules/&IN_MODULES#\"\n:PUB &AFSM_PART_URL# ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "",
+    "headers": "responseTimeout=60\n",
+    "method": "GET",
+    "resultVariableLevel": "SELF",
+    "url": "${AFSM_PART_URL#}"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "defaultValue": "${INSTANCE_NAME#}",
+      "editorType": "TEXT",
+      "name": "IN_INSTANCE",
+      "title": "IN_INSTANCE"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${REST_MODULES_DB#}",
+      "editorType": "TEXT",
+      "name": "IN_MODULES",
+      "title": "IN_MODULES"
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "RESPONSE_CONTENT#",
+      "outputFormat": "JSON",
+      "title": "RESPONSE_CONTENT#",
+      "outputDefinition": {
+        "dataPath": "$"
+      }
+    }
+  ]
+}

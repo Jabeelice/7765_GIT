@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! RESTART modules\n:SET &MODULES# = \"\"\n\n:SET &WMS_RESTART#       = \"false\"\n:SET &REFS_RESTART#      = \"false\"\n:SET &RW_RESTART#        = \"false\"\n:SET &EMS_RESTART#       = \"false\"\n:SET &WMS_FAIL_RESTART#  = \"false\"\n:SET &REFS_FAIL_RESTART# = \"false\"\n:SET &RW_FAIL_RESTART#   = \"false\"\n:SET &EMS_FAIL_RESTART#  = \"false\"\n:SET &WMS_DB_RESTART#    = \"false\"\n:SET &REFS_DB_RESTART#   = \"false\"\n:SET &EMS_DB_RESTART#    = \"false\"\n\n:IF &WMS_FAILOVER_SERVER# <> \"\"\n:  IF &WMS_FAILOVER_SHOULD_RUN# = \"Y\"\n:    SET &WMS_FAIL_RESTART#  = \"true\"\n:    SET &MODULES# = STR_CAT(&MODULES#, \"WMS,\")\n:  ENDIF\n:ENDIF\n\n:PUBLISH &WMS_RESTART#,,WORKFLOW\n:PUBLISH &REFS_RESTART#,,WORKFLOW\n:PUBLISH &RW_RESTART#,,WORKFLOW\n:PUBLISH &EMS_RESTART#,,WORKFLOW\n:PUBLISH &WMS_FAIL_RESTART#,,WORKFLOW\n:PUBLISH &REFS_FAIL_RESTART#,,WORKFLOW\n:PUBLISH &RW_FAIL_RESTART#,,WORKFLOW\n:PUBLISH &EMS_FAIL_RESTART#,,WORKFLOW\n\n:SET &LENGTH# = STR_LENGTH(&MODULES#)\n:IF &LENGTH# > 0\n:  SET &LE# = &LENGTH# - 1\n:  SET &MODULES# = SUBSTR(&MODULES#, 1, &LE#)\n:ENDIF\n\n:PUBLISH &MODULES#,,WORKFLOW"
+  }
+}

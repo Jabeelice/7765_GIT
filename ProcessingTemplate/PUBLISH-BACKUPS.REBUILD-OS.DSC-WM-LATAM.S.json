@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":IF &WMS_BACKUP# = \"false\"\n: SET &WMS_BACKUP_FILE# = \"\"\n:ENDIF\n\n:IF &REFS_BACKUP# = \"false\"\n: SET &REFS_BACKUP_FILE# = \"\"\n:ENDIF\n\n:IF &EMS_BACKUP# = \"false\"\n: SET &EMS_BACKUP_FILE# = \"\"\n:ENDIF\n\n:IF &RW_BACKUP# = \"false\"\n: SET &RW_BACKUP_FILE# = \"\"\n:ENDIF\n\n:IF &WMS_FAIL_BACKUP# = \"false\"\n: SET &WMS_FAIL_BACKUP_FILE# = \"\"\n:ENDIF\n\n:IF &REFS_FAIL_BACKUP# = \"false\"\n: SET &REFS_FAIL_BACKUP_FILE# = \"\"\n:ENDIF\n\n:IF &EMS_FAIL_BACKUP# = \"false\"\n: SET &EMS_FAIL_BACKUP_FILE# = \"\"\n:ENDIF\n\n:IF &RW_FAIL_BACKUP# = \"false\"\n: SET &RW_FAIL_BACKUP_FILE# = \"\"\n:ENDIF\n\n:SET &BACKUPS# = STR_CAT(&BACKUPS#, \",&INSTANCE_NAME#,&WMS_BACKUP_FILE#,&REFS_BACKUP_FILE#,&EMS_BACKUP_FILE#,&RW_BACKUP_FILE#,&WMS_FAIL_BACKUP_FILE#,&REFS_FAIL_BACKUP_FILE#,&EMS_FAIL_BACKUP_FILE#,&RW_FAIL_BACKUP_FILE#\")\n:PUBLISH &BACKUPS#,,TOP"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":SET &STOP_PRECHECK_SCRIPT_NAME# = GET_VAR(CONFIG.DR-NTV.DSC-WM-LATAM.V,STOP_PRECHECK_SCRIPT_NAME,1)\n:SET &CRONTAB_SCRIPT_NAME# = GET_VAR(CONFIG.DR-NTV.DSC-WM-LATAM.V,CRONTAB_SCRIPT_NAME,1)\n:SET &UPDATE_DB_PASS_WMS_SCRIPT# = GET_VAR(CONFIG.DB-PASS-CHANGE.DSC-WM-LATAM.V,UPDATE_DB_PASS_WMS_SCRIPT,1)\n:SET &UPDATE_DB_PASS_REFS_SCRIPT# = GET_VAR(CONFIG.DB-PASS-CHANGE.DSC-WM-LATAM.V,UPDATE_DB_PASS_REFS_SCRIPT,1)\n\n:PUB &STOP_PRECHECK_SCRIPT_NAME#\n:PUB &CRONTAB_SCRIPT_NAME#\n:PUB &UPDATE_DB_PASS_WMS_SCRIPT#\n:PUB &UPDATE_DB_PASS_REFS_SCRIPT#\n\n! Restart modules\n:SET &WMS_UPDATE#      = \"false\"\n:SET &REFS_UPDATE#     = \"false\"\n:SET &EMS_UPDATE#       = \"false\"\n:SET &WMS_FAIL_UPDATE#  = \"false\"\n:SET &REFS_FAIL_UPDATE# = \"false\"\n:SET &EMS_FAIL_UPDATE#  = \"false\"\n\n:IF &WMS_PRIMARY_SERVER# <> \"\"\n:  SET &WMS_UPDATE# = \"true\"\n:ENDIF\n\n:IF &REFS_PRIMARY_SERVER# <> \"\"\n:  SET &REFS_UPDATE# = \"true\"\n:ENDIF\n\n:IF &EMS_PRIMARY_SERVER# <> \"\"\n:  SET &EMS_UPDATE# = \"true\"\n:ENDIF\n\n:IF &WMS_FAILOVER_SERVER# <> \"\"\n:  SET &WMS_FAIL_UPDATE# = \"true\"\n:ENDIF\n\n:IF &REFS_FAILOVER_SERVER# <> \"\"\n:  SET &REFS_FAIL_UPDATE# = \"true\"\n:ENDIF\n\n:IF &EMS_FAILOVER_SERVER# <> \"\"\n:  SET &EMS_FAIL_UPDATE# = \"true\"\n:ENDIF\n\n:PUBLISH &WMS_UPDATE#,,WORKFLOW\n:PUBLISH &REFS_UPDATE#,,WORKFLOW\n:PUBLISH &EMS_UPDATE#,,WORKFLOW\n:PUBLISH &WMS_FAIL_UPDATE#,,WORKFLOW\n:PUBLISH &REFS_FAIL_UPDATE#,,WORKFLOW\n:PUBLISH &EMS_FAIL_UPDATE#,,WORKFLOW"
+  }
+}

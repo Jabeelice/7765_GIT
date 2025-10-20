@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "!:start this task after problem is fixed and restore is not needed\n\n:SET &UPGRADE_CONTINUE# = \"YES\"\n:PUBLISH &UPGRADE_CONTINUE#,,WORKFLOW\n:SET &UPGRADE_EXITCODE# = \"1\"\n:PUBLISH &UPGRADE_EXITCODE#,,WORKFLOW"
+  }
+}

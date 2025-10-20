@@ -1,0 +1,426 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "editorType": "TEXT",
+      "name": "MACHINE_FUNCTION#",
+      "title": "MACHINE_FUNCTION#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "MODULE#",
+      "title": "MODULE#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "MODULE_AGENT#",
+      "title": "MODULE_AGENT#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "MODULE_URL#",
+      "title": "MODULE_URL#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "MODULE_USERNAME#",
+      "title": "MODULE_USERNAME#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "GET-ID.MODULE-REFS.DSC-WM-LATAM.S",
+      "processingTemplate": "GET-ID.MODULE-REFS.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "taskType": "AE_SCRIPT"
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "UPGRADE"
+      ],
+      "title": "CRONTAB_COMMENT",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "'comment'",
+        "SCRIPT_NAME#": "${CRONTAB_SCRIPT_NAME#}",
+        "STEP#": "CRONTAB_COMMENT"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-ID.MODULE-REFS.DSC-WM-LATAM.S",
+          "predecessor": "GET-ID.MODULE-REFS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-CHECK.UPGRADE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-CHECK.UPGRADE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "UPGRADE"
+      ],
+      "title": "PRECHECK",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "'${APPLICATION_MAJOR_VERSION#}' '${MODULE#}'",
+        "SCRIPT_NAME#": "${PRECHECK_SCRIPT_NAME#}",
+        "STEP#": "PRECHECK"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.2",
+      "passBy": true,
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "UPGRADE"
+      ],
+      "title": "NA_PRECHECK",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${RESTORE_COMPLETED#}",
+            "operator": "EQ",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "'${APPLICATION_MAJOR_VERSION#}' '${MODULE#}'",
+        "SCRIPT_NAME#": "${PRECHECK_SCRIPT_NAME#}",
+        "STEP#": "PRECHECK"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.3",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "UPGRADE"
+      ],
+      "title": "PORTALSERVER",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${RESTORE_COMPLETED#}",
+            "operator": "EQ",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "'${MODULE#}' '${REFS_RPWEB_RESPONSE_FILE#}' '${UPGRADE_VERSION_PATH#}' '${WMS_PRIMARY_SERVER_URL#}' '${REFS_DB_USERNAME#}' '${REFS_DB_PASSWORD#}' '${REFS_DB_VIP_PRI#}' '${REFS_DB_PORT#}' '${REFS_DB_SID#}'",
+        "SCRIPT_NAME#": "${PORTALSERVER_SCRIPT_NAME#}",
+        "STEP#": "PORTALSERVER"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-CHECK.UPGRADE.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-SCRIPT-CHECK.UPGRADE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.2",
+          "predecessor": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.4",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "UPGRADE"
+      ],
+      "title": "DBCHECK",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${RESTORE_COMPLETED#}",
+            "operator": "EQ",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "",
+        "SCRIPT_NAME#": "${DBCHECK_SCRIPT_NAME#}",
+        "STEP#": "DBCHECK"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.3",
+          "predecessor": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.5",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "UPGRADE"
+      ],
+      "title": "DBALL",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${RESTORE_COMPLETED#}",
+            "operator": "EQ",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "",
+        "SCRIPT_NAME#": "${DBALL_SCRIPT_NAME#}",
+        "STEP#": "DBALL"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.4",
+          "predecessor": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.6",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "UPGRADE"
+      ],
+      "title": "POSTUPGRADE_CUSTOMIZATION",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${RESTORE_COMPLETED#}",
+            "operator": "EQ",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "'${MODULE#}' '${APPLICATION_MAJOR_VERSION#}'",
+        "SCRIPT_NAME#": "${CUSTOMIZATION_SCRIPT_NAME#}",
+        "STEP#": "POSTUPGRADE_CUSTOMIZATION"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.5",
+          "predecessor": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.5",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.7",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "UPGRADE"
+      ],
+      "title": "CRONTAB_UNCOMMENT",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "'uncomment'",
+        "SCRIPT_NAME#": "${CRONTAB_SCRIPT_NAME#}",
+        "STEP#": "CRONTAB_UNCOMMENT"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.6",
+          "predecessor": "RUN-SCRIPT-UPGRADE.UPGRADE.DSC-WM-LATAM.WST.6",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    }
+  ]
+}

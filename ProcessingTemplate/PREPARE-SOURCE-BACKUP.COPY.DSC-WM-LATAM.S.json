@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! Backup modules\n:SET &POST_INSTANCE_STOP# = &INSTANCE_STOP#\n:PUBLISH &POST_INSTANCE_STOP#,,WORKFLOW\n\n:SET &WMS_BACKUP#         = \"false\"\n:SET &REFS_BACKUP#        = \"false\"\n:SET &RW_BACKUP#          = \"false\"\n:SET &EMS_BACKUP#         = \"false\"\n:SET &WMS_FAIL_BACKUP#    = \"false\"\n:SET &REFS_FAIL_BACKUP#   = \"false\"\n:SET &RW_FAIL_BACKUP#     = \"false\"\n:SET &EMS_FAIL_BACKUP#    = \"false\"\n\n:SET &WMS_DB_BACKUP#      = \"false\"\n:SET &REFS_DB_BACKUP#     = \"false\"\n:SET &EMS_DB_BACKUP#      = \"false\"\n\n:IF \"${WMS_PRIMARY_SERVER#}\" <> \"\"\n:  SET &WMS_BACKUP# = \"true\"\n:ENDIF\n\n:IF \"${REFS_PRIMARY_SERVER#}\"  <> \"\"\n:  SET &REFS_BACKUP# = \"true\"\n:ENDIF\n\n:IF \"${RW_PRIMARY_SERVER#}\"  <> \"\"\n:  SET &RW_BACKUP# = \"true\"\n:ENDIF\n\n:IF \"${EMS_PRIMARY_SERVER#}\"  <> \"\"\n:  SET &EMS_BACKUP# = \"true\"\n:ENDIF\n\n:IF \"${WMS_FAILOVER_SERVER#}\"  <> \"\"\n:  IF \"${WMS_FAILOVER_SHOULD_RUN#}\"  = \"true\"\n:    SET &WMS_FAIL_BACKUP# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF \"${REFS_FAILOVER_SERVER#}\"  <> \"\"\n:  IF \"${REFS_FAILOVER_SHOULD_RUN#}\"  = \"true\"\n:    SET &REFS_FAIL_BACKUP# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF \"${RW_FAILOVER_SERVER#}\"  <> \"\"\n:  IF \"${RW_FAILOVER_SHOULD_RUN#}\"  = \"true\"\n:    SET &RW_FAIL_BACKUP# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF \"${EMS_FAILOVER_SERVER#}\" <> \"\"\n:  IF \"${EMS_FAILOVER_SHOULD_RUN#}\" = \"true\"\n:    SET &EMS_FAIL_BACKUP# = \"true\"\n:  ENDIF\n:ENDIF\n\n\n:PUBLISH &WMS_BACKUP#,,WORKFLOW\n:PUBLISH &REFS_BACKUP#,,WORKFLOW\n:PUBLISH &RW_BACKUP#,,WORKFLOW\n:PUBLISH &EMS_BACKUP#,,WORKFLOW\n:PUBLISH &WMS_FAIL_BACKUP#,,WORKFLOW\n:PUBLISH &REFS_FAIL_BACKUP#,,WORKFLOW\n:PUBLISH &RW_FAIL_BACKUP#,,WORKFLOW\n:PUBLISH &EMS_FAIL_BACKUP#,,WORKFLOW\n\n:PUBLISH &WMS_DB_BACKUP#,,WORKFLOW\n:PUBLISH &REFS_DB_BACKUP#,,WORKFLOW\n:PUBLISH &EMS_DB_BACKUP#,,WORKFLOW\n\n! Stop modules\n:SET &WMS_STOP#         = \"false\"\n:SET &REFS_STOP#        = \"false\"\n:SET &RW_STOP#          = \"false\"\n:SET &EMS_STOP#         = \"false\"\n:SET &WMS_FAIL_STOP#    = \"false\"\n:SET &REFS_FAIL_STOP#   = \"false\"\n:SET &RW_FAIL_STOP#     = \"false\"\n:SET &EMS_FAIL_STOP#    = \"false\"\n\n:IF \"${WMS_PRIMARY_SERVER#}\" <> \"\"\n:  IF \"${INSTANCE_STOP#}\" = \"Y\"\n:    IF \"${WMS_PRIMARY_SHOULD_RUN#}\" = \"true\"\n:      SET &WMS_STOP# = \"true\"\n:    ENDIF\n:  ENDIF\n:ENDIF\n\n:IF \"${REFS_PRIMARY_SERVER#}\" <> \"\"\n:  IF \"${INSTANCE_STOP#}\" = \"Y\"\n:    IF \"${REFS_PRIMARY_SHOULD_RUN#}\" = \"true\"\n:      SET &REFS_STOP# = \"true\"\n:    ENDIF\n:  ENDIF\n:ENDIF\n\n:IF \"${RW_PRIMARY_SERVER#}\" <> \"\"\n:  IF \"${INSTANCE_STOP#}\" = \"Y\"\n:    IF \"${RW_PRIMARY_SHOULD_RUN#}\" = \"true\"\n:      SET &RW_STOP# = \"true\"\n:    ENDIF\n:  ENDIF\n:ENDIF\n\n:IF \"${EMS_PRIMARY_SERVER#}\" <> \"\"\n:  IF \"${INSTANCE_STOP#}\" = \"Y\"\n:    IF \"${EMS_PRIMARY_SHOULD_RUN#}\" = \"true\"\n:      SET &EMS_STOP# = \"true\"\n:    ENDIF\n:  ENDIF\n:ENDIF\n\n:IF \"${WMS_FAILOVER_SERVER#}\" <> \"\"\n:  IF \"${INSTANCE_STOP#}\" = \"Y\"\n:    IF \"${WMS_FAILOVER_SHOULD_RUN#}\" = \"true\"\n:      SET &WMS_FAIL_STOP# = \"true\"\n:    ENDIF\n:  ENDIF\n:ENDIF\n\n:IF \"${REFS_FAILOVER_SERVER#}\" <> \"\"\n:  IF \"${INSTANCE_STOP#}\" = \"Y\"\n:    IF \"${REFS_FAILOVER_SHOULD_RUN#}\" = \"true\"\n:      SET &REFS_FAIL_STOP# = \"true\"\n:    ENDIF\n:  ENDIF\n:ENDIF\n\n:IF \"${RW_FAILOVER_SERVER#}\" <> \"\"\n:  IF \"${INSTANCE_STOP#}\" = \"Y\"\n:    IF \"${RW_FAILOVER_SHOULD_RUN#}\" = \"true\"\n:      SET &RW_FAIL_STOP# = \"true\"\n:    ENDIF\n:  ENDIF\n:ENDIF\n\n:IF \"${EMS_FAILOVER_SERVER#}\" <> \"\"\n:  IF \"${INSTANCE_STOP#}\" = \"Y\"\n:    IF \"${EMS_FAILOVER_SHOULD_RUN#}\" = \"true\"\n:      SET &EMS_FAIL_STOP# = \"true\"\n:    ENDIF\n:  ENDIF\n:ENDIF\n\n:PUBLISH &WMS_STOP#,,WORKFLOW\n:PUBLISH &REFS_STOP#,,WORKFLOW\n:PUBLISH &RW_STOP#,,WORKFLOW\n:PUBLISH &EMS_STOP#,,WORKFLOW\n:PUBLISH &WMS_FAIL_STOP#,,WORKFLOW\n:PUBLISH &REFS_FAIL_STOP#,,WORKFLOW\n:PUBLISH &RW_FAIL_STOP#,,WORKFLOW\n:PUBLISH &EMS_FAIL_STOP#,,WORKFLOW"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! INC/CTASK\n:SET &TYPE# = \"\"\n\n:SET &IN_TICKET# = \"${IN_TICKET}\"\n:PUB &IN_TICKET#\n\n:IF &IN_TICKET#  <> \"\"\n:  SET &INC# = SUBSTR(&IN_TICKET#,1,3)\n:  SET &CTA# = SUBSTR(&IN_TICKET#,1,5)\n:  IF &INC# = \"INC\"\n:    SET &TYPE# = \"INC\"\n:  ELSE\n:    IF &CTA# = \"CTASK\"\n:      SET &TYPE# = \"CTASK\"\n:    ELSE\n:      PRINT \"WARNING - No valid INC/CTASK!\"\n:      SET &TYPE# = \"\"\n:    ENDIF\n:  ENDIF\n:ENDIF\n:PUBLISH &TYPE#,,WORKFLOW\n\n:SET &ALERT_MESSAGE# = \"\"\n:SET &INC_VALID# = \"false\"\n:SET &CTASK_VALID# = \"false\"\n:PUBLISH &ALERT_MESSAGE#,,WORKFLOW\n:PUBLISH &INC_VALID#,,WORKFLOW\n:PUBLISH &CTASK_VALID#,,WORKFLOW\n"
+  }
+}

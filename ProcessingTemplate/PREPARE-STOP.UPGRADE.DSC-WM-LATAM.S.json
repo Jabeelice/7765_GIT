@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! Stop modules\n:SET &MODULES# = \"\"\n\n:SET &WMS_STOP#       = \"false\"\n:SET &REFS_STOP#      = \"false\"\n:SET &RW_STOP#        = \"false\"\n:SET &EMS_STOP#       = \"false\"\n:SET &WMS_FAIL_STOP#  = \"false\"\n:SET &REFS_FAIL_STOP# = \"false\"\n:SET &RW_FAIL_STOP#   = \"false\"\n:SET &EMS_FAIL_STOP#  = \"false\"\n:SET &FAILOVER#       = \"false\"\n\n:IF &WMS_PRIMARY_SERVER# <> \"\"\n:  SET &WMS_STOP# = \"true\"\n:  SET &MODULES# = STR_CAT(&MODULES#, \"WMS,\")\n:ENDIF\n\n:IF &REFS_PRIMARY_SERVER# <> \"\"\n:  SET &REFS_STOP# = \"true\"\n:  SET &MODULES# = STR_CAT(&MODULES#, \"REFS,\")\n:ENDIF\n\n:IF &EMS_PRIMARY_SERVER# <> \"\"\n:  SET &EMS_STOP# = \"true\"\n:  SET &MODULES# = STR_CAT(&MODULES#, \"EMS,\")\n:ELSE\n:  SET &EMS_PRIMARY_SERVER_URL# = '\"\"'\n:  PUBLISH &EMS_PRIMARY_SERVER_URL#,,WORKFLOW\n:ENDIF\n\n:IF &RW_PRIMARY_SERVER# <> \"\"\n:  SET &RW_STOP# = \"true\"\n:  SET &MODULES# = STR_CAT(&MODULES#, \"RW,\")\n:ENDIF\n\n:IF &WMS_FAILOVER_SERVER# <> \"\"\n:  SET &WMS_FAIL_STOP# = \"true\"\n:  SET &FAILOVER# = \"true\"\n:  SET &MODULES# = STR_CAT(&MODULES#, \"WMS-FAIL,\")\n:ENDIF\n\n:IF &REFS_FAILOVER_SERVER# <> \"\"\n:  SET &REFS_FAIL_STOP# = \"true\"\n:  SET &FAILOVER# = \"true\"\n:  SET &MODULES# = STR_CAT(&MODULES#, \"REFS-FAIL,\")\n:ENDIF\n\n:IF &RW_FAILOVER_SERVER# <> \"\"\n:  SET &RW_FAIL_STOP# = \"true\"\n:  SET &FAILOVER# = \"true\"\n:  SET &MODULES# = STR_CAT(&MODULES#, \"RW-FAIL,\")\n:ENDIF\n\n:IF &EMS_FAILOVER_SERVER# <> \"\"\n:  SET &EMS_FAIL_STOP# = \"true\"\n:  SET &FAILOVER# = \"true\"\n:  SET &MODULES# = STR_CAT(&MODULES#, \"EMS-FAIL,\")\n:ENDIF\n\n:PUBLISH &WMS_STOP#,,WORKFLOW\n:PUBLISH &REFS_STOP#,,WORKFLOW\n:PUBLISH &RW_STOP#,,WORKFLOW\n:PUBLISH &EMS_STOP#,,WORKFLOW\n:PUBLISH &WMS_FAIL_STOP#,,WORKFLOW\n:PUBLISH &REFS_FAIL_STOP#,,WORKFLOW\n:PUBLISH &RW_FAIL_STOP#,,WORKFLOW\n:PUBLISH &EMS_FAIL_STOP#,,WORKFLOW\n:PUBLISH &FAILOVER#,,WORKFLOW\n\n:SET &LENGTH# = STR_LENGTH(&MODULES#)\n:IF &LENGTH# > 0\n:  SET &LE# = &LENGTH# - 1\n:  SET &MODULES# = SUBSTR(&MODULES#, 1, &LE#)\n:ENDIF\n\n:PUBLISH &MODULES#,,WORKFLOW"
+  }
+}

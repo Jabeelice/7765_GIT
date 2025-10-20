@@ -1,0 +1,39 @@
+{
+  "dataSourceType": "LOCAL_KEY_VALUE_STORE",
+  "dataType": "STRING",
+  "description": "Main config",
+  "errorHandling": "INIT",
+  "folder": "DSC-WM-LATAM",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "validity": "FREE",
+  "records": 
+  [
+    {
+      "key": "ALERT_EMAIL",
+      "value": "br.dsc.dhl.jda.latam@dhl.com,,,,"
+    },
+    {
+      "key": "ALERT_MESSAGE_ASSIGNEE",
+      "value": "Dear team,\n\n&IN_TICKET# was scheduled to be performed by Automic, \nhowever the ticket is assigned to an engineer, not LATAM.JDA ProcessAssistant. \nThe flow is stopped and no action was taken.\nPlease review manually.,,,,"
+    },
+    {
+      "key": "ALERT_MESSAGE_STATE",
+      "value": "Dear team,\n\n&IN_TICKET# was scheduled to be performed by Automic, \nhowever the status of the ticket is not actionable (Assigned or New). \nThe flow is stopped and no action was taken. \nPlease review manually.,,,,"
+    },
+    {
+      "key": "ALERT_SUBJECT",
+      "value": "&IN_TICKET# status is not actionable,,,,"
+    },
+    {
+      "key": "CTASK_ASSIGNMENT_GROUP",
+      "value": "01655ea0eb298a9078d0fce7cad0cd96,,,,"
+    },
+    {
+      "key": "TEST_ASSIGNMENT_GROUPS",
+      "value": "JDA WM - TEST,,,,"
+    }
+  ]
+}

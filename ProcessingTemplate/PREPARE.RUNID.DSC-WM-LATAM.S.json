@@ -1,0 +1,55 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":DEFINE &TRIGGERID#,unsigned\n:DEFINE &RUN_ID#,unsigned\n\n:SET &TRIGGERID# = SYS_ACT_PARENT_NR(ACT)\n:SET &TRIGGERID# = GET_PARENT_NR(&TRIGGERID#,ACT)\n:P &TRIGGERID#\n:SET &TRIGGERID# = GET_PARENT_NR(&TRIGGERID#,ACT)\n:P &TRIGGERID#\n:PUB &TRIGGERID#\n\n:SET &RUN_ID# = &TRIGGERID#\n:PUB &RUN_ID#"
+  },
+  "actions": 
+  [
+    {
+      "processingActionType": "ADD_TAG",
+      "processingEventCategory": "PROCESSING",
+      "processingEventType": "PROCESSING_LOADED",
+      "processingCommand": {
+        "actionTargetType": "RELATED",
+        "keepForcedStatus": true,
+        "operator": "",
+        "relation": {
+          "relationType": "PARENT"
+        },
+        "restartType": "RESTART_FROM_BEGINNING",
+        "value": "${tags}"
+      }
+    },
+    {
+      "processingActionType": "ADD_TAG",
+      "processingEventCategory": "PROCESSING",
+      "processingEventType": "PROCESSING_COMPLETED",
+      "processingCommand": {
+        "actionTargetType": "RELATED",
+        "keepForcedStatus": true,
+        "operator": "",
+        "relation": {
+          "relationType": "PARENT"
+        },
+        "restartType": "RESTART_FROM_BEGINNING",
+        "value": "${RUN_ID#}"
+      }
+    }
+  ]
+}

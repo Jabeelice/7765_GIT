@@ -1,0 +1,93 @@
+{
+  "description": "Get task change",
+  "endpoint": "ServiceNow.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Rest.rr",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &CHANGE_TASK_VALID# = \"true\"\n:IF &SYS_ID# = \"\"\n:  SET &CHANGE_TASK_COMMENT# = \"Invalid Change Task Number.\"\n:  SET &CHANGE_TASK_VALID# = \"false\"\n:ELSE\n:  IF &TASK_ACTIVE# = \"true\"\n:    IF \"&TASK_STATE#\" = \"&SC_CHANGE_TASK_VALID#\"\n:      SET &CHANGE_TASK_VALID# = \"true\"\n:    ELSE\n:      SET &CHANGE_TASK_VALID# = \"false\"\n:      SET &CHANGE_TASK_COMMENT# = \"Change Task state is incorrect (&TASK_STATE#), please make the state to &SC_CHANGE_TASK_VALID# and continue\"\n:    ENDIF\n:  ELSE\n:    SET &CHANGE_TASK_VALID# = \"false\"\n:    SET &CHANGE_TASK_COMMENT# = \"Change task is not open\"\n:  ENDIF\n:ENDIF\n\n:SET &CHANGE_TASK_REQUEST# = \"&CHANGE_REQUEST#\"\n:PRINT &CHANGE_TASK_COMMENT#\n:PUBLISH &CHANGE_TASK_REQUEST#,,WORKFLOW\n:PUBLISH &CHANGE_TASK_VALID#,,WORKFLOW",
+  "preScript": ":INC PICK.CHANGE-CONFIG.GSN.DSC-WM-LATAM.INCL\n:INC READ.CHANGE-CONFIG.GSN.DSC-WM-LATAM.INCL\n\n:SET &GSN_FULL_URL# = \"&SC_GSN_PROTOCOL#://&SC_GSN_URL#/&SC_GSN_CONTEXT_CHANGE_GET#${IN_CTASK}&SC_GSN_CONTEXT_CHANGE_GET_PARAM#\"\n:PUBLISH &SC_CHANGE_TASK_VALID#,,TASK\n\n:SET &PARAM# = \"&&sysparm_display_value=true&&sysparm_exclude_reference_link=true&&sysparm_fields=sys_id,state,active,parent,assignment_group&&sysparm_limit=1\"\n\n:SET &GSN_PART_URL# = \"&SC_GSN_CONTEXT_CHANGE_GET#${IN_CTASK}&SC_GSN_CONTEXT_CHANGE_GET_PARAM#\"\n:P &GSN_PART_URL\n:SET &GSN_PART_URL# = \"&SC_GSN_CONTEXT_CHANGE_GET#${IN_CTASK}&PARAM#\"\n:P &GSN_PART_URL\n:PUB &GSN_PART_URL#,,TASK\n",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "",
+    "headers": "responseTimeout=60\n",
+    "method": "GET",
+    "resultVariableLevel": "SELF",
+    "url": "${GSN_PART_URL#}"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "defaultValue": "${TICKET#}",
+      "editorType": "TEXT",
+      "name": "IN_CTASK",
+      "title": "IN_CTASK"
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "ASSIGNMENT_GROUP#",
+      "outputFormat": "JSON",
+      "title": "ASSIGNMENT_GROUP#",
+      "outputDefinition": {
+        "dataPath": "$.result[0].assignment_group",
+        "outputLevel": "PARENT"
+      }
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "CHANGE_REQUEST#",
+      "outputFormat": "JSON",
+      "title": "CHANGE_REQUEST#",
+      "outputDefinition": {
+        "dataPath": "$.result[0].parent",
+        "outputLevel": "PARENT"
+      }
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "SYS_ID#",
+      "outputFormat": "JSON",
+      "title": "SYS_ID#",
+      "outputDefinition": {
+        "dataPath": "$.result[0].sys_id",
+        "outputLevel": "PARENT"
+      }
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "TASK_ACTIVE#",
+      "outputFormat": "JSON",
+      "title": "TASK_ACTIVE#",
+      "outputDefinition": {
+        "dataPath": "$.result[0].active",
+        "outputLevel": "PARENT"
+      }
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "TASK_STATE#",
+      "outputFormat": "JSON",
+      "title": "TASK_STATE#",
+      "outputDefinition": {
+        "dataPath": "$.result[0].state",
+        "outputLevel": "PARENT"
+      }
+    }
+  ]
+}

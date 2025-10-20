@@ -1,0 +1,35 @@
+{
+  "dataSourceType": "LOCAL_KEY_VALUE_STORE",
+  "dataType": "STRING",
+  "description": "Event main config",
+  "errorHandling": "INIT",
+  "folder": "DSC-WM-LATAM",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "validity": "FREE",
+  "records": 
+  [
+    {
+      "key": "gsn_context_event_create",
+      "value": "api/dpit2/event/create,,,,"
+    },
+    {
+      "key": "gsn_context_event_update",
+      "value": "api/dpit2/event/update,,,,"
+    },
+    {
+      "key": "gsn_protocol",
+      "value": "https,,,,"
+    },
+    {
+      "key": "gsn_sysparm_limit",
+      "value": "1,,,,"
+    },
+    {
+      "key": "gsn_url",
+      "value": "servicenow.dhl.com,,,,"
+    }
+  ]
+}

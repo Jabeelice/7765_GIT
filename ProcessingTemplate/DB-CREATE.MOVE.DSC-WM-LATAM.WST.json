@@ -1,0 +1,288 @@
+{
+  "folder": "ae1f3e1a-bf74-4dac-9d99-5b9ba39535cb",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "items": 
+  [
+    {
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_DB create started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "DB create has been started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}"
+      }
+    },
+    {
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "REFS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${REFS_DB_CREATE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "DB_COPY_PARAMETERS#": "'copyvanilla' 'PPT' 'PPT' '${REFS_DB_USERNAME#}' '${REFS_DB_PASSWORD#}' '${REFS_DB_VIP_PRI#}' '${REFS_DB_PORT#}' '${REFS_DB_SID#}' '${DB_DIRECTORY_NAME#}' '${REFS_DB_USERNAME#}' '${REFS_DB_PASSWORD#}' '${M_DB_VIP_PRI#}' '${REFS_DB_PORT#}' '${M_DB_SID#}' '${DB_DIRECTORY_NAME#}' 'all' 'autodetect' 'N'",
+        "DB_CREATE_PARAMETERS#": "'${REFS_DB_USERNAME#}' '${REFS_DB_PASSWORD#}' '${REFS_DB_TABLESPACE_NAME#}' '${REFS_DB_TABLESPACE_ASIZE#}' '${M_DB_ADMIN_USERNAME#}' '${M_DB_ADMIN_PASSWORD#}' '${M_DB_VIP_PRI#}' '${M_DB_PORT#}' '${M_DB_SID#}'",
+        "MACHINE_FUNCTION#": "REFS_DB",
+        "MODULE#": "REFS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "WMS_ARCH",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${WMS_ARCH_DB_CREATE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "DB_COPY_PARAMETERS#": "'copyvanilla' 'PPT' 'PPT' '${WMS_ARCH_DB_USERNAME#}' '${WMS_ARCH_DB_PASSWORD#}' '${WMS_ARCH_DB_VIP_PRI#}' '${WMS_ARCH_DB_PORT#}' '${WMS_ARCH_DB_SID#}' '${DB_DIRECTORY_NAME#}' '${WMS_ARCH_DB_USERNAME#}' '${WMS_ARCH_DB_PASSWORD#}' '${TGT_WMS_ARCH_DB_VIP_PRI#}' '${TGT_WMS_ARCH_DB_PORT#}' '${TGT_WMS_ARCH_DB_SID#}' '${DB_DIRECTORY_NAME#}' 'all' 'autodetect' 'N'",
+        "DB_CREATE_PARAMETERS#": "'${WMS_ARCH_DB_USERNAME#}' '${WMS_ARCH_DB_PASSWORD#}' '${WMS_ARCH_DB_TABLESPACE_NAME#}' '${WMS_ARCH_DB_TABLESPACE_ASIZE#}' '${TGT_DB_ADMIN_USERNAME#}' '${TGT_DB_ADMIN_PASSWORD#}' '${TGT_WMS_ARCH_DB_VIP_PRI#}' '${TGT_WMS_ARCH_DB_PORT#}' '${TGT_WMS_ARCH_DB_SID#}'",
+        "MACHINE_FUNCTION#": "WMS_DB",
+        "MODULE#": "WMS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST.4",
+      "priority": "0",
+      "processingTemplate": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "EMS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EMS_DB_CREATE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "DB_COPY_PARAMETERS#": "'copyvanilla' 'PPT' 'PPT' '${EMS_DB_USERNAME#}' '${EMS_DB_PASSWORD#}' '${EMS_DB_VIP_PRI#}' '${EMS_DB_PORT#}' '${EMS_DB_SID#}' '${DB_DIRECTORY_NAME#}' '${EMS_DB_USERNAME#}' '${EMS_DB_PASSWORD#}' '${M_DB_VIP_PRI#}' '${EMS_DB_PORT#}' '${M_DB_SID#}' '${DB_DIRECTORY_NAME#}' 'all' 'autodetect' 'N'",
+        "DB_CREATE_PARAMETERS#": "'${EMS_DB_USERNAME#}' '${EMS_DB_PASSWORD#}' '${EMS_DB_TABLESPACE_NAME#}' '${EMS_DB_TABLESPACE_ASIZE#}' '${M_DB_ADMIN_USERNAME#}' '${M_DB_ADMIN_PASSWORD#}' '${M_DB_VIP_PRI#}' '${M_DB_PORT#}' '${M_DB_SID#}'",
+        "MACHINE_FUNCTION#": "EMS_DB",
+        "MODULE#": "EMS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST",
+          "predecessor": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST.3",
+      "priority": "0",
+      "processingTemplate": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "title": "WMS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${WMS_DB_CREATE#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "DBLINK_CREATE_PARAMETERS#": "'${WMS_DB_USERNAME#}' '${WMS_DB_PASSWORD#}' '${M_DB_VIP_PRI#}' '${M_DB_PORT#}' '${M_DB_SID#}' 'ARCHIVE' '${WMS_ARCH_DB_USERNAME#}' '${WMS_ARCH_DB_PASSWORD#}' '${TGT_WMS_ARCH_DB_VIP_PRI#}' '${TGT_WMS_ARCH_DB_PORT#}' '${TGT_WMS_ARCH_DB_SID#}'",
+        "DBLINK_DROP_OLDSRV_PARAMETERS#": "'${WMS_DB_USERNAME#}' '${WMS_DB_PASSWORD#}' '${WMS_DB_VIP_PRI#}' '${WMS_DB_PORT#}' '${WMS_DB_SID#}' 'ARCHIVE'",
+        "DBLINK_DROP_PARAMETERS#": "'${WMS_DB_USERNAME#}' '${WMS_DB_PASSWORD#}' '${M_DB_VIP_PRI#}' '${M_DB_PORT#}' '${M_DB_SID#}' 'ARCHIVE'",
+        "DB_COPY_PARAMETERS#": "'copyvanilla' 'PPT' 'PPT' '${WMS_DB_USERNAME#}' '${WMS_DB_PASSWORD#}' '${WMS_DB_VIP_PRI#}' '${WMS_DB_PORT#}' '${WMS_DB_SID#}' '${DB_DIRECTORY_NAME#}' '${WMS_DB_USERNAME#}' '${WMS_DB_PASSWORD#}' '${M_DB_VIP_PRI#}' '${WMS_DB_PORT#}' '${M_DB_SID#}' '${DB_DIRECTORY_NAME#}' 'all' 'autodetect' 'N'",
+        "DB_CREATE_PARAMETERS#": "'${WMS_DB_USERNAME#}' '${WMS_DB_PASSWORD#}' '${WMS_DB_TABLESPACE_NAME#}' '${WMS_DB_TABLESPACE_ASIZE#}' '${M_DB_ADMIN_USERNAME#}' '${M_DB_ADMIN_PASSWORD#}' '${M_DB_VIP_PRI#}' '${M_DB_PORT#}' '${M_DB_SID#}'",
+        "MACHINE_FUNCTION#": "WMS_DB",
+        "MODULE#": "WMS",
+        "MODULE_AGENT#": "${DB_MANAGEMENT_SERVER_PRIMARY#},${DB_MANAGEMENT_SERVER_SECONDARY#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST.4",
+          "predecessor": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_DB create finished",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "DB create has been finished",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST.2",
+          "predecessor": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST.3",
+          "predecessor": "MODULE-DB-CREATE.MOVE.DSC-WM-LATAM.WST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    }
+  ]
+}

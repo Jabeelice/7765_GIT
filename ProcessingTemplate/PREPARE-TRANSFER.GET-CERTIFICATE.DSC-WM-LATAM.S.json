@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":DEFINE &AAGENT#,string,3\n:SET &TARGET_KEYSTORE_FILE# = \"\"\n:SET &AFSM_SERVER_AGENT# = \"\"\n:SET &SERVER_AGENT# = \"\"\n\n:IF &KEYSTORE_FILE# <> \"\"\n:  SET &POS# = STR_FIND_REVERSE(&KEYSTORE_FILE#, '/')\n:  SET &POS# = &POS# + 1\n:  SET &KEYSTORE_FILENAME# = SUBSTR(&KEYSTORE_FILE#, &POS#)\n:  SET &TARGET_KEYSTORE_FILE# = \"/opt/jda/wm/certificate/&KEYSTORE_FILENAME#\"\n:ENDIF\n\n:FILL &AAGENT#[] = STR_SPLIT(&AFSM_MANAGEMENT_SERVER#,\".\")\n:SET &AGENT_UC# = \"&AAGENT#[1]\"\n:SET &AFSM_SERVER_AGENT# = \"&AGENT_UC#.os\"\n\n:FILL &AAGENT#[] = STR_SPLIT(&SERVER_NAME#,\".\")\n:SET &AGENT_UC# = \"&AAGENT#[1]\"\n:SET &SERVER_AGENT# = \"&AGENT_UC#.os\"\n\n:PUBLISH &AFSM_SERVER_AGENT#,,WORKFLOW\n:PUBLISH &SERVER_AGENT#,,WORKFLOW\n:PUBLISH &TARGET_KEYSTORE_FILE#,,WORKFLOW"
+  }
+}

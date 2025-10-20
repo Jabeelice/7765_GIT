@@ -1,0 +1,27 @@
+{
+  "dataSourceType": "LOCAL_KEY_VALUE_STORE",
+  "dataType": "STRING",
+  "errorHandling": "INIT",
+  "folder": "DSC-WM-LATAM",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "Consultants"
+  ],
+  "validity": "FREE",
+  "records": 
+  [
+    {
+      "key": "GSN",
+      "value": "{\n\"CI\": \"\", \n\"Prio\": \"\", \n\"GroupL1\": \"LATAM WMS Delivery\", \n\"GroupL2\": \"\", \n\"GroupL3\": \"\", \n\"METADATA.DSC-WM-LATAM.WST:gsn_groupL1\": \"\", \n\"METADATA.DSC-WM-LATAM.WST:gsn_groupL2\": \"\", \n\"METADATA.DSC-WM-LATAM.WST:gsn_prio\": \"\", \n\"READ.DSC-WM-LATAM.JLIN:gsn_groupL1\": \"\", \n\"READ.DSC-WM-LATAM.JLIN:instructions\": \"\", \n\"WF-PROCESS.DSC-WM-LATAM.S:gsn_prio\": \"\"\n}"
+    },
+    {
+      "key": "Service",
+      "value": "{\n\"ID\": \"BS31318\", \n\"Owner_ldap\": \"jpesek\", \n\"Owner_email\": \"solsup_wms_so@dhl.com\"\n}"
+    },
+    {
+      "key": "UC",
+      "value": "{\n\"Owner1_email\": \"petr.kubat@dhl.com\", \n\"Owner2_email\": \"richard.gewissler@dhl.com\", \n\"Developer1\":\"\", \n\"Developer2\":\"\", \n\"Demand\":\"\", \n\"Consultant\":\"\", \n\"Name4mgrs\":\"\", \n\"TmpRetention\": \"\"\n}"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "description": "Alert mail",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Linux.apf",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "preScript": "!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB\n",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SHELL_SCRIPT",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":SET &OUT_MAIL = GET_VAR(MAIN-CONFIG.GSN.DSC-WM-LATAM.V,ALERT_EMAIL,1)\n:SET &SUBJECT = GET_VAR(MAIN-CONFIG.GSN.DSC-WM-LATAM.V,ALERT_SUBJECT,1)\n \n:RESOLVE &OUT_SUBJECT = '&SUBJECT'\n:RESOLVE &OUT_MESSAGE = '${ALERT_MESSAGE#}'\n \n:PUB &OUT_MAIL,,TASK\n:PUB &OUT_SUBJECT,,TASK\n:PUB &OUT_MESSAGE,,TASK\n\n\n!:RESOLVE &SUBJECT# = \"&IN_SUBJECT#\"\n!:RESOLVE &MESSAGE# = \"&IN_MESSAGE#\"\n!:SET &OUT# = SEND_MAIL(&IN_EMAIL#,,&SUBJECT#,&MESSAGE#)"
+  },
+  "actions": 
+  [
+    {
+      "processingActionType": "NOTIFY_EMAIL",
+      "processingEventCategory": "PROCESSING",
+      "processingEventType": "PROCESSING_COMPLETED",
+      "condition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "exitCode",
+            "operator": "EQ_NUM",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "processingCommand": {
+        "contentType": "TEXT",
+        "message": "${OUT_MESSAGE}",
+        "recipient": "${OUT_MAIL}",
+        "subject": "${OUT_SUBJECT}"
+      }
+    }
+  ]
+}

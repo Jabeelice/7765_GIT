@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "! Will set only that accounts that are defined\n:SET &WMS_CHANGE#      = \"false\"\n:SET &REFS_CHANGE#     = \"false\"\n:SET &EMS_CHANGE#      = \"false\"\n\n:IF &WMS_DB_USERNAME# <> \"\"\n:  IF &WMS_DB_USERNAME# <> \"N/A\"\n:    SET &WMS_CHANGE# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF &REFS_DB_USERNAME# <> \"\"\n:  IF &REFS_DB_USERNAME# <> \"N/A\"\n:    SET &REFS_CHANGE# = \"true\"\n:  ENDIF\n:ENDIF\n\n:IF &EMS_DB_USERNAME# <> \"\"\n:  IF &EMS_DB_USERNAME# <> \"N/A\"\n:    SET &EMS_CHANGE# = \"true\"\n:  ENDIF\n:ENDIF\n\n:PUBLISH &WMS_CHANGE#,,WORKFLOW\n:PUBLISH &REFS_CHANGE#,,WORKFLOW\n:PUBLISH &EMS_CHANGE#,,WORKFLOW\n"
+  }
+}

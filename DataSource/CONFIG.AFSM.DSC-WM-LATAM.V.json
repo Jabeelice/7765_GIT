@@ -1,0 +1,55 @@
+{
+  "dataSourceType": "LOCAL_KEY_VALUE_STORE",
+  "dataType": "STRING",
+  "description": "Main config",
+  "errorHandling": "INIT",
+  "folder": "DSC-WM-LATAM",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "validity": "FREE",
+  "records": 
+  [
+    {
+      "key": "afsm_context_instance",
+      "value": "api/automic/instances,,,,"
+    },
+    {
+      "key": "afsm_context_db",
+      "value": "api/automic/instances,,,,"
+    },
+    {
+      "key": "afsm_context_machine_message",
+      "value": "api/automic/machineStatus/,,,,"
+    },
+    {
+      "key": "afsm_context_message",
+      "value": "api/automic/status/,,,,"
+    },
+    {
+      "key": "afsm_context_move_instance",
+      "value": "api/automic/moveInstance/,,,,"
+    },
+    {
+      "key": "afsm_machine_deployment",
+      "value": "api/automic/machine/deployment,,,,"
+    },
+    {
+      "key": "____Key____",
+      "value": "___ Value ___,___ Value for PROD___,___ Value for DEV___,,"
+    },
+    {
+      "key": "afsm_context_machine",
+      "value": "api/automic/machines,,,,"
+    },
+    {
+      "key": "afsm_url",
+      "value": "afsmlatam.dhl.com/afsm,afsmlatam.dhl.com/afsm,czcholstc001173.prg-dc.dhl.com/fat_afsm,,"
+    },
+    {
+      "key": "afsm_protocol",
+      "value": "https,,,,"
+    }
+  ]
+}

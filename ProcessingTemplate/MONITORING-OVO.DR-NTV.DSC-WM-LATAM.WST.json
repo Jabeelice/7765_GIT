@@ -1,0 +1,125 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "OVO_ACTION#",
+      "title": "OVO_ACTION#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "OVO_HOST1#",
+      "title": "OVO_HOST1#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "OVO_HOST2#",
+      "title": "OVO_HOST2#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "OVO_HOST3#",
+      "title": "OVO_HOST3#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "OVO_MSG#",
+      "title": "OVO_MSG#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "name": "HOST-OVO.DR-NTV.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "HOST-OVO.DR-NTV.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DRNTV"
+      ],
+      "title": "OVO_HOST1",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "OVO_HOST#": "${OVO_HOST1#}"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "name": "HOST-OVO.DR-NTV.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "HOST-OVO.DR-NTV.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DRNTV"
+      ],
+      "title": "OVO_HOST2",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "OVO_HOST#": "${OVO_HOST2#}"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "name": "HOST-OVO.DR-NTV.DSC-WM-LATAM.WST.3",
+      "priority": "0",
+      "processingTemplate": "HOST-OVO.DR-NTV.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DRNTV"
+      ],
+      "title": "OVO_HOST3",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "OVO_HOST#": "${OVO_HOST3#}"
+      }
+    }
+  ]
+}

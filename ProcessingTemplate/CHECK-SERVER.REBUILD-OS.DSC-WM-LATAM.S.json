@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":DEFINE &AAGENT#,string,3\n\n:SET &IN_AGENT# = ${SERVER_NAME#}\n:FILL &AAGENT#[] = STR_SPLIT(&IN_AGENT#,\".\")\n:SET &AGENT_UC# = \"&AAGENT#[1].os\"\n\n:SET &COUNT# = 1\n:SET &COUNT_MAX# = 5\n:SET &DELAY# = 120\n:SET &DELAYFIRST# = 360\n\n:PRINT \"Waiting '&DELAYFIRST#' seconds for the NAS script to complete ...\"\n:WAIT &DELAYFIRST#\n\n:WHILE &COUNT# LE &COUNT_MAX#\n:  SET &C# = FORMAT(&COUNT#)\n:  PRINT \"Checking agent '&AGENT_UC#' &C# times ...\"\n:  SET &AGENT_ALIVE# = SYS_HOST_ALIVE(&AGENT_UC#)\n:  IF &AGENT_ALIVE# = \"Y\"\n:    PRINT \"Agent '&AGENT_UC#' is up.\"\n:    SET &STATUS# = \"true\"\n:    SET &COUNT# = &COUNT_MAX#\n:  ELSE\n:    PRINT \"Agent '&AGENT_UC#' is down.\"\n:    SET &STATUS# = \"false\"\n:    PRINT \"Waiting '&DELAY#' seconds ...\"\n:    WAIT &DELAY#\n:  ENDIF\n:  SET &COUNT# = &COUNT# + 1\n:ENDWHILE\n\n:IF &STATUS# = \"true\"\n:  SET &EXITCODE# = \"0\"\n:  PUBLISH &EXITCODE#,,WORKFLOW\n:ELSE\n:  SET &EXITCODE# = \"1\"\n:  PUBLISH &EXITCODE#,,WORKFLOW\n:ENDIF"
+  }
+}

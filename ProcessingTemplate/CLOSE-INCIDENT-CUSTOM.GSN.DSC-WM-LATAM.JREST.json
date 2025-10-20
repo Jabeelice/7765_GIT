@@ -1,0 +1,98 @@
+{
+  "description": "Close Incident",
+  "endpoint": "ServiceNow.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Rest.rr",
+  "owner": "TDROBISZ",
+  "postScript": "!:PUBLISH &CLOSE_NUMBER_ID#,,WORKFLOW\n!:PUBLISH &SYS_ID#,,WORKFLOW",
+  "preScript": ":INC PICK.INCIDENT-CONFIG.GSN.DSC-WM-LATAM.INCL\n:INC READ.INCIDENT-CONFIG.GSN.DSC-WM-LATAM.INCL\n\n!:READ &GSN_UPDATE_URL#,,,&SC_GSN_UPDATE_URL#\n!:SET &GSN_FULL_URL# = \"&GSN_UPDATE_URL#/&IN_NUMBER_ID#\"\n\n:SET &GSN_UPDATE_URL# = &SC_GSN_CONTEXT_UPDATE#\n:SET &GSN_PART_URL# = \"&GSN_UPDATE_URL#/${IN_NUMBER_ID}\"\n:PUB &GSN_PART_URL#\n\n:SET &IN_INCIDENT_TYPE# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_INCIDENT_TYPE,1)\n:PUB &IN_INCIDENT_TYPE#,,TASK\n:SET &IN_CATEGORY_LEVEL1# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_CATEGORY_LEVEL1,1)\n:PUB &IN_CATEGORY_LEVEL1#,,TASK\n:SET &IN_CMDB_CI# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_CONFIGURATION_ITEM,1)\n:RESOLVE &CMDB_CI# = \"&IN_CMDB_CI#\"\n:PUB &CMDB_CI#,,TASK\n:SET &IN_ASSIGNMENT_GROUP# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_ASSIGNMENT_GROUP,1)\n:PUB &IN_ASSIGNMENT_GROUP#,,TASK\n:SET &IN_ASSIGNED_TO# = GET_VAR(CONFIG.${PART}.DSC-WM-LATAM.V,RFSC_CALLER,1)\n:PUB &IN_ASSIGNED_TO#,,TASK\n:SET &NEWLINE# = UC_CRLF()\n:SET &TMP_STR# = STR_SUB(&IN_CLOSE_NOTES#,&NEWLINE#,\"\\n\")\n:RESOLVE &CLOSE_NOTES# = \"&TMP_STR#\"\n\n:SET &TMP_STR# = STR_SUB(&IN_COMMENTS#,&NEWLINE#,\"\\n\")\n:RESOLVE &COMMENTS# = \"&TMP_STR#\"",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "{\n  \"close_code\": \"${IN_CLOSE_COD#}\",\n  \"u_spl_closure_code\": \"${IN_SPL_CLOSURE_CODE}\",\n  \"incident_state\": \"${IN_STATE}\",\n  \"close_notes\": \"${CLOSE_NOTES#}\",\n  \"comments\": \"${COMMENTS#}\",\n  \"cmdb_ci\": \"${CMDB_CI#}\",\n  \"u_category_level_1\": \"${IN_CATEGORY_LEVEL1#}\",\n  \"u_incident_type\": \"${IN_INCIDENT_TYPE#}\",\n  \"assignment_group\": \"${IN_ASSIGNMENT_GROUP#}\",\n  \"assigned_to\": \"${IN_ASSIGNED_TO#}\"\n}",
+    "headers": "mediaType=application/json\nrequestDataSource=text\nresponseTimeout=60\n",
+    "method": "PUT",
+    "resultVariableLevel": "SELF",
+    "url": "${GSN_PART_URL#}"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_NUMBER_ID",
+      "title": "IN_NUMBER_ID"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_CLOSE_CODE",
+      "title": "IN_CLOSE_CODE"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "PART",
+      "title": "PART"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_SPL_CLOSURE_CODE",
+      "title": "IN_SPL_CLOSURE_CODE"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_STATE",
+      "title": "IN_STATE"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_CLOSE_NOTES",
+      "title": "IN_CLOSE_NOTES"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_COMMENTS",
+      "title": "IN_COMMENTS"
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "SYS_ID#",
+      "outputFormat": "JSON",
+      "title": "SYS_ID#",
+      "outputDefinition": {
+        "dataPath": "$.result.sys_id",
+        "outputLevel": "PARENT"
+      }
+    },
+    {
+      "editorType": "OUTPUT",
+      "name": "CLOSE_NUMBER_ID#",
+      "outputFormat": "JSON",
+      "title": "CLOSE_NUMBER_ID#",
+      "outputDefinition": {
+        "dataPath": "$.result.number",
+        "outputLevel": "PARENT"
+      }
+    }
+  ]
+}
