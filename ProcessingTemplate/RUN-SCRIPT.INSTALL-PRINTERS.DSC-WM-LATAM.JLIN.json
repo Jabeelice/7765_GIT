@@ -1,0 +1,72 @@
+{
+  "description": "Run bash script",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "${AGENT#}",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &RID# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=*\")\n:PROCESS &RID#\n:  SET &LINE# = GET_PROCESS_LINE(&RID#)\n:  PRINT &LINE#\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,WORKFLOW\n!:  IF &EXITCODE# > 0\n!:    MODIFY_STATE RETCODE=1800\n!:  ENDIF\n:ENDPROCESS\n\n:SET &RID2# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=0*\")\n:PROCESS &RID2#\n:  SET &LINE# = GET_PROCESS_LINE(&RID2#)\n:  PRINT &LINE#\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,WORKFLOW\n!:  IF &EXITCODE# > 0\n!:    MODIFY_STATE RETCODE=1800\n!:  ENDIF\n:ENDPROCESS",
+  "preScript": ":SET &TMP# = STR_SUB('${IN_AGENT#}', '[','')\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n\n:DEFINE &AAGENT#,string,3\n:FILL &AAGENT#[] = STR_SPLIT(&TMP#,\".\")\n:SET &AGENT_UC# = \"&AAGENT#[1]\"\n:SET &AGENT# = \"&AGENT_UC#.os\"\n:PUB &AGENT#\n\n!:SET &LOGIN# = &IN_LOGIN#\n!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB\n",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SHELL_SCRIPT",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "echo \">> Instance: ${IN_INSTANCE#}\"\necho \">> Module: ${IN_MODULE#}\"\necho \">> Machine Function: ${IN_MACHINE_FUNCTION#}\"\necho \">> Hostname: `hostname`\"\necho \">> Shell: $SHELL\"\necho \">> Username: ${IN_USERNAME#}\"\necho \">> Parameters: ${IN_PARAMETERS#}\"\necho \">> Executing: sudo su - ${IN_USERNAME#} -c \\\"${IN_SCRIPT_NAME#} ${IN_PARAMETERS#}\\\"\"\necho \">> Script output: \"\nsudo su - ${IN_USERNAME#} -c \"${IN_SCRIPT_NAME#} ${IN_PARAMETERS#}\"\nEXITCODE=$?\nif [[ $EXITCODE -eq 2 ]]; then\n  EXITCODE=0\n  echo \">> Warning: Script exited with exitcode 2!\"\n  echo \"EXITCODE=$EXITCODE\"\nelse\n  echo \"EXITCODE=$EXITCODE\"\nfi\nexit $EXITCODE\n"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_AGENT#",
+      "title": "IN_AGENT#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_INSTANCE#",
+      "title": "IN_INSTANCE#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_MACHINE_FUNCTION#",
+      "title": "IN_MACHINE_FUNCTION#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_MODULE#",
+      "title": "IN_MODULE#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_PARAMETERS#",
+      "title": "IN_PARAMETERS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_SCRIPT_NAME#",
+      "title": "IN_SCRIPT_NAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_USERNAME#",
+      "title": "IN_USERNAME#"
+    }
+  ]
+}

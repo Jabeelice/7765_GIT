@@ -1,0 +1,70 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_AGENT#",
+      "title": "IN_AGENT#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_WMS_USER#",
+      "title": "IN_WMS_USER#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "UPDATE-ZABBIX.DB-PASS-CHANGE.DSC-WM-LATAM.JUNX",
+      "priority": "0",
+      "processingTemplate": "UPDATE-ZABBIX.DB-PASS-CHANGE.DSC-WM-LATAM.JUNX",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DBPC"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "weight": "1",
+      "templateParameters": {
+      }
+    }
+  ]
+}

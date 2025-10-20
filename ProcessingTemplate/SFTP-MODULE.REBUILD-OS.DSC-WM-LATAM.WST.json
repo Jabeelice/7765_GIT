@@ -1,0 +1,92 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "INSTALL_PARAMETERS#",
+      "title": "INSTALL_PARAMETERS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MACHINE_FUNCTION#",
+      "title": "MACHINE_FUNCTION#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE#",
+      "title": "MODULE#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_AGENT#",
+      "title": "MODULE_AGENT#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_USERNAME#",
+      "title": "MODULE_USERNAME#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-MODULE.REBUILD-OS.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-MODULE.REBUILD-OS.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "title": "SFTP_USER",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "PARAMETERS#": "'${INSTANCE_NAME#}' '${SFTP_PASSWORD#}'",
+        "SCRIPT_NAME#": "${CREATESFTP_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "",
+        "STEP#": "SFTP_USER"
+      }
+    }
+  ]
+}

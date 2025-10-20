@@ -1,0 +1,456 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_STATUS#",
+      "title": "MODULE_STATUS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "PARAMETERS#",
+      "title": "PARAMETERS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "SCRIPT_NAME#",
+      "title": "SCRIPT_NAME#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTPRI"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Script started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "${SCRIPT_NAME#} has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "${MACHINE_FUNCTION#}",
+        "IN_MODULE#": "${MODULE#}",
+        "IN_MODULE_STATUS#": "1550"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CHECK-AGENT.INSTALL-PRINTERS.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "CHECK-AGENT.INSTALL-PRINTERS.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTPRI"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "CHECK-AGENT",
+      "weight": "1",
+      "templateParameters": {
+        "IN_AGENT": "${MODULE_AGENT#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTPRI"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Agent down",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${AGENT_ALIVE#}",
+            "operator": "NE",
+            "value": "N"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Agent ${MODULE_AGENT#} is down!",
+        "IN_FLOW_STATUS#": "1560",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "${MODULE#}",
+        "IN_MODULE#": "${MODULE#}",
+        "IN_MODULE_STATUS#": "1560"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CHECK-AGENT.INSTALL-PRINTERS.DSC-WM-LATAM.S",
+          "predecessor": "CHECK-AGENT.INSTALL-PRINTERS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CREATE-EVENTS.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "CREATE-EVENTS.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTPRI"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "EVNT_Agent downn",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${AGENT_ALIVE#}",
+            "operator": "NE",
+            "value": "N"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_ASSIGNMENT_GROUP#": null,
+        "IN_CALLER#": null,
+        "IN_CATEGORY_LEVEL1#": null,
+        "IN_CMDB_CI#": null,
+        "IN_CONTACT_TYPE#": null,
+        "IN_DESCRIPTION": "Agent ${MODULE_AGENT#} is down",
+        "IN_DESCRIPTION#": null,
+        "IN_IMPACT#": null,
+        "IN_INCIDENT_TYPE#": null,
+        "IN_LOCATION#": null,
+        "IN_SERVICE#": null,
+        "IN_SHORT_DESCRIPTION#": null,
+        "IN_STATE#": null,
+        "IN_U_IMPACTED_BUSINESS_UNIT#": null,
+        "MODULE_STATUS#": null,
+        "PARAMETERS#": null,
+        "PART": "${TOP_PART}",
+        "SCRIPT_NAME#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT.INSTALL-PRINTERS.DSC-WM-LATAM.JLIN",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT.INSTALL-PRINTERS.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTPRI"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "RUN SCRIPT",
+      "weight": "1",
+      "templateParameters": {
+        "IN_AGENT#": "${MODULE_AGENT#}",
+        "IN_INSTANCE#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "${MACHINE_FUNCTION#}",
+        "IN_MODULE#": "${MODULE#}",
+        "IN_PARAMETERS#": "${PARAMETERS#}",
+        "IN_SCRIPT_NAME#": "${SCRIPT_NAME#}",
+        "IN_USERNAME#": "${MODULE_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CHECK-AGENT.INSTALL-PRINTERS.DSC-WM-LATAM.S",
+          "predecessor": "CHECK-AGENT.INSTALL-PRINTERS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTPRI"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Script succeeded",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EXITCODE#}",
+            "operator": "NE",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "${SCRIPT_NAME#} has succeeded",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "${MODULE#}",
+        "IN_MODULE#": "${MODULE#}",
+        "IN_MODULE_STATUS#": "1550"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT.INSTALL-PRINTERS.DSC-WM-LATAM.JLIN",
+          "predecessor": "RUN-SCRIPT.INSTALL-PRINTERS.DSC-WM-LATAM.JLIN",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTPRI"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Script failed",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EXITCODE#}",
+            "operator": "EQ",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "${SCRIPT_NAME#} has failed",
+        "IN_FLOW_STATUS#": "1560",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "${MODULE#}",
+        "IN_MODULE#": "${MODULE#}",
+        "IN_MODULE_STATUS#": "1560"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT.INSTALL-PRINTERS.DSC-WM-LATAM.JLIN",
+          "parent": "05661a48-b9f7-499c-829c-d1c1b0e09ce3",
+          "predecessor": "RUN-SCRIPT.INSTALL-PRINTERS.DSC-WM-LATAM.JLIN",
+          "processingStatus": "FAILED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT.INSTALL-PRINTERS.DSC-WM-LATAM.JLIN",
+          "parent": "05661a48-b9f7-499c-829c-d1c1b0e09ce3",
+          "predecessor": "RUN-SCRIPT.INSTALL-PRINTERS.DSC-WM-LATAM.JLIN",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        },
+        {
+          "dependencyType": "OR",
+          "groupId": "05661a48-b9f7-499c-829c-d1c1b0e09ce3",
+          "name": "OR",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CREATE-EVENTS.GSN.DSC-WM-LATAM.JREST.2",
+      "priority": "0",
+      "processingTemplate": "CREATE-EVENTS.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTPRI"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "EVNT_Script failed",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EXITCODE#}",
+            "operator": "EQ",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_ASSIGNMENT_GROUP#": null,
+        "IN_CALLER#": null,
+        "IN_CATEGORY_LEVEL1#": null,
+        "IN_CMDB_CI#": null,
+        "IN_CONTACT_TYPE#": null,
+        "IN_DESCRIPTION#": null,
+        "IN_IMPACT#": null,
+        "IN_INCIDENT_TYPE#": null,
+        "IN_LOCATION#": null,
+        "IN_SERVICE#": null,
+        "IN_SHORT_DESCRIPTION#": null,
+        "IN_STATE#": null,
+        "IN_U_IMPACTED_BUSINESS_UNIT#": null,
+        "MODULE_STATUS#": null,
+        "PARAMETERS#": null,
+        "PART": "${TOP_PART}",
+        "SCRIPT_NAME#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    }
+  ]
+}

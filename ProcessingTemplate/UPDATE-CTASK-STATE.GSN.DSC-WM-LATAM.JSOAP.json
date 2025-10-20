@@ -1,0 +1,46 @@
+{
+  "description": "Update Change Task State",
+  "endpoint": "UpdateCtask.Gsn.Gbl.ep",
+  "endpointType": "SOAP_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Soap.rr",
+  "owner": "TDROBISZ",
+  "passBy": true,
+  "preScript": ":INC PICK.CHANGE-CONFIG.GSN.DSC-WM-LATAM.INCL\n:INC READ.CHANGE-CONFIG.GSN.DSC-WM-LATAM.INCL\n\n:SET &GSN_FULL_URL# = &SC_GSN_CTASK_UPDATE_URL#\n\n:DEFINE &ACT#, string, 2\n:FILL &ACT#[] = STR_SPLIT(\"&IN_CHANGE_CTASK#\", \"/\")\n:SET &CHANGE_REQUEST# = &ACT#[1]\n:SET &CHANGE_TASK# = &ACT#[2]",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "SOAP_WEB_SERVICE",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "SOAP_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "operation": "update",
+    "payload": "<dhl:update xmlns:dhl=\"https://servicenow.dhl.com/ns/cchm_change_task_update/\">\n      <change_request>?XXX?<\/change_request>\n      <change_task>?XXX?<\/change_task>\n<!-- optional -->\n      <short_description>?XXX?<\/short_description>\n<!-- optional -->\n      <assignment_group>?XXX?<\/assignment_group>\n<!-- optional -->\n      <assigned_to>?XXX?<\/assigned_to>\n<!-- optional -->\n      <order>?XXX?<\/order>\n<!-- optional -->\n      <state>?XXX?<\/state>\n<!-- optional -->\n      <u_task_type>?XXX?<\/u_task_type>\n<!-- optional -->\n      <u_affected_cis>?XXX?<\/u_affected_cis>\n<!-- optional -->\n      <description>?XXX?<\/description>\n<!-- optional -->\n      <u_special_instructions>?XXX?<\/u_special_instructions>\n<!-- optional -->\n      <work_start>?XXX?<\/work_start>\n<!-- optional -->\n      <work_end>?XXX?<\/work_end>\n<!-- optional -->\n      <due_date>?XXX?<\/due_date>\n<!-- optional -->\n      <u_downtime_start>?XXX?<\/u_downtime_start>\n<!-- optional -->\n      <u_downtime_duration>?XXX?<\/u_downtime_duration>\n<!-- optional -->\n      <u_close_code>?XXX?<\/u_close_code>\n<!-- optional -->\n      <close_notes>?XXX?<\/close_notes>\n<!-- optional -->\n      <u_customer_satisfaction>?XXX?<\/u_customer_satisfaction>\n<!-- optional -->\n      <u_lesson_learned>?XXX?<\/u_lesson_learned>\n<!-- optional -->\n      <u_preventive_measures>?XXX?<\/u_preventive_measures>\n<!-- optional -->\n      <watch_list>?XXX?<\/watch_list>\n<!-- optional -->\n      <work_notes>?XXX?<\/work_notes>\n<!-- optional -->\n      <u_external_system>?XXX?<\/u_external_system>\n<!-- optional -->\n      <u_external_id>?XXX?<\/u_external_id>\n    <\/dhl:update>",
+    "port": "cchm_change_task_updateSOAP",
+    "service": "cchm_change_task_update"
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "ServiceNow.Gbl.sem",
+      "processingStatus": "COMPLETED",
+      "processingType": "TASK",
+      "resource": "ServiceNow.Gbl.sem",
+      "resourceType": "BINARY_SEMAPHORE",
+      "semaphoreState": "ON",
+      "serverNodeType": "SOAP_WEB_SERVICE",
+      "taskType": "SOAP_WEB_SERVICE_CALL"
+    }
+  ]
+}

@@ -1,0 +1,547 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "MAIN-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "MAIN-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE.STOP-CORE.DSC-WM-LATAM.S",
+      "processingTemplate": "PREPARE.STOP-CORE.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM"
+      ],
+      "taskType": "AE_SCRIPT"
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Stop flow started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION": null,
+        "IN_DESCRIPTION#": "Stop flow has started - ANOW ID: ${RUN_ID#}",
+        "IN_FLOW_STATUS": null,
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME": null,
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE.STOP-CORE.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE.STOP-CORE.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE.STOP.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "MODULE.STOP.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "title": "WMS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${WMS_STOP#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MACHINE_FUNCTION": "WMS",
+        "MODULE": "WMS",
+        "MODULE_AGENT": "${WMS_PRIMARY_SERVER#}",
+        "MODULE_RPTAB_Y": "${WMS_RPTAB_Y#}",
+        "MODULE_USERNAME": "${WMS_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE.STOP.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "MODULE.STOP.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "title": "REFS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${REFS_STOP#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MACHINE_FUNCTION": "REFS",
+        "MODULE": "REFS",
+        "MODULE_AGENT": "${REFS_PRIMARY_SERVER#}",
+        "MODULE_RPTAB_Y": "${REFS_RPTAB_Y#}",
+        "MODULE_USERNAME": "${REFS_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.STOP.DSC-WM-LATAM.WST",
+          "predecessor": "MODULE.STOP.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE.STOP.DSC-WM-LATAM.WST.3",
+      "priority": "0",
+      "processingTemplate": "MODULE.STOP.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "title": "RW",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${RW_STOP#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MACHINE_FUNCTION": "RW",
+        "MODULE": "RW",
+        "MODULE_AGENT": "${RW_PRIMARY_SERVER#}",
+        "MODULE_RPTAB_Y": "${RW_RPTAB_Y#}",
+        "MODULE_USERNAME": "${RW_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.STOP.DSC-WM-LATAM.WST",
+          "predecessor": "MODULE.STOP.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE.STOP.DSC-WM-LATAM.WST.4",
+      "priority": "0",
+      "processingTemplate": "MODULE.STOP.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "title": "EMS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EMS_STOP#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MACHINE_FUNCTION": "EMS",
+        "MODULE": "EMS",
+        "MODULE_AGENT": "${EMS_PRIMARY_SERVER#}",
+        "MODULE_RPTAB_Y": "${EMS_RPTAB_Y#}",
+        "MODULE_URL": null,
+        "MODULE_USERNAME": "${EMS_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.STOP.DSC-WM-LATAM.WST",
+          "predecessor": "MODULE.STOP.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE.STOP.DSC-WM-LATAM.WST.5",
+      "priority": "0",
+      "processingTemplate": "MODULE.STOP.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "title": "WMS_FAIL",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${WMS_FAIL_STOP#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MACHINE_FUNCTION": "WMS",
+        "MODULE": "WMS",
+        "MODULE_AGENT": "${WMS_FAILOVER_SERVER#}",
+        "MODULE_RPTAB_Y": "${WMS_RPTAB_Y#}",
+        "MODULE_USERNAME": "${WMS_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.STOP.DSC-WM-LATAM.WST.2",
+          "predecessor": "MODULE.STOP.DSC-WM-LATAM.WST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.STOP.DSC-WM-LATAM.WST.3",
+          "predecessor": "MODULE.STOP.DSC-WM-LATAM.WST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.STOP.DSC-WM-LATAM.WST.4",
+          "predecessor": "MODULE.STOP.DSC-WM-LATAM.WST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE.STOP.DSC-WM-LATAM.WST.6",
+      "priority": "0",
+      "processingTemplate": "MODULE.STOP.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "title": "REFS_FAIL",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${REFS_FAIL_STOP#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MACHINE_FUNCTION": "REFS",
+        "MODULE": "REFS",
+        "MODULE_AGENT": "${REFS_FAILOVER_SERVER#}",
+        "MODULE_RPTAB_Y": "${REFS_RPTAB_Y#}",
+        "MODULE_USERNAME": "${REFS_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.STOP.DSC-WM-LATAM.WST.5",
+          "predecessor": "MODULE.STOP.DSC-WM-LATAM.WST.5",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE.STOP.DSC-WM-LATAM.WST.7",
+      "priority": "0",
+      "processingTemplate": "MODULE.STOP.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "title": "RW_FAIL",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${RW_FAIL_STOP#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MACHINE_FUNCTION": "RW",
+        "MODULE": "RW",
+        "MODULE_AGENT": "${RW_FAILOVER_SERVER#}",
+        "MODULE_RPTAB_Y": "${RW_RPTAB_Y#}",
+        "MODULE_USERNAME": "${RW_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.STOP.DSC-WM-LATAM.WST.5",
+          "predecessor": "MODULE.STOP.DSC-WM-LATAM.WST.5",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE.STOP.DSC-WM-LATAM.WST.8",
+      "priority": "0",
+      "processingTemplate": "MODULE.STOP.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "title": "EMS_FAIL",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EMS_FAIL_STOP#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MACHINE_FUNCTION": "EMS",
+        "MODULE": "EMS",
+        "MODULE_AGENT": "${EMS_FAILOVER_SERVER#}",
+        "MODULE_RPTAB_Y": "${EMS_RPTAB_Y#}",
+        "MODULE_USERNAME": "${EMS_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.STOP.DSC-WM-LATAM.WST.5",
+          "predecessor": "MODULE.STOP.DSC-WM-LATAM.WST.5",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.18",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RESTART"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Stop flow finished",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION": null,
+        "IN_DESCRIPTION#": "Restart flow has finished - ANOW ID: ${RUN_ID#}",
+        "IN_FLOW_STATUS": null,
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME": null,
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.STOP.DSC-WM-LATAM.WST.6",
+          "predecessor": "MODULE.STOP.DSC-WM-LATAM.WST.6",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.STOP.DSC-WM-LATAM.WST.7",
+          "predecessor": "MODULE.STOP.DSC-WM-LATAM.WST.7",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE.STOP.DSC-WM-LATAM.WST.8",
+          "predecessor": "MODULE.STOP.DSC-WM-LATAM.WST.8",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    }
+  ]
+}

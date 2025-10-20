@@ -1,0 +1,65 @@
+{
+  "description": "Run bash script",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "${AGENT#}",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &RID# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=*\")\n:PROCESS &RID#\n:  SET &LINE# = GET_PROCESS_LINE(&RID#)\n:  PRINT &LINE#\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,TOP\n!:  IF &EXITCODE# > 0\n!:    MODIFY_STATE RETCODE=1800\n!:  ENDIF\n:ENDPROCESS\n\n\n!probably not in use :)\n\n:IF &CHECK_RPTAB# = \"true\"\n:  PRINT \"INFO: RPTAB check enabled.\"\n:  SET &RID2# = PREP_PROCESS_REPORT(,,REP,\"*RPTAB_Y=*\")\n:  PROCESS &RID2#\n:    SET &LINE# = GET_PROCESS_LINE(&RID2#)\n:    SET &RPTAB_Y# = STR_FIND(&LINE#,\"=\")\n:    SET &RPTAB_Y# = ADD(&RPTAB_Y#,1)\n:    SET &RPTAB_Y# = SUBSTR(&LINE#,&RPTAB_Y#)\n:    IF &RPTAB_Y# = \"\"\n:      SET &RPTAB_Y# = \"false\"\n:    ENDIF\n:    PRINT \"INFO: RPTAB_Y value is '&RPTAB_Y#'\"\n:    SWITCH \"Y\"\n:      CASE \"${IN_MODULE#}\" = \"WMS\"\n:        SET &WMS_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &WMS_RPTAB_Y#,,TOP\n:      CASE \"${IN_MODULE#}\" = \"REFS\"\n:        SET &REFS_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &REFS_RPTAB_Y#,,TOP\n:      CASE \"${IN_MODULE#}\" = \"RW\"\n:        SET &RW_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &RW_RPTAB_Y#,,TOP\n:      CASE \"${IN_MODULE#}\" = \"EMS\"\n:        SET &EMS_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &EMS_RPTAB_Y#,,TOP\n:      CASE \"${IN_MODULE#}\" = \"WMS-FAIL\"\n:        SET &WMS_FAIL_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &WMS_FAIL_RPTAB_Y#,,TOP\n:      CASE \"${IN_MODULE#}\" = \"REFS-FAIL\"\n:        SET &REFS_FAIL_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &REFS_FAIL_RPTAB_Y#,,TOP\n:      CASE \"${IN_MODULE#}\" = \"RW-FAIL\"\n:        SET &RW_FAIL_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &RW_FAIL_RPTAB_Y#,,TOP\n:      CASE \"${IN_MODULE#}\" = \"EMS-FAIL\"\n:        SET &EMS_FAIL_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &EMS_FAIL_RPTAB_Y#,,TOP\n:    ENDSWITCH\n:  ENDPROCESS\n:ENDIF\n\n\n",
+  "preScript": ":SET &TMP# = STR_SUB('${IN_AGENT#}', '[','')\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n\n:DEFINE &AAGENT#,string,3\n:FILL &AAGENT#[] = STR_SPLIT(&TMP#,\".\")\n:SET &AGENT_UC# = \"&AAGENT#[1]\"\n:SET &AGENT# = \"&AGENT_UC#.os\"\n:PUB &AGENT#\n!:SET &LOGIN# = &IN_LOGIN#\n!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB\n",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SHELL_SCRIPT",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":SET &APP_JSON_DATA# = STR_SUBSTITUTE(${APP_JSON_DATA#}, '\\/', '/')\n:SET &APP_JSON_DATA# = STR_SUBSTITUTE(&APP_JSON_DATA#, '\"', '\\\"')\n:SET &DB_JSON_DATA# = STR_SUBSTITUTE(${DB_JSON_DATA#}, '\\/', '/')\n:SET &DB_JSON_DATA# = STR_SUBSTITUTE(&DB_JSON_DATA#, '\"', '\\\"')\n\necho \">> Instance: ${IN_INSTANCE#}\"\necho \">> Module: ${IN_MODULE#}\"\necho \">> Machine Function: ${IN_MACHINE_FUNCTION#}\"\necho \">> Hostname: `hostname`\"\necho \">> Shell: $SHELL\"\n\n\necho \">> Username: ${IN_USERNAME#}\"\necho \">> Executing: sudo su - ${IN_USERNAME#} -c \\\"${IN_SCRIPT_NAME#} '&APP_JSON_DATA#' '&DB_JSON_DATA#'\\\"\"\necho \">> Script output: \"\nsudo su - ${IN_USERNAME#} -c \"${IN_SCRIPT_NAME#} '&APP_JSON_DATA#' '&DB_JSON_DATA#'\"\n\n\nEXITCODE=$?\necho \"EXITCODE=$EXITCODE\"\nexit $EXITCODE"
+  },
+  "designParameters": 
+  [
+    {
+      "editorType": "TEXT",
+      "name": "IN_AGENT#",
+      "title": "IN_AGENT#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_INSTANCE#",
+      "title": "IN_INSTANCE#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_LOGIN#",
+      "title": "IN_LOGIN#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_MACHINE_FUNCTION#",
+      "title": "IN_MACHINE_FUNCTION#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_MODULE#",
+      "title": "IN_MODULE#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_SCRIPT_NAME#",
+      "title": "IN_SCRIPT_NAME#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_USERNAME#",
+      "title": "IN_USERNAME#"
+    }
+  ]
+}

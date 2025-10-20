@@ -1,0 +1,503 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Middleware patching instance flow started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Middleware patching instance flow has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "",
+        "IN_MODULE#": "",
+        "IN_MODULE_STATUS#": ""
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Retrieving instance data started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Retrieving instance data from AFSM has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "GET-INSTANCE-SERVERS-MW-PATCHING.AFSM.DSC-WM-LATAM.JREST",
+      "processingTemplate": "GET-INSTANCE-SERVERS-MW-PATCHING.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "templateParameters": {
+        "IN_INSTANCE#": "${INSTANCE_NAME#}",
+        "IN_MODULES#": "${REST_MODULES#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Retrieving instance data finished",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Retrieving instance data from AFSM has finished",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "GET-INSTANCE-SERVERS-MW-PATCHING.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "GET-INSTANCE-SERVERS-MW-PATCHING.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Creation of ZABBIX started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Creation of ZABBIX maintenance window has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "title": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "IN_AGENT": "${WMS_PRIMARY_SERVER#}",
+        "IN_AGENT#": null,
+        "IN_LOGIN#": null,
+        "IN_WMS_USER": "${WMS_USERNAME#}",
+        "IN_WMS_USER#": null,
+        "IN_WORKFLOW": "MW-PATCHING.DSC-WM-LATAM.WST",
+        "IN_WORKFLOW#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "ALERT.DSC-WM-LATAM.JLIN",
+      "priority": "0",
+      "processingTemplate": "ALERT.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "ALERT.DSC-WM-LATAM.JLIN",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${ZABBIX_MAINTENANCESID#}",
+            "operator": "NE",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_EMAIL#": null,
+        "IN_MAIL": "ZABBIX_ALERT_EMAIL",
+        "IN_MESSAGE": "ZABBIX_ALERT_MESSAGE",
+        "IN_MESSAGE#": null,
+        "IN_SUBJECT": "ZABBIX_ALERT_SUBJECT",
+        "IN_SUBJECT#": null,
+        "PART": "${TOP_PART}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "predecessor": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Zabbix maintenance window not created",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${ZABBIX_MAINTENANCESID#}",
+            "operator": "NE",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Zabbix maintenance window was not created",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "predecessor": "CREATE-MAINTENANCE.ZABBIX.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.5",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Zabbix maintenance window created",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${ZABBIX_MAINTENANCESID#}",
+            "operator": "EQ",
+            "value": ""
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Zabbix maintenance window ${ZABBIX_MAINTENANCESID#} was created",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "ALERT.DSC-WM-LATAM.JLIN",
+          "predecessor": "ALERT.DSC-WM-LATAM.JLIN",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "title": "PRECHECK",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+        "PARAMETERS#": "",
+        "SCRIPT_NAME#": "${PRECHECK_SCRIPT_NAME#}",
+        "SCRIPT_USERNAME#": "",
+        "STEP#": "PRECHECK"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.5",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.5",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE-STOP.MW-PATCHING.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PREPARE-STOP.MW-PATCHING.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "taskType": "AE_SCRIPT",
+      "weight": "1",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-SCRIPT.MW-PATCHING.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "STOP-CORE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "STOP-CORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "title": "STOP-CORE.DSC-WM-LATAM.WST",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE-STOP.MW-PATCHING.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE-STOP.MW-PATCHING.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    }
+  ]
+}

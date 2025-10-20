@@ -1,0 +1,72 @@
+{
+  "description": "Run bash script",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "${AGENT#}",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &RID# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=*\")\n:PROCESS &RID#\n:  SET &LINE# = GET_PROCESS_LINE(&RID#)\n:  PRINT &LINE#\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,WORKFLOW\n!:  IF &EXITCODE# > 0\n!:    MODIFY_STATE RETCODE=1800\n!:  ENDIF\n:ENDPROCESS",
+  "preScript": ":DEFINE &IAGENTS#,string,2\n:DEFINE &OAGENTS#,string,2\n:DEFINE &AAGENT#,string,3\n\n:SET &TMP# = STR_SUB('${IN_AGENT#}', '[','')\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n\n:FILL &IAGENTS#[] = STR_SPLIT(&TMP#,\",\")\n:SET &RUNVAR# = 1\n:SET &LEN# = LENGTH(&IAGENTS#[])\n\n:WHILE &RUNVAR# LE &LEN#\n:  FILL &AAGENT#[] = STR_SPLIT(&IAGENTS#[&RUNVAR#],\".\")\n:  SET &AGENT_UC# = \"&AAGENT#[1]\"\n:  SET &OAGENTS#[&RUNVAR#] = \"&AGENT_UC#.os\"\n:  SET &AGENT_ALIVE# = SYS_HOST_ALIVE(&OAGENTS#[&RUNVAR#])\n:  PRINT \"Agent &OAGENTS#[&RUNVAR#], Alive: &AGENT_ALIVE#\"\n:  IF &AGENT_ALIVE# = \"Y\"\n:    SET &AGENT# = &OAGENTS#[&RUNVAR#]\n:PUB &AGENT#\n:    SET &RUNVAR# = &LEN# + 1\n:  ENDIF\n:  SET &RUNVAR# = &RUNVAR# + 1\n:ENDWHILE\n\n!:SET &LOGIN# = &IN_LOGIN#\n!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB\n\n:SET &DATE# = SYS_DATE(\"YYYYMMDD\",&TZ#)\n:SET &TIME# = SYS_TIME(\"HHMMSS\",&TZ#)\n\n:SET &TMP1# = \"${IN_PARAMETERS#}\"\n:IF &TMP1# <> \"\"\n:SET &XPARAMETERS# = STR_SUBSTITUTE(&TMP1#, \"%DATE%\", &DATE#)\n:SET &XPARAMETERS# = STR_SUBSTITUTE(&XPARAMETERS#, \"%TIME%\", &TIME#)\n:PUB &XPARAMETERS#\n:ENDIF\n",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SHELL_SCRIPT",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "\n\necho \">> Instance: ${IN_INSTANCE#}\"\necho \">> Module: ${IN_MODULE#}\"\necho \">> Machine Function: ${IN_MACHINE_FUNCTION#}\"\necho \">> Hostname: `hostname`\"\necho \">> Shell: $SHELL\"\necho \">> Username: ${IN_USERNAME#}\"\necho \">> Parameters: ${XPARAMETERS#}\"\necho '>> Executing: sudo su - ${IN_USERNAME#} -c \"${IN_SCRIPT_NAME#} ${XPARAMETERS#}\"'\necho \">> Script output: \"\nsudo su - ${IN_USERNAME#} -c \"${IN_SCRIPT_NAME#} ${XPARAMETERS#}\"\nEXITCODE=$?\nif [[ $EXITCODE -eq 2 ]]; then\n  EXITCODE=0\n  echo \">> Warning: Script exited with exitcode 2!\"\n  echo \"EXITCODE=$EXITCODE\"\nelse\n  echo \"EXITCODE=$EXITCODE\"\nfi\nexit $EXITCODE\n"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_AGENT#",
+      "title": "IN_AGENT#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_INSTANCE#",
+      "title": "IN_INSTANCE#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_MACHINE_FUNCTION#",
+      "title": "IN_MACHINE_FUNCTION#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_MODULE#",
+      "title": "IN_MODULE#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_PARAMETERS#",
+      "title": "IN_PARAMETERS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_SCRIPT_NAME#",
+      "title": "IN_SCRIPT_NAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_USERNAME#",
+      "title": "IN_USERNAME#"
+    }
+  ]
+}

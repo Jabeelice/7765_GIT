@@ -1,0 +1,47 @@
+{
+  "description": "Update deployment ID in AFSM",
+  "endpoint": "Afsm.DSC-WM-LATAM.ep",
+  "endpointType": "REST_WEB_SERVICE",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "AnowEngine.Rest.rr",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "preScript": ":INC PICK.SYSTEM-CONFIG.AFSM.DSC-WM-LATAM.INCL\n:INC READ.SYSTEM-CONFIG.AFSM.DSC-WM-LATAM.INCL\n\n:SET &AFSM_URL# = &SC_AFSM_URL#\n:SET &AFSM_CONTECT_M_DEPLOY# = &SC_AFSM_CONTECT_M_DEPLOY#\n:SET &AFSM_FULL_URL# = \"&AFSM_URL#/&AFSM_CONTECT_M_DEPLOY#\"\n:SET &AFSM_PART_URL# = \"&AFSM_CONTECT_M_DEPLOY#\"\n:PUB &AFSM_PART_URL#",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "REST_WEB_SERVICE",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "REST_WEB_SERVICE_CALL",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "body": "{\n  \"run_id\": ${SC_RUN_ID#},\n  \"machine_name\": \"${IN_MACHINE_NAME#}\",\n  \"deployment_id\": \"${IN_DEPLOYMENT_ID#}\"\n}\n",
+    "headers": "Content-Type=application/json\nrequestDataSource=text\nresponseTimeout=60\n",
+    "method": "POST",
+    "resultVariableLevel": "SELF",
+    "url": "${AFSM_PART_URL#}"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_MACHINE_NAME#",
+      "title": "IN_MACHINE_NAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_DEPLOYMENT_ID#",
+      "title": "IN_DEPLOYMENT_ID#"
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "description": "Run bash script",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "${AGENT#}",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &RID# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=*\")\n:PROCESS &RID#\n:  SET &LINE# = GET_PROCESS_LINE(&RID#)\n:  PRINT &LINE#\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,WORKFLOW\n!:  IF &EXITCODE# > 0\n!:    MODIFY_STATE RETCODE=1800\n!:  ENDIF\n:ENDPROCESS\n\n:SET &RID3# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=0*\")\n:PROCESS &RID3#\n:  SET &LINE# = GET_PROCESS_LINE(&RID3#)\n:  PRINT &LINE#\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,WORKFLOW\n:ENDPROCESS\n\n:IF &CHECK_RPTAB# = \"true\"\n:  PRINT \"INFO: RPTAB check enabled.\"\n:  SET &RID2# = PREP_PROCESS_REPORT(,,REP,\"*RPTAB_Y=*\")\n:  PROCESS &RID2#\n:    SET &LINE# = GET_PROCESS_LINE(&RID2#)\n:    SET &RPTAB_Y# = STR_FIND(&LINE#,\"=\")\n:    SET &RPTAB_Y# = ADD(&RPTAB_Y#,1)\n:    SET &RPTAB_Y# = SUBSTR(&LINE#,&RPTAB_Y#)\n:    IF &RPTAB_Y# = \"\"\n:      SET &RPTAB_Y# = \"false\"\n:    ENDIF\n:    PRINT \"INFO: RPTAB_Y value is '&RPTAB_Y#'\"\n:    SWITCH \"Y\"\n:      CASE &IN_MODULE# = \"WMS\"\n:        SET &WMS_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &WMS_RPTAB_Y#,,TOP\n:      CASE &IN_MODULE# = \"REFS\"\n:        SET &REFS_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &REFS_RPTAB_Y#,,TOP\n:      CASE &IN_MODULE# = \"RW\"\n:        SET &RW_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &RW_RPTAB_Y#,,TOP\n:      CASE &IN_MODULE# = \"EMS\"\n:        SET &EMS_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &EMS_RPTAB_Y#,,TOP\n:      CASE &IN_MODULE# = \"WMS-FAIL\"\n:        SET &WMS_FAIL_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &WMS_FAIL_RPTAB_Y#,,TOP\n:      CASE &IN_MODULE# = \"REFS-FAIL\"\n:        SET &REFS_FAIL_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &REFS_FAIL_RPTAB_Y#,,TOP\n:      CASE &IN_MODULE# = \"RW-FAIL\"\n:        SET &RW_FAIL_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &RW_FAIL_RPTAB_Y#,,TOP\n:      CASE &IN_MODULE# = \"EMS-FAIL\"\n:        SET &EMS_FAIL_RPTAB_Y# = &RPTAB_Y#\n:        PUBLISH &EMS_FAIL_RPTAB_Y#,,TOP\n:    ENDSWITCH\n:  ENDPROCESS\n:ELSE\n:  PRINT \"INFO: RPTAB check disabled.\"\n:  SET &RPTAB_Y# = \"true\"\n:  PRINT \"INFO: RPTAB_Y value is '&RPTAB_Y#'\"\n:  SWITCH \"Y\"\n:    CASE &IN_MODULE# = \"WMS\"\n:      SET &WMS_RPTAB_Y# = &RPTAB_Y#\n:      PUBLISH &WMS_RPTAB_Y#,,TOP\n:    CASE &IN_MODULE# = \"REFS\"\n:      SET &REFS_RPTAB_Y# = &RPTAB_Y#\n:      PUBLISH &REFS_RPTAB_Y#,,TOP\n:    CASE &IN_MODULE# = \"RW\"\n:      SET &RW_RPTAB_Y# = &RPTAB_Y#\n:      PUBLISH &RW_RPTAB_Y#,,TOP\n:    CASE &IN_MODULE# = \"EMS\"\n:      SET &EMS_RPTAB_Y# = &RPTAB_Y#\n:      PUBLISH &EMS_RPTAB_Y#,,TOP\n:    CASE &IN_MODULE# = \"WMS-FAIL\"\n:      SET &WMS_FAIL_RPTAB_Y# = &RPTAB_Y#\n:      PUBLISH &WMS_FAIL_RPTAB_Y#,,TOP\n:    CASE &IN_MODULE# = \"REFS-FAIL\"\n:      SET &REFS_FAIL_RPTAB_Y# = &RPTAB_Y#\n:      PUBLISH &REFS_FAIL_RPTAB_Y#,,TOP\n:    CASE &IN_MODULE# = \"RW-FAIL\"\n:      SET &RW_FAIL_RPTAB_Y# = &RPTAB_Y#\n:      PUBLISH &RW_FAIL_RPTAB_Y#,,TOP\n:    CASE &IN_MODULE# = \"EMS-FAIL\"\n:      SET &EMS_FAIL_RPTAB_Y# = &RPTAB_Y#\n:      PUBLISH &EMS_FAIL_RPTAB_Y#,,TOP\n:    ENDSWITCH\n:ENDIF",
+  "preScript": ":SET &TMP# = STR_SUB('${IN_AGENT}', '[','')\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n:PRINT &TMP#\n\n:DEFINE &AAGENT#,string,3\n:FILL &AAGENT#[] = STR_SPLIT(&TMP#,\".\")\n:SET &AGENT_UC# = \"&AAGENT#[1]\"\n:SET &AGENT# = \"&AGENT_UC#.os\"\n:PUB &AGENT#\n\n:SET &IN_MODULE# = ${IN_MODULE}\n:PUB &IN_MODULE# \n\n\n:SET &DELAY# = 60\n:SET &CHECK_COUNT# = 1\n:SET &CHECK_COUNT_MAX# = 10\n\n:WHILE &CHECK_COUNT# LE &CHECK_COUNT_MAX#\n:  SET &AGENT_ALIVE# = SYS_HOST_ALIVE(&AGENT#)\n:  SET &CHECK_COUNT_F# = FORMAT(&CHECK_COUNT#)\n:  PRINT \"Checking agent: &AGENT# status &CHECK_COUNT_F# time(s) ...\"\n:  IF  &AGENT_ALIVE# = \"Y\"\n:    PRINT \"Agent: &AGENT# is up.\"\n:    SET &CHECK_COUNT# =  &CHECK_COUNT_MAX#\n:  ELSE\n:    SET &DELAY_F# = FORMAT(&DELAY#)\n:    PRINT \"Agent: &AGENT# is down!\"\n:    PRINT \"Waiting &DELAY_F# seconds for next check ...\"\n:    WAIT &DELAY#\n:  ENDIF\n:  SET &CHECK_COUNT# = &CHECK_COUNT# + 1\n:ENDWHILE\n:PUBLISH &AGENT_ALIVE#\n",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SHELL_SCRIPT",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":IF ${AGENT_ALIVE#} = \"N\"\n:STOP MSG,3,NODE_IS_DOWN\n:ENDIF\n\necho \">> Instance: ${IN_INSTANCE}\"\necho \">> Module: ${IN_MODULE}\"\necho \">> Machine Function: ${IN_MACHINE_FUNCTION}\"\necho \">> Hostname: `hostname`\"\necho \">> Shell: $SHELL\"\necho \">> Username: ${IN_USERNAME}\"\necho \">> Parameters: ${IN_PARAMETERS}\"\necho \">> Executing: sudo su - ${IN_USERNAME} -c \\\"${IN_SCRIPT_NAME} ${IN_PARAMETERS}\\\"\"\necho \">> Script output: \"\nsudo su - ${IN_USERNAME} -c \"${IN_SCRIPT_NAME} ${IN_PARAMETERS}\"\nEXITCODE=$?\nif [[ $EXITCODE -eq 2 ]]; then\n  EXITCODE=0\n  echo \">> Warning: Script exited with exitcode 2!\"\n  echo \"EXITCODE=$EXITCODE\"\nelse\n  echo \"EXITCODE=$EXITCODE\"\nfi\nexit $EXITCODE\n"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "defaultValue": "${MODULE_AGENT}",
+      "editorType": "TEXT",
+      "name": "IN_AGENT",
+      "title": "IN_AGENT"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${INSTANCE_NAME#}",
+      "editorType": "TEXT",
+      "name": "IN_INSTANCE",
+      "title": "IN_INSTANCE"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${MODULE}",
+      "editorType": "TEXT",
+      "name": "IN_MODULE",
+      "title": "IN_MODULE"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${MACHINE_FUNCTION}",
+      "editorType": "TEXT",
+      "name": "IN_MACHINE_FUNCTION",
+      "title": "IN_MACHINE_FUNCTION"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${MODULE_USERNAME}",
+      "editorType": "TEXT",
+      "name": "IN_USERNAME",
+      "title": "IN_USERNAME"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${SCRIPT_NAME}",
+      "editorType": "TEXT",
+      "name": "IN_SCRIPT_NAME",
+      "title": "IN_SCRIPT_NAME"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${PARAMETERS}",
+      "editorType": "TEXT",
+      "name": "IN_PARAMETERS",
+      "title": "IN_PARAMETERS"
+    }
+  ]
+}

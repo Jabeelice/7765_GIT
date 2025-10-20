@@ -1,0 +1,22 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "INTERNAL",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SCRIPT",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": ":PRINT \"SCRIPT COMPLETED\"\n:SET &SCRIPT_COMPLETED# = \"true\"\n:PUBLISH &SCRIPT_COMPLETED#,,WORKFLOW\n\n!:SET &JOBNR# = SYS_ACT_PARENT_NR()\n!:READ &JOBNR#,,,&JOBNR#\n!:SET &TASKNR# = GET_UC_OBJECT_NR(\"PREPARE-RESTORE.UPGRADE.DSC-WM-LATAM.S\")\n!:READ &TASKNR#,,,&TASKNR#\n!:SET &STATUS# = MODIFY_UC_OBJECT(&JOBNR#, RELEASE, &TASKNR#)\n!:PRINT &STATUS#\n!replaced by action force complete parent"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "description": "Run bash script",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "${AGENT#}",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &RID# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=*\")\n:PROCESS &RID#\n:  SET &LINE# = GET_PROCESS_LINE(&RID#)\n:  PRINT &LINE#\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,WORKFLOW\n!:  IF &EXITCODE# > 0\n!:    MODIFY_STATE RETCODE=1800\n!:  ENDIF\n:ENDPROCESS\n\n! CSR FILE\n:SET &HND1# = PREP_PROCESS_REPORT(,,REP,\"*CSRFILE=*\")\n:PROCESS &HND1#\n:  SET &LINE# = GET_PROCESS_LINE(&HND1#)\n:  PRINT &LINE#\n:  SET &CSR_FILE# = STR_FIND(&LINE#,\"=\")\n:  SET &CSR_FILE# = ADD(&CSR_FILE#,1)\n:  SET &CSR_FILE# = SUBSTR(&LINE#,&CSR_FILE#)\n:  IF &CSR_FILE# <> \"\"\n:    PUBLISH &CSR_FILE#,,TOP\n:  ENDIF\n:ENDPROCESS\n\n\n! KEY FILE\n:SET &HND2# = PREP_PROCESS_REPORT(,,REP,\"*KEYFILE=*\")\n:PROCESS &HND2#\n:  SET &LINE# = GET_PROCESS_LINE(&HND2#)\n:  PRINT &LINE#\n:  SET &KEY_FILE# = STR_FIND(&LINE#,\"=\")\n:  SET &KEY_FILE# = ADD(&KEY_FILE#,1)\n:  SET &KEY_FILE# = SUBSTR(&LINE#,&KEY_FILE#)\n:  IF &KEY_FILE# <> \"\"\n:    PUBLISH &KEY_FILE#,,TOP\n:  ENDIF\n:ENDPROCESS\n\n\n! PEM FILE\n:SET &HND3# = PREP_PROCESS_REPORT(,,REP,\"*PEMFILE=*\")\n:PROCESS &HND3#\n:  SET &LINE# = GET_PROCESS_LINE(&HND3#)\n:  PRINT &LINE#\n:  SET &PEM_FILE# = STR_FIND(&LINE#,\"=\")\n:  SET &PEM_FILE# = ADD(&PEM_FILE#,1)\n:  SET &PEM_FILE# = SUBSTR(&LINE#,&PEM_FILE#)\n:  IF &PEM_FILE# <> \"\"\n:    PUBLISH &PEM_FILE#,,TOP\n:  ENDIF\n:ENDPROCESS\n\n! KEYSTORE FILE\n:SET &HND4# = PREP_PROCESS_REPORT(,,REP,\"*KEYSTOREFILE=*\")\n:PROCESS &HND4#\n:  SET &LINE# = GET_PROCESS_LINE(&HND4#)\n:  PRINT &LINE#\n:  SET &KEYSTORE_FILE# = STR_FIND(&LINE#,\"=\")\n:  SET &KEYSTORE_FILE# = ADD(&KEYSTORE_FILE#,1)\n:  SET &KEYSTORE_FILE# = SUBSTR(&LINE#,&KEYSTORE_FILE#)\n:  IF &KEYSTORE_FILE# <> \"\"\n:    PUBLISH &KEYSTORE_FILE#,,TOP\n:  ENDIF\n:ENDPROCESS\n\n! APPID\n:SET &HND5# = PREP_PROCESS_REPORT(,,REP,\"*APPID=*\")\n:PROCESS &HND5#\n:  SET &LINE# = GET_PROCESS_LINE(&HND5#)\n:  PRINT &LINE#\n:  SET &APP_ID# = STR_FIND(&LINE#,\"=\")\n:  SET &APP_ID# = ADD(&APP_ID#,1)\n:  SET &APP_ID# = SUBSTR(&LINE#,&APP_ID#)\n:  IF &APP_ID# <> \"\"\n:    PUBLISH &APP_ID#,,TOP\n:  ENDIF\n:ENDPROCESS",
+  "preScript": ":DEFINE &IAGENTS#,string,2\n:DEFINE &OAGENTS#,string,2\n:DEFINE &AAGENT#,string,3\n\n:SET &TMP# = STR_SUB('${IN_AGENT#}', '[','')\n:PRINT &TMP#\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:PRINT &TMP#\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n:PRINT &TMP#\n\n:FILL &IAGENTS#[] = STR_SPLIT(&TMP#,\",\")\n:SET &RUNVAR# = 1\n:SET &LEN# = LENGTH(&IAGENTS#[])\n\n:WHILE &RUNVAR# LE &LEN#\n:  FILL &AAGENT#[] = STR_SPLIT(&IAGENTS#[&RUNVAR#],\".\")\n:  SET &AGENT_UC# = \"&AAGENT#[1]\"\n:  SET &OAGENTS#[&RUNVAR#] = \"&AGENT_UC#.os\"\n:  SET &AGENT_ALIVE# = SYS_HOST_ALIVE(&OAGENTS#[&RUNVAR#])\n:  PRINT \"Agent &OAGENTS#[&RUNVAR#], Alive: &AGENT_ALIVE#\"\n:  IF &AGENT_ALIVE# = \"Y\"\n:    SET &AGENT# = &OAGENTS#[&RUNVAR#]\n:    PUB &AGENT#\n:    SET &RUNVAR# = &LEN# + 1\n:  ENDIF\n:  SET &RUNVAR# = &RUNVAR# + 1\n:ENDWHILE\n\n!:SET &LOGIN# = &IN_LOGIN#\n!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB\n\n:DEFINE &APAGENT#,string,2\n:SET &DATE# = SYS_DATE(\"YYYYMMDD\",&TZ#)\n:SET &TIME# = SYS_TIME(\"HHMMSS\",&TZ#)\n\n:FILL &APAGENT#[] = STR_SPLIT(&AGENT#,\".\")\n:SET &PAGENT# = STR_LC(\"&APAGENT#[1]\")\n\n:SET &TMP1# = \"${IN_PARAMETERS#}\"\n:IF &TMP1# <> \"\"\n:SET &XPARAMETERS# = STR_SUBSTITUTE(&TMP1#, \"%DATE%\", &DATE#)\n:SET &XPARAMETERS# = STR_SUBSTITUTE(&XPARAMETERS#, \"%TIME%\", &TIME#)\n:SET &XPARAMETERS# = STR_SUBSTITUTE(&XPARAMETERS#, \"%AGENT%\", &PAGENT#)\n:PUB &XPARAMETERS#\n:ENDIF",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SHELL_SCRIPT",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "\n\necho \">> Server: ${SERVER_NAME#}\"\necho \">> Hostname: `hostname`\"\necho \">> Shell: $SHELL\"\necho \">> Username: `whoami`\"\necho \">> Parameters: ${XPARAMETERS#}\"\necho \">> Executing: ${IN_SCRIPT_NAME#} ${XPARAMETERS#}\"\necho \">> Script output: \"\n${IN_SCRIPT_NAME#} ${XPARAMETERS#}\nEXITCODE=$?\nif [[ $EXITCODE -eq 2 ]]; then\n  EXITCODE=0\n  echo \">> Warning: Script exited with exitcode 2!\"\n  echo \"EXITCODE=$EXITCODE\"\nelse\n  echo \"EXITCODE=$EXITCODE\"\nfi\nexit $EXITCODE\n"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_AGENT#",
+      "title": "IN_AGENT#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_PARAMETERS#",
+      "title": "IN_PARAMETERS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_SCRIPT_NAME#",
+      "title": "IN_SCRIPT_NAME#"
+    }
+  ]
+}

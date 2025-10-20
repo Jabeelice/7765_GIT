@@ -1,0 +1,362 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE-VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PREPARE-VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "taskType": "AE_SCRIPT",
+      "weight": "1",
+      "templateParameters": {
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Backup flow started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Backup flow has started (${VANILLA_INSTANCE_NAME#})",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "",
+        "IN_MODULE#": "",
+        "IN_MODULE_STATUS#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE-VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE-VANILLA-BACKUP.DEPLOY.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "WMS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${WMS_BACKUP#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "BACKUP_PARAMETERS#": "'backup' '${APP_CODE_BACKUP_PATH#}/${WMS_USERNAME#}_wms_%DATE%_%TIME%_%AGENT%.tar.gz' 'n'",
+        "MACHINE_FUNCTION#": "WMS",
+        "MODULE#": "WMS",
+        "MODULE_AGENT#": "${WMS_PRIMARY_SERVER#}",
+        "MODULE_URL#": "${WMS_PRIMARY_SERVER_URL#}",
+        "MODULE_USERNAME#": "${WMS_USERNAME#}",
+        "PUBLISH_PARAMETER#": "${WMS_USERNAME#}_wms_%DATE%_%TIME%_%AGENT%.tar.gz"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST.2",
+      "priority": "0",
+      "processingTemplate": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "REFS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${REFS_BACKUP#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "BACKUP_PARAMETERS#": "'backup' '${APP_CODE_BACKUP_PATH#}/${REFS_USERNAME#}_refs_%DATE%_%TIME%_%AGENT%.tar.gz' 'n'",
+        "MACHINE_FUNCTION#": "REFS",
+        "MODULE#": "REFS",
+        "MODULE_AGENT#": "${REFS_PRIMARY_SERVER#}",
+        "MODULE_URL#": "${REFS_PRIMARY_SERVER_URL#}",
+        "MODULE_USERNAME#": "${REFS_USERNAME#}",
+        "PUBLISH_PARAMETER#": "${REFS_USERNAME#}_refs_%DATE%_%TIME%_%AGENT%.tar.gz"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST.3",
+      "priority": "0",
+      "processingTemplate": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "RW",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${RW_BACKUP#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "BACKUP_PARAMETERS#": "'backup' '${APP_CODE_BACKUP_PATH#}/${RW_USERNAME#}_rw_%DATE%_%TIME%_%AGENT%.tar.gz' 'n'",
+        "MACHINE_FUNCTION#": "RW",
+        "MODULE#": "RW",
+        "MODULE_AGENT#": "${RW_PRIMARY_SERVER#}",
+        "MODULE_URL#": "${RW_PRIMARY_SERVER_URL#}",
+        "MODULE_USERNAME#": "${RW_USERNAME#}",
+        "PUBLISH_PARAMETER#": "${RW_USERNAME#}_rw_%DATE%_%TIME%_%AGENT%.tar.gz"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST.4",
+      "priority": "0",
+      "processingTemplate": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "title": "EMS",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EMS_BACKUP#}",
+            "operator": "NE",
+            "value": "true"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "BACKUP_PARAMETERS#": "'backup' '${APP_CODE_BACKUP_PATH#}/${EMS_USERNAME#}_ems_%DATE%_%TIME%_%AGENT%.tar.gz' 'n'",
+        "MACHINE_FUNCTION#": "EMS",
+        "MODULE#": "EMS",
+        "MODULE_AGENT#": "${EMS_PRIMARY_SERVER#}",
+        "MODULE_URL#": "${EMS_PRIMARY_SERVER_URL#}",
+        "MODULE_USERNAME#": "${EMS_USERNAME#}",
+        "PUBLISH_PARAMETER#": "${EMS_USERNAME#}_ems_%DATE%_%TIME%_%AGENT%.tar.gz"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "DPL"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Backup flow finished ",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Backup flow has finished (${VANILLA_INSTANCE_NAME#})",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "",
+        "IN_MODULE#": "",
+        "IN_MODULE_STATUS#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+          "predecessor": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST.2",
+          "predecessor": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST.3",
+          "predecessor": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST.4",
+          "predecessor": "MODULE-BACKUP.DEPLOY.DSC-WM-LATAM.WST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    }
+  ]
+}

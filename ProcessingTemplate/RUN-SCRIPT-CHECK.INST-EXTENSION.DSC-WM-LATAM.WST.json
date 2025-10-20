@@ -1,0 +1,137 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "SCRIPT_NAME#",
+      "title": "SCRIPT_NAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_STATUS#",
+      "title": "MODULE_STATUS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "PARAMETERS#",
+      "title": "PARAMETERS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "STEP#",
+      "title": "STEP#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-CHECK.INST-EXTENSION.DSC-WM-LATAM.JLIN",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-CHECK.INST-EXTENSION.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "RUN-SCRIPT-CHECK",
+      "weight": "1",
+      "templateParameters": {
+        "IN_AGENT#": "${MODULE_AGENT#}",
+        "IN_INSTANCE#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "${MACHINE_FUNCTION#}",
+        "IN_MODULE#": "${MODULE#}",
+        "IN_PARAMETERS#": "${PARAMETERS#}",
+        "IN_SCRIPT_NAME#": "${SCRIPT_NAME#}",
+        "IN_USERNAME#": "${MODULE_USERNAME#}"
+      },
+      "actions": 
+      [
+        {
+          "processingActionType": "PROCESSING_RUN_NOW",
+          "processingEventCategory": "PROCESSING",
+          "processingEventType": "PROCESSING_FAILED",
+          "condition": {
+            "criteria": 
+            [
+              {
+                "fieldName": "${AGENT_ALIVE#}",
+                "operator": "EQ",
+                "value": "N"
+              }
+            ],
+            "operator": "AND"
+          },
+          "processingCommand": {
+            "actionTargetType": "SELF",
+            "includeContextVariables": true,
+            "processingTemplate": "CREATE-EVENTS-NNA.GSN.DSC-WM-LATAM.JREST",
+            "timestampSelector": "SAME"
+          }
+        },
+        {
+          "processingActionType": "PROCESSING_RUN_NOW",
+          "processingEventCategory": "PROCESSING",
+          "processingEventType": "PROCESSING_FAILED",
+          "condition": {
+            "criteria": 
+            [
+              {
+                "fieldName": "${EXITCODE#}",
+                "operator": "NE_NUM",
+                "value": "0"
+              }
+            ],
+            "operator": "AND"
+          },
+          "processingCommand": {
+            "actionTargetType": "SELF",
+            "includeContextVariables": true,
+            "processingTemplate": "CREATE-EVENTS.GSN.DSC-WM-LATAM.JREST",
+            "timestampSelector": "SAME"
+          }
+        }
+      ]
+    }
+  ]
+}

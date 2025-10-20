@@ -1,0 +1,680 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "preScript": "!:IF &INSTALL_EXTENSION_STATUS# <> \"true\"\n!:  STOP NOMSG,50,\"Install extension failed!\"\n!:ENDIF",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "forceCompletedCondition": {
+    "criteria": 
+    [
+      {
+        "fieldName": "${INSTALL_EXTENSION_STATUS#}",
+        "operator": "NE",
+        "value": "true"
+      },
+      {
+        "fieldName": "${SUBWF_STARTED#}",
+        "operator": "NE",
+        "value": "true"
+      }
+    ],
+    "operator": "AND"
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "SCRIPT_NAME#",
+      "title": "SCRIPT_NAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "MODULE_STATUS#",
+      "title": "MODULE_STATUS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "PARAMETERS#",
+      "title": "PARAMETERS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "STEP#",
+      "title": "STEP#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Script started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "${SCRIPT_NAME#} has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "${MACHINE_FUNCTION#}",
+        "IN_MODULE#": "${MODULE#}",
+        "IN_MODULE_STATUS#": "1550"
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CHECK-AGENT.INST-EXTENSION.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "CHECK-AGENT.INST-EXTENSION.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "CHECK-AGENT",
+      "weight": "1",
+      "templateParameters": {
+        "IN_AGENT": "${MODULE_AGENT#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Agent is down",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${AGENT_ALIVE#}",
+            "operator": "NE",
+            "value": "N"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Agent ${MODULE_AGENT#} is down",
+        "IN_FLOW_STATUS#": "1560",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "${MODULE#}",
+        "IN_MODULE#": "${MODULE#}",
+        "IN_MODULE_STATUS#": "1560",
+        "MODULE_STATUS#": null,
+        "PARAMETERS#": null,
+        "SCRIPT_NAME#": null,
+        "STEP#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CHECK-AGENT.INST-EXTENSION.DSC-WM-LATAM.S",
+          "predecessor": "CHECK-AGENT.INST-EXTENSION.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CREATE-EVENTS.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "CREATE-EVENTS.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "EVNT_Agent is down",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${AGENT_ALIVE#}",
+            "operator": "NE",
+            "value": "N"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_ASSIGNMENT_GROUP#": null,
+        "IN_CALLER#": null,
+        "IN_CATEGORY_LEVEL1#": null,
+        "IN_CMDB_CI#": null,
+        "IN_CONTACT_TYPE#": null,
+        "IN_DESCRIPTION": "Agent ${MODULE_AGENT#} is down",
+        "IN_DESCRIPTION#": null,
+        "IN_IMPACT#": null,
+        "IN_INCIDENT_TYPE#": null,
+        "IN_LOCATION#": null,
+        "IN_SERVICE#": null,
+        "IN_SHORT_DESCRIPTION#": null,
+        "IN_STATE#": null,
+        "IN_U_IMPACTED_BUSINESS_UNIT#": null,
+        "MODULE_STATUS#": null,
+        "PARAMETERS#": null,
+        "PART": "${TOP_PART}",
+        "SCRIPT_NAME#": null,
+        "STEP#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-INSTALL.INST-EXTENSION.DSC-WM-LATAM.JLIN",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-INSTALL.INST-EXTENSION.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "RUN-SCRIPT-INSTALL",
+      "weight": "1",
+      "templateParameters": {
+        "IN_AGENT#": "${MODULE_AGENT#}",
+        "IN_INSTANCE#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "${MACHINE_FUNCTION#}",
+        "IN_MODULE#": "${MODULE#}",
+        "IN_PARAMETERS#": "${PARAMETERS#}",
+        "IN_SCRIPT_NAME#": "${SCRIPT_NAME#}",
+        "IN_USERNAME#": "${MODULE_USERNAME#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CHECK-AGENT.INST-EXTENSION.DSC-WM-LATAM.S",
+          "predecessor": "CHECK-AGENT.INST-EXTENSION.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Script succeeded",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTALL_EXITCODE#}",
+            "operator": "NE",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "${SCRIPT_NAME#} has succeeded",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "${MODULE#}",
+        "IN_MODULE#": "${MODULE#}",
+        "IN_MODULE_STATUS#": "${MODULE_STATUS#}"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-INSTALL.INST-EXTENSION.DSC-WM-LATAM.JLIN",
+          "predecessor": "RUN-SCRIPT-INSTALL.INST-EXTENSION.DSC-WM-LATAM.JLIN",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+      "priority": "0",
+      "processingTemplate": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Script failed",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTALL_EXITCODE#}",
+            "operator": "EQ",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "${SCRIPT_NAME#} has failed",
+        "IN_FLOW_STATUS#": "1560",
+        "IN_INSTANCE_NAME#": "${INSTANCE_NAME#}",
+        "IN_MACHINE_FUNCTION#": "${MODULE#}",
+        "IN_MODULE#": "${MODULE#}",
+        "IN_MODULE_STATUS#": "1560"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-INSTALL.INST-EXTENSION.DSC-WM-LATAM.JLIN",
+          "parent": "e480559e-283c-4074-9c51-dcde72590be0",
+          "predecessor": "RUN-SCRIPT-INSTALL.INST-EXTENSION.DSC-WM-LATAM.JLIN",
+          "processingStatus": "FAILED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-INSTALL.INST-EXTENSION.DSC-WM-LATAM.JLIN",
+          "parent": "e480559e-283c-4074-9c51-dcde72590be0",
+          "predecessor": "RUN-SCRIPT-INSTALL.INST-EXTENSION.DSC-WM-LATAM.JLIN",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        },
+        {
+          "dependencyType": "OR",
+          "groupId": "e480559e-283c-4074-9c51-dcde72590be0",
+          "name": "OR",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUBLISH-ERROR.INST-EXTENSION.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PUBLISH-ERROR.INST-EXTENSION.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "PUBLISH-ERROR",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTALL_EXITCODE#}",
+            "operator": "EQ",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+          "predecessor": "PUT-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT-LOGBACKUP.INST-EXTENSION.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT-LOGBACKUP.INST-EXTENSION.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTALL_EXITCODE#}",
+            "operator": "EQ",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "MODULE_STATUS#": "1550",
+        "PARAMETERS#": "logbackup ${APP_CODE_BACKUP_PATH#}/${WMS_USERNAME#}_wms_%DATE%_%TIME%_%AGENT%_logbackup.tar.gz",
+        "SCRIPT_NAME#": "${LOGBACKUP_SCRIPT_NAME#}",
+        "STEP#": "LOG_BACKUP"
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUBLISH-ERROR.INST-EXTENSION.DSC-WM-LATAM.S",
+          "predecessor": "PUBLISH-ERROR.INST-EXTENSION.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "UPLOAD-ATTACHMENT.GSN.DSC-WM-LATAM.JUNX",
+      "priority": "0",
+      "processingTemplate": "UPLOAD-ATTACHMENT.GSN.DSC-WM-LATAM.JUNX",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "title": "UPLOAD-ATTACHMENT",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTALL_EXITCODE#}",
+            "operator": "EQ",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "DECRYPTED_PWD#": "ENCRYPTED::EREYCgcKDBAJEQoKGAoKDAkMEwwRChsMGxMRChgKGBEYChAFAQoFCgkMDAwRDAoF",
+        "IN_AGENT": "${MODULE_AGENT#}",
+        "IN_AGENT#": null,
+        "IN_FILE_PATH": null,
+        "IN_FILE_PATH#": "${LOG_FILE#}",
+        "IN_LOGIN#": null,
+        "IN_SUDO_USERNAME": null,
+        "IN_SUDO_USERNAME#": "${MODULE_USERNAME#}",
+        "IN_TICKET_ID": null,
+        "IN_TICKET_ID#": "${SYS_ID#}",
+        "PARAMETERS#": null,
+        "SCRIPT_NAME#": null,
+        "STEP#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT-LOGBACKUP.INST-EXTENSION.DSC-WM-LATAM.WST",
+          "predecessor": "RUN-SCRIPT-LOGBACKUP.INST-EXTENSION.DSC-WM-LATAM.WST",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PREPARE-RESTORE.INST-EXTENSION.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "PREPARE-RESTORE.INST-EXTENSION.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "PREPARE-RESTORE",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTALL_EXITCODE#}",
+            "operator": "EQ",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "UPLOAD-ATTACHMENT.GSN.DSC-WM-LATAM.JUNX",
+          "predecessor": "UPLOAD-ATTACHMENT.GSN.DSC-WM-LATAM.JUNX",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RESTORE-CORE.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "RESTORE-CORE.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "INSTEX"
+      ],
+      "title": "RESTORE-CORE.DSC-WM-LATAM.WST",
+      "weight": "1",
+      "workflowType": "STANDARD",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${INSTALL_EXITCODE#}",
+            "operator": "EQ",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+      },
+      "actions": 
+      [
+        {
+          "processingActionType": "FORCE_COMPLETED",
+          "processingEventCategory": "PROCESSING",
+          "processingEventType": "PROCESSING_COMPLETED",
+          "processingCommand": {
+            "abortChildren": false,
+            "actionTargetType": "RELATED",
+            "forbidChildrenStart": false,
+            "forceChildren": true,
+            "keepForcedStatus": false,
+            "killChildren": false,
+            "relation": {
+              "relationType": "PARENT"
+            },
+            "restartType": "RESTART_FROM_BEGINNING"
+          }
+        }
+      ],
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PREPARE-RESTORE.INST-EXTENSION.DSC-WM-LATAM.S",
+          "predecessor": "PREPARE-RESTORE.INST-EXTENSION.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    }
+  ]
+}

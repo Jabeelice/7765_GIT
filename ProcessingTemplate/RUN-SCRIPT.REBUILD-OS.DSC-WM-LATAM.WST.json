@@ -1,0 +1,457 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "owner": "TDROBISZ",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "STANDARD",
+  "customFieldValues": {
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "STANDARD"
+    }
+  ],
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "SCRIPT_USERNAME#",
+      "title": "SCRIPT_USERNAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "SCRIPT_NAME#",
+      "title": "SCRIPT_NAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "PARAMETERS#",
+      "title": "PARAMETERS#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "STEP#",
+      "title": "STEP#"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Script started",
+      "weight": "1",
+      "templateParameters": {
+        "IN_DESCRIPTION#": "${SCRIPT_NAME#} has started",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      }
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CHECK-AGENT.REBUILD-OS.DSC-WM-LATAM.S",
+      "priority": "0",
+      "processingTemplate": "CHECK-AGENT.REBUILD-OS.DSC-WM-LATAM.S",
+      "processingType": "TASK",
+      "serverNodeType": "INTERNAL",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "AE_SCRIPT",
+      "title": "CHECK-AGENT.REBUILD-OS.DSC-WM-LATAM.S",
+      "weight": "1",
+      "templateParameters": {
+        "IN_AGENT": "${SERVER_NAME#}",
+        "PARAMETERS#": null,
+        "SCRIPT_NAME#": null,
+        "SCRIPT_USERNAME#": null,
+        "STEP#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Agent down",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${AGENT_ALIVE#}",
+            "operator": "NE",
+            "value": "N"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "Agent ${SERVER_NAME#} is down!",
+        "IN_FLOW_STATUS#": "1560",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CHECK-AGENT.REBUILD-OS.DSC-WM-LATAM.S",
+          "predecessor": "CHECK-AGENT.REBUILD-OS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CREATE-EVENTS.GSN.DSC-WM-LATAM.JREST.2",
+      "priority": "0",
+      "processingTemplate": "CREATE-EVENTS.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "EVNT_Agent down",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${AGENT_ALIVE#}",
+            "operator": "NE",
+            "value": "N"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_ASSIGNMENT_GROUP#": null,
+        "IN_CALLER#": null,
+        "IN_CATEGORY_LEVEL1#": null,
+        "IN_CMDB_CI#": null,
+        "IN_CONTACT_TYPE#": null,
+        "IN_DESCRIPTION": "Agent ${SERVER_NAME#} is down!",
+        "IN_DESCRIPTION#": null,
+        "IN_IMPACT#": null,
+        "IN_INCIDENT_TYPE#": null,
+        "IN_LOCATION#": null,
+        "IN_SERVICE#": null,
+        "IN_SHORT_DESCRIPTION#": null,
+        "IN_STATE#": null,
+        "IN_U_IMPACTED_BUSINESS_UNIT#": null,
+        "PARAMETERS#": null,
+        "PART": "${TOP_PART}",
+        "SCRIPT_NAME#": null,
+        "SCRIPT_USERNAME#": null,
+        "STEP#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.4",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "RUN-SCRIPT.REBUILD-OS.DSC-WM-LATAM.JLIN",
+      "priority": "0",
+      "processingTemplate": "RUN-SCRIPT.REBUILD-OS.DSC-WM-LATAM.JLIN",
+      "processingType": "TASK",
+      "serverNodeType": "LINUX",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "AE_SHELL_SCRIPT",
+      "weight": "1",
+      "templateParameters": {
+        "IN_AGENT#": "${SERVER_NAME#}",
+        "IN_INSTANCE#": "${INSTANCE_NAME#}",
+        "IN_PARAMETERS#": "${PARAMETERS#}",
+        "IN_SCRIPT_NAME#": "${SCRIPT_NAME#}",
+        "IN_USERNAME#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "CHECK-AGENT.REBUILD-OS.DSC-WM-LATAM.S",
+          "predecessor": "CHECK-AGENT.REBUILD-OS.DSC-WM-LATAM.S",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "INTERNAL",
+          "taskType": "AE_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.2",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Script succeeded",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EXITCODE#}",
+            "operator": "NE",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "${SCRIPT_NAME#} has succeeded",
+        "IN_FLOW_STATUS#": "1550",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT.REBUILD-OS.DSC-WM-LATAM.JLIN",
+          "predecessor": "RUN-SCRIPT.REBUILD-OS.DSC-WM-LATAM.JLIN",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+      "priority": "0",
+      "processingTemplate": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "MSG_Script failed",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EXITCODE#}",
+            "operator": "EQ",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_DESCRIPTION#": "${SCRIPT_NAME#} has failed",
+        "IN_FLOW_STATUS#": "1560",
+        "IN_MACHINE_HOSTNAME#": "${SERVER_NAME#}",
+        "IN_MACHINE_SID#": ""
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT.REBUILD-OS.DSC-WM-LATAM.JLIN",
+          "parent": "12658acf-dca6-45f8-8b2e-7c3e8c4a2f1e",
+          "predecessor": "RUN-SCRIPT.REBUILD-OS.DSC-WM-LATAM.JLIN",
+          "processingStatus": "FAILED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        },
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "RUN-SCRIPT.REBUILD-OS.DSC-WM-LATAM.JLIN",
+          "parent": "12658acf-dca6-45f8-8b2e-7c3e8c4a2f1e",
+          "predecessor": "RUN-SCRIPT.REBUILD-OS.DSC-WM-LATAM.JLIN",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "LINUX",
+          "taskType": "AE_SHELL_SCRIPT"
+        },
+        {
+          "dependencyType": "OR",
+          "groupId": "12658acf-dca6-45f8-8b2e-7c3e8c4a2f1e",
+          "name": "OR",
+          "processingStatus": "COMPLETED",
+          "processingType": "WORKFLOW",
+          "workflowType": "STANDARD"
+        }
+      ]
+    },
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "CREATE-EVENTS.GSN.DSC-WM-LATAM.JREST",
+      "priority": "0",
+      "processingTemplate": "CREATE-EVENTS.GSN.DSC-WM-LATAM.JREST",
+      "processingType": "TASK",
+      "serverNodeType": "REST_WEB_SERVICE",
+      "statisticMethod": "AVERAGE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "RBOS"
+      ],
+      "taskType": "REST_WEB_SERVICE_CALL",
+      "title": "EVNT_Script failed",
+      "weight": "1",
+      "forceCompletedCondition": {
+        "criteria": 
+        [
+          {
+            "fieldName": "${EXITCODE#}",
+            "operator": "EQ",
+            "value": "0"
+          }
+        ],
+        "operator": "AND"
+      },
+      "templateParameters": {
+        "IN_ASSIGNMENT_GROUP#": null,
+        "IN_CALLER#": null,
+        "IN_CATEGORY_LEVEL1#": null,
+        "IN_CMDB_CI#": null,
+        "IN_CONTACT_TYPE#": null,
+        "IN_DESCRIPTION#": null,
+        "IN_IMPACT#": null,
+        "IN_INCIDENT_TYPE#": null,
+        "IN_LOCATION#": null,
+        "IN_SERVICE#": null,
+        "IN_SHORT_DESCRIPTION#": null,
+        "IN_STATE#": null,
+        "IN_U_IMPACTED_BUSINESS_UNIT#": null,
+        "PARAMETERS#": null,
+        "PART": "${TOP_PART}",
+        "SCRIPT_NAME#": null,
+        "SCRIPT_USERNAME#": null,
+        "STEP#": null
+      },
+      "dependencies": 
+      [
+        {
+          "dependencyType": "PREDECESSOR",
+          "name": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+          "predecessor": "PUT-MACHINE-MESSAGE.AFSM.DSC-WM-LATAM.JREST.3",
+          "processingStatus": "COMPLETED",
+          "processingType": "TASK",
+          "serverNodeType": "REST_WEB_SERVICE",
+          "taskType": "REST_WEB_SERVICE_CALL"
+        }
+      ]
+    }
+  ]
+}

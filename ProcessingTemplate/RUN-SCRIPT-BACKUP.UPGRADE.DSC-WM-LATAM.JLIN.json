@@ -1,0 +1,70 @@
+{
+  "description": "Run bash script",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "${AGENT#}",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &RID# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=*\")\n:PROCESS &RID#\n:  SET &LINE# = GET_PROCESS_LINE(&RID#)\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,WORKFLOW\n:SET &TMP1# = \"${PUBLISH#}\"\n:  IF &TMP1# <> \"\"\n:    SWITCH \"Y\"\n:      CASE ${IN_MACHINE_FUNCTION#} = \"WMS\"\n:        SET &WMS_BACKUP_FILE# = &TMP1#\n:        PUBLISH &WMS_BACKUP_FILE#,,TOP\n:      CASE ${IN_MACHINE_FUNCTION#} = \"REFS\"\n:        SET &REFS_BACKUP_FILE# = &TMP1#\n:        PUBLISH &REFS_BACKUP_FILE#,,TOP\n:      CASE ${IN_MACHINE_FUNCTION#} = \"RW\"\n:        SET &RW_BACKUP_FILE# = &TMP1#\n:        PUBLISH &RW_BACKUP_FILE#,,TOP\n:      CASE ${IN_MACHINE_FUNCTION#} = \"EMS\"\n:        SET &EMS_BACKUP_FILE# = &TMP1#\n:        PUBLISH &EMS_BACKUP_FILE#,,TOP\n:      CASE ${IN_MACHINE_FUNCTION#} = \"WMS-FAIL\"\n:        SET &WMS_FAIL_BACKUP_FILE# = &TMP1#\n:        PUBLISH &WMS_FAIL_BACKUP_FILE#,,TOP\n:      CASE ${IN_MACHINE_FUNCTION#} = \"REFS-FAIL\"\n:        SET &REFS_FAIL_BACKUP_FILE# = &TMP1#\n:        PUBLISH &REFS_FAIL_BACKUP_FILE#,,TOP\n:      CASE ${IN_MACHINE_FUNCTION#} = \"RW-FAIL\"\n:        SET &RW_FAIL_BACKUP_FILE# = &TMP1#\n:        PUBLISH &RW_FAIL_BACKUP_FILE#,,TOP\n:      CASE ${IN_MACHINE_FUNCTION#} = \"EMS-FAIL\"\n:        SET &EMS_FAIL_BACKUP_FILE# = &TMP1#\n:        PUBLISH &EMS_FAIL_BACKUP_FILE#,,TOP\n:  ENDSWITCH\n:  ENDIF\n!:  IF &EXITCODE# > 0\n!:    MODIFY_STATE RETCODE=1800\n!:  ENDIF\n:ENDPROCESS\n\n",
+  "preScript": ":DEFINE &IAGENTS#,string,2\n:DEFINE &OAGENTS#,string,2\n:DEFINE &AAGENT#,string,3\n\n:SET &TMP# = STR_SUB('${IN_AGENT#}', '[','')\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n\n:FILL &IAGENTS#[] = STR_SPLIT(&TMP#,\",\")\n:SET &RUNVAR# = 1\n:SET &LEN# = LENGTH(&IAGENTS#[])\n\n:WHILE &RUNVAR# LE &LEN#\n:  FILL &AAGENT#[] = STR_SPLIT(&IAGENTS#[&RUNVAR#],\".\")\n:  SET &AGENT_UC# = \"&AAGENT#[1]\"\n:  SET &OAGENTS#[&RUNVAR#] = \"&AGENT_UC#.os\"\n:  SET &AGENT_ALIVE# = SYS_HOST_ALIVE(&OAGENTS#[&RUNVAR#])\n:  PRINT \"Agent &OAGENTS#[&RUNVAR#], Alive: &AGENT_ALIVE#\"\n:  IF &AGENT_ALIVE# = \"Y\"\n:    SET &AGENT# = &OAGENTS#[&RUNVAR#]\n:PUB &AGENT#\n:    SET &RUNVAR# = &LEN# + 1\n:  ENDIF\n:  SET &RUNVAR# = &RUNVAR# + 1\n:ENDWHILE\n\n!:SET &LOGIN# = &IN_LOGIN#\n!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB\n\n:DEFINE &APAGENT#,string,2\n:SET &DATE# = SYS_DATE(\"YYYYMMDD\",&TZ#)\n:SET &TIME# = SYS_TIME(\"HHMMSS\",&TZ#)\n\n:FILL &APAGENT#[] = STR_SPLIT(&AGENT#,\".\")\n:SET &PAGENT# = STR_LC(\"&APAGENT#[1]\")\n\n:SET &TMP1# = \"${IN_PARAMETERS#}\"\n:IF &TMP1# <> \"\"\n:SET &XPARAMETERS# = STR_SUBSTITUTE(&TMP1#, \"%DATE%\", &DATE#)\n:SET &XPARAMETERS# = STR_SUBSTITUTE(&XPARAMETERS#, \"%TIME%\", &TIME#)\n:SET &XPARAMETERS# = STR_SUBSTITUTE(&XPARAMETERS#, \"%AGENT%\", &PAGENT#)\n:PUB &XPARAMETERS#\n:ENDIF\n\n:SET &TMP2# = \"${IN_PUBLISH#}\"\n:IF &TMP2# <> \"\"\n:  SET &PUBLISH# = STR_SUBSTITUTE(&TMP2#, \"%DATE%\", &DATE#)\n:  SET &PUBLISH# = STR_SUBSTITUTE(&PUBLISH#, \"%TIME%\", &TIME#)\n:  SET &PUBLISH# = STR_SUBSTITUTE(&PUBLISH#, \"%AGENT%\", &PAGENT#)\n:  PUB &PUBLISH#\n:ENDIF\n",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SHELL_SCRIPT",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "\necho \">> Instance: ${IN_INSTANCE#}\"\necho \">> Module: ${IN_MODULE#}\"\necho \">> Machine Function: ${IN_MACHINE_FUNCTION#}\"\necho \">> Hostname: `hostname`\"\necho \">> Shell: $SHELL\"\necho \">> Username: ${IN_USERNAME#}\"\necho \">> Parameters: ${XPARAMETERS#}\"\necho \">> Executing: sudo su - ${IN_USERNAME#} -c \\\"${IN_SCRIPT_NAME#} ${XPARAMETERS#}\\\"\"\necho \">> Script output: \"\nsudo su - ${IN_USERNAME#} -c \"${IN_SCRIPT_NAME#} ${XPARAMETERS#}\"\nEXITCODE=$?\nif [[ $EXITCODE -eq 2 ]]; then\n  EXITCODE=0\n  echo \">> Warning: Script exited with exitcode 2!\"\n  echo \"EXITCODE=$EXITCODE\"\nelse\n  echo \"EXITCODE=$EXITCODE\"\nfi\nexit $EXITCODE"
+  },
+  "designParameters": 
+  [
+    {
+      "editorType": "TEXT",
+      "name": "IN_AGENT#",
+      "title": "IN_AGENT#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_INSTANCE#",
+      "title": "IN_INSTANCE#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_MACHINE_FUNCTION#",
+      "title": "IN_MACHINE_FUNCTION#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_MODULE#",
+      "title": "IN_MODULE#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_PARAMETERS#",
+      "title": "IN_PARAMETERS#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_PUBLISH#",
+      "title": "IN_PUBLISH#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_SCRIPT_NAME#",
+      "title": "IN_SCRIPT_NAME#"
+    },
+    {
+      "editorType": "TEXT",
+      "name": "IN_USERNAME#",
+      "title": "IN_USERNAME#"
+    }
+  ]
+}

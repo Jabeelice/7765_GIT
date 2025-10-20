@@ -1,0 +1,58 @@
+{
+  "description": "saves cert file to DS",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "${AGENT#}",
+  "owner": "tdrobisz",
+  "preScript": ":DEFINE &AAGENT#,string,4\n\n:SET &TMP# = STR_SUB('${IN_AGENT}', '[','')\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n\n:FILL &AAGENT#[] = STR_SPLIT(&TMP#,\".\")\n:SET &AGENTS# = &AAGENT#[1]\n:SET &AGENT#= \"&AGENTS#.filemgr\"\n:PUB &AGENT#,,TASK",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "FILE_MANAGER",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "DATASOURCE_UPLOAD_FILE",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "dataSource": "${DATASOURCE}",
+    "dataSourceKey": "${SYSID}",
+    "dataSourceType": "LOCAL_FILE_STORE",
+    "localSourcePath": "${CFILE}",
+    "onFileExists": "OVERWRITE",
+    "onFileNotFound": "TASK_FAILED"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "CFILE",
+      "title": "CFILE"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "DATASOURCE",
+      "title": "DATASOURCE"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "SYSID",
+      "title": "SYSID"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_AGENT",
+      "title": "IN_AGENT"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "lazyLoad": true,
+  "owner": "tomas.drobisz@infinitedata.com",
+  "priority": "0",
+  "processingType": "WORKFLOW",
+  "statisticMethod": "AVERAGE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM"
+  ],
+  "useScripts": true,
+  "workflowType": "FOR_EACH",
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "forEachCollection": "${INSTANCES#}",
+    "forEachCollectionType": "TEXT",
+    "forEachIteratorName": "INSTANCE_NAME#",
+    "forEachSeparator": ",",
+    "onUnresolvedVariables": "FAIL",
+    "sequentialProcessing": false
+  },
+  "dependencies": 
+  [
+    {
+      "dependencyType": "RESOURCE",
+      "name": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "processingStatus": "COMPLETED",
+      "processingType": "WORKFLOW",
+      "resource": "CHILD-WF.DSC-WM-LATAM.STOCK",
+      "resourcePermits": "1",
+      "resourceType": "STOCK",
+      "workflowType": "FOR_EACH"
+    }
+  ],
+  "items": 
+  [
+    {
+      "folder": "DSC-WM-LATAM",
+      "highRiskStatisticMethod": "PERCENT",
+      "highRiskStatisticPeriod": "MONTH",
+      "name": "STOP-INSTANCE.MW-PATCHING.DSC-WM-LATAM.WST",
+      "priority": "0",
+      "processingTemplate": "STOP-INSTANCE.MW-PATCHING.DSC-WM-LATAM.WST",
+      "processingType": "WORKFLOW",
+      "statisticMethod": "MOST_FREQUENT_VALUE",
+      "statisticPeriod": "MONTH",
+      "tags": 
+      [
+        "DSC-WM-LATAM",
+        "MWP"
+      ],
+      "weight": "1",
+      "workflowType": "STANDARD"
+    }
+  ]
+}

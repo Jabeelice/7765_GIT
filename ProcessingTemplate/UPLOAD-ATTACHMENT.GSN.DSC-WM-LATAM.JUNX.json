@@ -1,0 +1,60 @@
+{
+  "description": "Add attachment to incident",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "${AGENT#}",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &GSN_SYS_ID# = JSON_GET_VALUE(&RESPONSE_CONTENT#,\"$.result.sys_id\")\n:PUBLISH &GSN_SYS_ID#,,WORKFLOW",
+  "preScript": ":IF &IN_FILE_PATH# = \"\"\n:  STOP NOMSG, 50, \"SKIPPED - No attachment file for job!\"\n:ENDIF\n\n:INC PICK.INCIDENT-CONFIG.GSN.DSC-WM-LATAM.INCL\n:INC READ.INCIDENT-CONFIG.GSN.DSC-WM-LATAM.INCL\n\n!:READ &GSN_ATTACH_URL#,,,&SC_GSN_ATTACH_URL#\n!:SET &GSN_FULL_URL# = &GSN_ATTACH_URL#\n\n:PUB &SC_GSN_USERNAME#     \n:PUB &SC_GSN_PASSWORD# \n\n:SET &GSN_ATTACH_URL# = &SC_GSN_ATTACH_URL#\n:SET &GSN_FULL_URL# = &GSN_ATTACH_URL#\n:PUB &GSN_FULL_URL#\n\n:SET &TMP# = STR_SUB('${IN_AGENT}', '[','')\n:SET &TMP# = STR_SUB(&TMP#, ']','')\n:SET &TMP# = STR_SUB(&TMP#, '\"','')\n:PRINT &TMP#\n\n:DEFINE &IAGENTS#,string,2\n:DEFINE &OAGENTS#,string,2\n:DEFINE &AAGENT#,string,3\n\n:FILL &IAGENTS#[] = STR_SPLIT(&TMP#,\",\")\n:SET &RUNVAR# = 1\n:SET &LEN# = LENGTH(&IAGENTS#[])\n\n:WHILE &RUNVAR# LE &LEN#\n:  FILL &AAGENT#[] = STR_SPLIT(&IAGENTS#[&RUNVAR#],\".\")\n:  SET &AGENT_UC# = \"&AAGENT#[1]\"\n:  SET &OAGENTS#[&RUNVAR#] = \"&AGENT_UC#.os\"\n:  SET &AGENT_ALIVE# = SYS_HOST_ALIVE(&OAGENTS#[&RUNVAR#])\n:  PRINT \"Agent &OAGENTS#[&RUNVAR#], Alive: &AGENT_ALIVE#\"\n:  IF &AGENT_ALIVE# = \"Y\"\n:    SET &AGENT# = &OAGENTS#[&RUNVAR#]\n:    PUB &AGENT#\n:    SET &RUNVAR# = &LEN# + 1\n:  ENDIF\n:  SET &RUNVAR# = &RUNVAR# + 1\n:ENDWHILE\n\n!:SET &LOGIN# = &IN_LOGIN#\n!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SHELL_SCRIPT",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "!:INCLUDE PCK.ITPA_SHARED.PUB.INCLUDE.ATTACH\n!:SET &UC4RB_ENCRYPTED_PASSWORD_TMP# = &SC_GSN_PASSWORD#\n!:INCLUDE PCK.ITPA_SHARED.PRV.INCLUDE.DECRYPT_PASSWORD\n!:SET &DECRYPTED_PWD# = \"$UC4_DECRYPTED_PWD\"\n!====================================== SHELL SCRIPT =====================================\necho '>> Agent:       ${AGENT#}'\nif ${IN_SUDO_USERNAME#} <> \"\"\nthen echo '>> Username:    ${IN_SUDO_USERNAME#}'\nelse\necho \">> Username:    `whoami`\"\nfi\necho '>> GSN SYS_ID:  ${IN_TICKET_ID#}'\necho '>> Upload file: ${IN_FILE_PATH#}'\necho \">> Shell:       $SHELL\"\necho -e '---------------------------------------------------------------------------\\n'\nif ${IN_SUDO_USERNAME#} <> \"\"\nthen \necho 'sudo su - ${IN_SUDO_USERNAME#} -c \"cat ${IN_FILE_PATH#}\"'\nsudo su - ${IN_SUDO_USERNAME#} -c \"cat ${IN_FILE_PATH#}\"\necho -e '---------------------------------------------------------------------------\\n'\necho 'sudo su - ${IN_SUDO_USERNAME#} -c \"ls -la ${IN_FILE_PATH#}\"'\nsudo su - ${IN_SUDO_USERNAME#} -c \"ls -la ${IN_FILE_PATH#}\"\necho -e '---------------------------------------------------------------------------\\n'\nelse\necho 'cat ${IN_FILE_PATH#}'\ncat ${IN_FILE_PATH#}\necho -e '---------------------------------------------------------------------------\\n'\necho 'ls -la ${IN_FILE_PATH#}'\nls -la \"${IN_FILE_PATH#}\"\necho -e '---------------------------------------------------------------------------\\n'\nfi\nstrings \"${IN_FILE_PATH#}\" > \"${IN_FILE_PATH#}.txt\"\nresponse=$(curl -ksSX POST \"${GSN_FULL_URL#}\" \\\n  -u \"${SC_GSN_USERNAME#}:${DECRYPTED_PWD#}\" \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: multipart/form-data' \\\n  -H 'Cache-Control: no-cache' \\\n  -F 'table_name=incident' \\\n  -F \"table_sys_id=${IN_TICKET_ID#}\" \\\n  -F 'encryption_context=undefined' \\\n  -F \"uploadFile=@${IN_FILE_PATH#}.txt\"\n)\n\n!:INCLUDE PCK.ITPA_SHARED.PRV.INCLUDE.CHECK_SHELL_CMD@UNIX\n!checks the return code and if greater 0 exits the job\nRC=$?\nif [ \"$RC\" -gt \"0\" ] ;\nthen\n exit $RC;\nfi\n\necho $response | grep -Eo '\"[^\"]*\" *(: *([0-9]*|\"[^\"]*\")[^{}\\[\"]*|,)?|[^\"\\]\\[\\}\\{]*|\\{|\\},?|\\[|\\],?|[0-9 ]*,?' | awk '{if ($0 ~ /^[}\\]]/ ) offset-=4; printf \"%*c%s\\n\", offset, \" \", $0; if ($0 ~ /^[{\\[]/) offset+=4}'\n\n!:REGISTER_VARIABLE RESPONSE_CONTENT#, $response\necho \"ANOWVAR:PARENT.RESPONSE_CONTENT#=$response\""
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_AGENT",
+      "title": "IN_AGENT"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_SUDO_USERNAME#",
+      "title": "IN_SUDO_USERNAME#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "PASSWORD",
+      "name": "DECRYPTED_PWD#",
+      "title": "DECRYPTED_PWD#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_TICKET_ID#",
+      "title": "IN_TICKET_ID#"
+    },
+    {
+      "allowExpressions": true,
+      "editorType": "TEXT",
+      "name": "IN_FILE_PATH#",
+      "title": "IN_FILE_PATH#"
+    }
+  ]
+}

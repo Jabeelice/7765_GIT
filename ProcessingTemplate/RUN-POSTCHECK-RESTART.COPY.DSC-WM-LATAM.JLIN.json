@@ -1,0 +1,79 @@
+{
+  "description": "Post check script",
+  "folder": "DSC-WM-LATAM",
+  "highRiskStatisticMethod": "PERCENT",
+  "highRiskStatisticPeriod": "MONTH",
+  "node": "${AGENT#}",
+  "owner": "tomas.drobisz@infinitedata.com",
+  "postScript": ":SET &RID# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=*\")\n:PROCESS &RID#\n:  SET &LINE# = GET_PROCESS_LINE(&RID#)\n:  PRINT &LINE#\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,WORKFLOW\n!:  IF &EXITCODE# > 0\n!:    MODIFY_STATE RETCODE=1800\n!:  ENDIF\n:ENDPROCESS\n\n:SET &RID2# = PREP_PROCESS_REPORT(,,REP,\"*EXITCODE=0*\")\n:PROCESS &RID2#\n:  SET &LINE# = GET_PROCESS_LINE(&RID2#)\n:  PRINT &LINE#\n:  SET &EXITCODE# = STR_FIND(&LINE#,\"=\")\n:  SET &EXITCODE# = ADD(&EXITCODE#,1)\n:  SET &EXITCODE# = SUBSTR(&LINE#,&EXITCODE#)\n:  PUBLISH &EXITCODE#,,WORKFLOW\n!:  IF &EXITCODE# = 0\n!:    MODIFY_STATE RETCODE=0\n!:  ENDIF\n:ENDPROCESS\n\n!:IF &COUNT# <> \"\"\n!:SET &COUNT# = &COUNT# + 1\n!:PUB &COUNT#,,TASK\n!:ELSE \n!:SET &COUNT# = 1\n!:PUB &COUNT#,,TASK\n!:ENDIF\n\n!:IF  &EXITCODE# > 0\n!:  IF &COUNT# = 12\n!:    STOP MSG, 15, \"Error, script failed\"\n!:  ENDIF\n!:  IF &COUNT# <> 12\n!:    STOP MSG, 14, \"Error, waiting for restart\"\n!:  ENDIF\n!:ENDIF",
+  "preScript": ":DEFINE &AAGENT#,string,3\n:FILL &AAGENT#[] = STR_SPLIT(${IN_AGENT},\".\")\n:SET &AGENT_UC# = \"&AAGENT#[1]\"\n:SET &AGENT# = \"&AGENT_UC#.os\"\n:PUB &AGENT#\n\n!:SET &LOGIN# = &MODULE_LOGIN#\n!:INC PCK.ITPA_SHARED.PRV.INCLUDE.PREPARE_JOB\n",
+  "priority": "0",
+  "processingType": "TASK",
+  "serverNodeType": "LINUX",
+  "statisticMethod": "MOST_FREQUENT_VALUE",
+  "statisticPeriod": "MONTH",
+  "tags": 
+  [
+    "DSC-WM-LATAM",
+    "NotMonitored"
+  ],
+  "taskType": "AE_SHELL_SCRIPT",
+  "useScripts": true,
+  "customFieldValues": {
+  },
+  "processingCommand": {
+    "script": "echo \">> Instance: ${IN_INSTANCE_NAME}\"\necho \">> Module: ${IN_MODULE}\"\necho \">> Machine Function: ${IN_MACHINE_FUNCTION}\"\necho \">> Hostname: `hostname`\"\necho \">> Shell: $SHELL\"\necho \">> Username: ${IN_MODULE_USERNAME}\"\necho \">> Parameters: ${IN_PARAMETERS}\"\necho \">> Executing: sudo su - ${IN_MODULE_USERNAME} -c \\\"${IN_SCRIPT_NAME} ${IN_PARAMETERS}\\\"\"\necho \">> Script output: \"\n\nfor i in {1..20}\n do\n sleep 30\n sudo su - ${IN_MODULE_USERNAME} -c \"${IN_SCRIPT_NAME#} ${IN_PARAMETERS}\"\n EXITCODE=$?\n\n if [[ $EXITCODE -eq 0 ]] \n  then \n  break \n fi\ndone\n\necho \"EXITCODE=$EXITCODE\"\nexit $EXITCODE\n\n"
+  },
+  "designParameters": 
+  [
+    {
+      "allowExpressions": true,
+      "defaultValue": "${MODULE_AGENT}",
+      "editorType": "TEXT",
+      "name": "IN_AGENT",
+      "title": "IN_AGENT"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${SOURCE_INSTANCE_NAME#}",
+      "editorType": "TEXT",
+      "name": "IN_INSTANCE",
+      "title": "IN_INSTANCE"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${MODULE}",
+      "editorType": "TEXT",
+      "name": "IN_MODULE",
+      "title": "IN_MODULE"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${MACHINE_FUNCTION}",
+      "editorType": "TEXT",
+      "name": "IN_MACHINE_FUNCTION",
+      "title": "IN_MACHINE_FUNCTION"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${MODULE_USERNAME}",
+      "editorType": "TEXT",
+      "name": "IN_USERNAME",
+      "title": "IN_USERNAME"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${SCRIPT_NAME}",
+      "editorType": "TEXT",
+      "name": "IN_SCRIPT_NAME",
+      "title": "IN_SCRIPT_NAME"
+    },
+    {
+      "allowExpressions": true,
+      "defaultValue": "${PARAMETERS}",
+      "editorType": "TEXT",
+      "name": "IN_PARAMETERS",
+      "title": "IN_PARAMETERS"
+    }
+  ]
+}
